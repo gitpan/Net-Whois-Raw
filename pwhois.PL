@@ -4,22 +4,43 @@ my $script = <<'END_OF_SCRIPT';
 use Net::Whois::Raw;
 use Getopt::Std;
 use strict;
-use vars qw($opt_s $opt_c);
+use vars qw($opt_s $opt_c $opt_S $opt_C $opt_t);
 
-getopts("sc");
+getopts("scSCt");
 
-$OMIT_MSG = $opt_s;
-$CHECK_FAIL = $opt_c;
+$OMIT_MSG = $CHECK_FAIL = undef;
+
+$OMIT_MSG = 1 if $opt_s;
+$OMIT_MSG = 2 if $opt_S;
+$CHECK_FAIL = 1 if $opt_c;
+$CHECK_FAIL = 2 if $opt_C;
+$CACHE_DIR = undef;
+if ($opt_t) {
+    if ($^O =~ /Win/) {
+        $CACHE_DIR = $ENV{'TEMP'} || "C:\\temp";
+    } else {
+        $CACHE_DIR = $ENV{'TEMP'} || "/tmp";
+        my @ent = getpwuid($>);
+        if (@ent) {
+            foreach ("/tmp/$ent[0]", "$ent[7]/.pwhois") {
+                mkdir $_, 0644;
+                if (open(O, ">$_/__$$-$$.tmp")) {
+                    close(O);
+                    unlink "$_/__$$-$$.tmp";
+                    $CACHE_DIR = $_;
+                    last;
+                 }
+            }
+        }
+    }
+}
 
 my $dom = $ARGV[0] || die "Usage: $0 domain";
 
 my $server = $ARGV[1];
 
-unless ($server) {
-	print whois($dom);
-} else {
-	print Net::Whois::Raw::_whois($dom, $server);
-}
+print whois($dom, $server);
+
 
 __END__
 
