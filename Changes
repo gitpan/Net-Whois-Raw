@@ -45,3 +45,6 @@ Revision history for Perl extension Net::Whois::Raw.
 	- data structures in Net/Whois/Raw/Data.pm reformatted
 	- new strip patterns for whois.crsnic.net
 
+
+0.30  Mar 15 2004	Walery Studennikov <despair@cpan.org>
+	- added strip rules for whois.dns.be

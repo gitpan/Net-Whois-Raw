@@ -492,6 +492,9 @@ our %servers = qw(
     'aardvark.dns.be' => [
 	'^%',
     ],
+    'whois.dns.be' => [
+	'^%-',
+    ],
     'whois.nic.tj' => [
 	'^This Whois server looks up only',
 	'^Please see http://nic.tj for more',
@@ -499,7 +502,7 @@ our %servers = qw(
     ],
     'whois.nic.at' => [
 	'^%',
-    ]
+    ],
 );
 
 
