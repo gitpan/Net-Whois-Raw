@@ -120,9 +120,6 @@ use vars qw(%notfound %strip %servers);
     YU  whois.ripe.net
     ZA  apies.frd.ac.za
 
-    RA--AQ5D4PA	whois.i-dns.net
-    RA--AQ6TKQQ	whois.i-dns.net
-    RA--AQ7EAMY	whois.i-dns.net
     XN--P1AG	ru.whois.i-dns.net
     XN--P1AG	ru.whois.i-dns.net
     XN--J1AEF	whois.i-dns.net
@@ -135,6 +132,13 @@ use vars qw(%notfound %strip %servers);
     SPB.RU	whois.relcom.ru
     MSK.RU	whois.relcom.ru
     RU.NET	whois.relcom.ru
+    YES.RU	whois.regtime.net
+
+    UK.COM      whois.centralnic.com
+    UK.NET      whois.centralnic.com
+    GB.COM      whois.centralnic.com
+    GB.NET      whois.centralnic.com
+    EU.COM      whois.centralnic.com
 );
 
 # These do not seem to work

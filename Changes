@@ -54,3 +54,9 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.32  Apr 07 2004	IVAN <IVAN@cpan.org>
 	- small fix allows the module to work under 5.005
+
+0.33  Apr 21 2004	Walery Studennikov <despair@cpan.org>
+	- new whois server in Data.pm - whois.regtime.net
+
+0.34  May 18 2004	Richard Poole <rp@guests.deus.net>
+	- new whois server in Data.pm - whois.centralnic.com

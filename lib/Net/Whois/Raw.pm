@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.32';
+$VERSION = '0.34';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -315,7 +315,7 @@ the search failed and return undef in such a case.
 B<IMPORTANT>: these checks merely use pattern matching; they will work
 on several servers but certainly not on all of them.
 
-(This features were contributed by Walery Studennikov B<despair@sama.ru>)
+(This features were contributed by Walery Studennikov B<despair@cpan.org>)
 
 =head1 AUTHOR
 
@@ -340,7 +340,7 @@ Added support for reverse lookup of IP addresses via the ARIN registry. (Alex Wi
 
 This will work now for RIPE addresses as well, according to a redirection from ARIN. (Philip Hands B<phil@uk.alcove.com>, Trevor Peirce B<trev@digitalcon.ca>)
 
-Added the pattern matching switches, (Walery Studennikov B<despair@sama.ru>)
+Added the pattern matching switches, (Walery Studennikov B<despair@cpan.org>)
 
 Modified pattern matching, added cache. (Tony L. Svanstrom B<tony@svanstrom.org>)
 
@@ -367,7 +367,7 @@ B<die> on L<perlfunc> about exception handling in Perl.
 Copyright 2000-2002 Ariel Brosh.
 Copyright 2003-2003 Gabor Szabo.
 Copyright 2003-2003 Corris Randall.
-Copyright 2003-2003 Walery Studennikov.
+Copyright 2003-2004 Walery Studennikov.
 
 This package is free software. You may redistribute it or modify it under
 the same terms as Perl itself.
