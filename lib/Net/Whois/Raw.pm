@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.23';
+$VERSION = '0.24';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -33,18 +33,32 @@ sub whois {
 sub query {
     my $dom = shift;
     my $tld;
-    my @tokens = split(/\./, $dom);
     if ($dom =~ /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/) {
-        $tld = "ARPA";
+        $tld = "IP";
     } else { 
-        $tld = uc($tokens[-1]); 
+	my @alltlds = keys %Net::Whois::Raw::Data::servers;
+	@alltlds = sort { dlen($b) <=> dlen($a) } @alltlds;
+	foreach my $awailtld (@alltlds) {
+	    $awailtld = lc $awailtld;
+	    if ($dom =~ /(.+?)\.($awailtld)$/) {
+		$tld = uc $2;
+		last;
+	    }
+	}
+	unless ($tld) {
+	    my @tokens = split(/\./, $dom);
+    	    $tld = uc($tokens[-1]); 
+	}
     }
+
+
+    $dom =~ s/.NS$//i;
     my $cname = "$tld.whois-servers.net";
     my $srv = $Net::Whois::Raw::Data::servers{$tld} || $cname;
     $srv = $cname if $USE_CNAMES && gethostbyname($cname); 
     my $flag = (
 			$srv eq 'whois.crsnic.net' || 
-			$srv eq 'whois.publicinterestregistrey.net' || 
+			$srv eq 'whois.publicinterestregistry.net' || 
 			$tld eq 'ARPA'
 		);
     my $res = do_whois($dom, uc($srv), $flag, [], $tld);
@@ -90,7 +104,7 @@ sub finish {
     my @strip = $strip{lc($srv)} ? @{$strip{lc($srv)}} : ();
     my @lines;
     MAIN: foreach (split(/\n/, $text)) {
-        return undef if $CHECK_FAIL && /$notfound/;
+        return undef if $CHECK_FAIL && $notfound && /$notfound/;
         if ($OMIT_MSG) {
             foreach my $re (@strip) {
                 next MAIN if (/$re/);
@@ -99,6 +113,24 @@ sub finish {
         push(@lines, $_);
     }
     local ($_) = join("\n", @lines, "");
+
+    if ($CHECK_FAIL > 1) {
+        return undef if
+	    /is unavailable/is ||
+	    /No entries found for the selected source/is ||
+	    /Not found:/s ||
+	    /No match\./s ||
+
+	    /is available/is ||
+	    /Not found/is && !/ your query returns "NOT FOUND"/ ||
+	    /No match for/is ||
+	    /No Objects Found/s ||
+	    /No domain records were found/s ||
+	    /No such domain/s ||
+	    /No entries found in the /s ||
+	    /Unable to find any information for your query/s ||
+	    /is not registered and may be available for registration/s;
+    }
 
     if ($OMIT_MSG > 1) {	
         s/The Data.+(policy|connection)\.\n//is;
@@ -111,12 +143,17 @@ sub finish {
         s/NOTICE AND TERMS OF USE:.*modify these terms at any time\.//s;
         s/TERMS OF USE:.*modify these terms at any time\.//s;
         s/NOTICE:.*expiration for this registration\.//s;
-    }
-    if ($CHECK_FAIL > 2) {
-        return undef if /is unavailable/is ||
-	   /No entries found for the selected source/is ||
-	   /Not found:/s ||
-	   /No match\./s;
+
+	s/By submitting a WHOIS query.+?DOMAIN AVAILABILITY.\n?//s;
+	s/Registration and WHOIS.+?its accuracy.\n?//s;
+        s/Disclaimer:.+?\*\*\*\n?//s;
+	s/The .COOP Registration .+ Information\.//s;
+	s/Whois Server Version \d+\.\d+.//is;
+	s/NeuStar,.+www.whois.us\.//is;
+        s/\n?Domain names in the \.com, .+ detailed information.\n?//s;
+        s/\n?The Registry database .+?Registrars\.\n?//s;
+        s/\n?>>> Last update of .+? <<<\n?//;
+        s/% .+?\n//gs;
     }
     $_;
 }
@@ -129,7 +166,7 @@ sub _whois {
     eval {
         local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
         alarm $TIMEOUT if $TIMEOUT;
-        $sock = new IO::Socket::INET("$srv:43") || die $!;
+        $sock = new IO::Socket::INET("$srv:43") || die "$srv: $!";
     };
     alarm 0;
     die $@ if $@;
@@ -138,24 +175,44 @@ sub _whois {
     close($sock);
     if ($flag) {
         foreach (@lines) {
-            $state ||= (/^\s*Registrar:/);
-            if ( $state && /^\s*Whois Server: ([A-Za-z0-9\-_\.]+)/ ) {
+            $state ||= (/^\s*(?:Sponsoring )?Registrar:/);
+            if ( $state && /Whois Server:\s*([A-Za-z0-9\-_\.]+)/ ) {
                 my $newsrv = uc("$1");
                 next if (($newsrv) eq uc($srv));
                 return undef if (grep {$_ eq $newsrv} @$ary);
-                return _whois($dom, $newsrv, $flag, [@$ary, $srv]);
+		my $whois = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
+		if ($@ && !$whois) {
+		    return join '', @lines;
+		}
+                return $whois;
             }
             if (/^\s+Maintainer:\s+RIPE\b/ && $tld eq 'ARPA') {
                 my $newsrv = uc($Net::Whois::Raw::Data::servers{'RIPE'});
                 next if ($newsrv eq $srv);
                 return undef if (grep {$_ eq $newsrv} @$ary);
-                return _whois($dom, $newsrv, $flag, [@$ary, $srv]);
+                my $whois = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
+		if ($@ && !$whois) {
+		    return join '', @lines;
+		}
+                return $whois;
             }
         }
     }
-    join("", @lines);
+    my $whois = join("", @lines);
+
+    if ($whois =~ /To single out one record, look it up with \"xxx\",/s) {
+        my $newsrv = uc('whois.networksolutions.com');
+        return _whois($dom, $newsrv, $flag, [@{$ary||[]}, $srv]);
+    }
+    
+    return $whois;
 }
 
+sub dlen {
+    my ($str) = @_;
+    my $dotcount = $str =~ tr/././;
+    return length($str) * (1 + $dotcount);
+}
 
 # Preloaded methods go here.
 

@@ -13,3 +13,11 @@ Revision history for Perl extension Net::Whois::Raw.
 	- added some more regexen to strip out disclaimers and such ( for $OMIT_MSG > 2 ).
 	- moved %servers to %Net::Whois::Raw::Data::servers
 
+0.24  Tue Nov 18 2003	Walery Studennikov <despair@cpan.org>
+	- fixed whois server for .org domains and add new whois servers
+	  for multilingual domains
+	- fixed recursive whois requests for .org domains
+	- new fail-check and strip patterns added
+	- more verbose error messages
+	- added support for third level domains
+	- some bugfixes
