@@ -14,7 +14,7 @@ require Exporter;
 @EXPORT = qw(
 whois	
 );
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 %servers = qw(COM whois.networksolutions.com
 	 NET whois.networksolutions.com
@@ -107,6 +107,23 @@ As NetworkSolutions got most of the domains of InterNic as legacy, we
 start by querying their server, as this way one whois query would be
 sufficient for many domains. Starting at whois.internic.net or
 whois.crsnic.net will result in always two requests in any case.
+
+=head1 COPYRIGHT
+
+Module can be copied, distributed and used with no fee, as long as it is
+not modified. Repackaging the module for embedding in other software
+products is allowed, including distribution as a feature of a commercial
+package. Nevertheless, I guarantee no support whatsoever and grant totally
+no liability for this module.
+
+=head1 COMMERCIAL SUPPORT
+
+As of May 2001, commercial support for modules by SCHOP@CPAN is available
+via Raz Information Systems, Israel. Mail raz@raz.co.il for
+details. Note: this is only for commercial organizations in need of
+support contracts. You are not requested to pay anything to use the module
+in your organization for a commercial application and there are no
+royalties for redistributing it to your customers.
 
 =head1 SEE ALSO
 
