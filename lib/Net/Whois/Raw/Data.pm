@@ -196,8 +196,11 @@ our %servers = qw(
           'ns.litnet.lt' => 'No matches found',
           'whois.adamsnames.tc' => 'is not a domain controlled by',
           'whois.nic.la' => '^NO MATCH for',
-          'whois.networksolutions.com' => '^No match for',
-          'whois.thnic.net' => 'No entries found');
+          'whois.networksolutions.com' => '(?i)no match',
+          'whois.thnic.net' => 'No entries found',
+          'whois.neulevel.biz' => '^Not found:',
+          'whois.afilias.net' => '^NOT FOUND',
+      );
 
 %strip = (
           'whois.tonic.to' => [
