@@ -101,3 +101,6 @@ Revision history for Perl extension Net::Whois::Raw.
 0.91  Mar 04 2005	Walery Studennikov <despair@cpan.org>
 	- fixed bug (introduced in v0.90) that caused fault of DNS server whois queries
 	- new test for DNS servers whois
+
+0.92  Mar 28 2005	Walery Studennikov <despair@cpan.org>
+	- new fail check patterns

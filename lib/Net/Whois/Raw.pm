@@ -21,7 +21,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '0.91';
+$VERSION = '0.92';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -344,6 +344,8 @@ sub check_existance {
         /Could not find a match for/s ||
         /Unable to find any information for your query/s ||
         /is not registered/s ||
+        /no matching record/s ||
+	/No match found\n/ ||
         /NOMATCH/s;
 
     return 1;
