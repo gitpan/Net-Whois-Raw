@@ -6,7 +6,7 @@
 # Change 1..1 below to 1..last_test_to_print .
 # (It may become useful if the test is moved to ./t subdirectory.)
 
-BEGIN { $| = 1; print "1..3\n"; }
+BEGIN { $| = 1; print "1..4\n"; }
 END {print "not ok 1\n" unless $loaded;}
 use Net::Whois::Raw;
 $loaded = 1;
@@ -35,4 +35,10 @@ if ($txt =~ /Ariel Brosh/) {
     print "not ok 3\n";
 }
 
+$txt = whois("147.222.2.1");
 
+if ($txt =~ /Gonzaga/) {
+    print "ok 4\n";
+} else {
+    print "not ok 4\n";
+}

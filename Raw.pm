@@ -14,7 +14,7 @@ require Exporter;
 @EXPORT = qw(
 whois	
 );
-$VERSION = '0.13';
+$VERSION = '0.14';
 
 %servers = qw(COM whois.networksolutions.com
 	 NET whois.networksolutions.com
@@ -25,9 +25,11 @@ $VERSION = '0.13';
 	 TO whois.tonic.to);
 
 sub whois {
+    my $tld;
     my $dom = shift;
     my @tokens = split(/\./, $dom);
-    my $tld = uc($tokens[-1]);
+    if ( $dom =~ /\d+\.\d+\.\d+\.\d+/ ) { $tld = "ARPA"; }
+    else { $tld = uc($tokens[-1]); }
     my $srv = $servers{$tld} || "$tld.whois-servers.net";
     my $flag = ($srv eq 'whois.networksolutions.com');
     _whois($dom, uc($srv), $flag, []);
@@ -90,6 +92,8 @@ net.
 
 Peter Chow, B<peter@interq.or.jp>, Corrections. (See below)
 
+Alex Withers B<awithers@gonzaga.edu>, ARIN support. (See below)
+
 =head1 MODIFICATIONS
 
 =item
@@ -100,6 +104,10 @@ B<peter@interq.or.jp>)
 =item
 
 Added support for Tonga TLD. (.to) (Peter Chow, B<peter@interq.or.jp>)
+
+=item
+
+Added support for reverse lookup of IP addresses via the ARIN registry. (Alex Withers B<awithers@gonzaga.edu>)
 
 =head1 CLARIFICATION
 
