@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.25';
+$VERSION = '0.26';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -65,12 +65,13 @@ sub query {
     $dom =~ s/.NS$//i;
     my $cname = "$tld.whois-servers.net";
     my $srv = $Net::Whois::Raw::Data::servers{$tld} || $cname;
-    $srv = $cname if $USE_CNAMES && gethostbyname($cname); 
+    $srv = $cname if $USE_CNAMES && gethostbyname($cname);
     my $flag = (
-			$srv eq 'whois.crsnic.net' || 
-			$srv eq 'whois.publicinterestregistry.net' || 
-			$tld eq 'ARPA'
-		);
+	$srv eq 'whois.crsnic.net' ||
+	$srv eq 'whois.publicinterestregistry.net' ||
+	$srv eq 'whois.nic.cc' ||
+	$tld eq 'ARPA'
+    );
     my $res = do_whois($dom, uc($srv), $flag, [], $tld);
     wantarray ? ($res, $srv) : $res;
 }
@@ -190,7 +191,7 @@ sub _whois {
     close($sock);
     if ($flag) {
         foreach (@lines) {
-            $state ||= (/^\s*(?:Sponsoring )?Registrar:/);
+            $state ||= (/Registrar:/);
             if ( $state && /Whois Server:\s*([A-Za-z0-9\-_\.]+)/ ) {
                 my $newsrv = uc("$1");
                 next if (($newsrv) eq uc($srv));

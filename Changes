@@ -28,3 +28,7 @@ Revision history for Perl extension Net::Whois::Raw.
 	  (if setting imported variables $OMIT_MSG, $CHECK_FAIL etc.
 	  doesn't work for some reason, for example because of
 	  namespace problems in mod_perl scripts)
+
+0.26  Fri Jan  9 2004	Walery Studennikov <despair@cpan.org>
+	- added recursive whois requests for .cc domains
+	- fixed recursive whois requests for whois.crsnic.net
