@@ -1,16 +1,19 @@
 NAME
-    Net::Whois::Raw - Perl extension for unparsed raw whois information
+    Net::Whois::Raw - Get Whois information for domains
 
 SYNOPSIS
-      use Net::Whois::Raw qw( whois );
+      use Net::Whois::Raw;
   
       $s = whois('perl.com');
       $s = whois('funet.fi');
-      $s = whois('yahoo.co.uk');
+
+      $arrayref = get_whois('yahoo.co.uk', undef, 'QRY_ALL');
+      $text = get_whois('yahoo.co.uk', undef, 'QRY_LAST');
+      ($text, $srv) = get_whois('yahoo.co.uk', undef, 'QRY_FIRST');
 
       ### if you do "use Net::Whois::Raw qw(
-      #             $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED
-      #             $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT @SRC_IPS );
+      #     $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED
+      #     $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT @SRC_IPS );
       ### you can use these:
 
       $OMIT_MSG = 1; # This will attempt to strip several known copyright
@@ -29,7 +32,7 @@ SYNOPSIS
                     if none are known for the specific server.
 
       $CHECK_EXCEED = 1; # When this option is set, "die" will be called
-                    is connection rate to specific whois server have been
+                    if connection rate to specific whois server have been
                     exceeded
 
       $CACHE_DIR = "/var/spool/pwhois/"; # Whois information will be
@@ -48,11 +51,12 @@ SYNOPSIS
                     a specific number of seconds.
 
       @SRC_IPS = (11.22.33.44); # List of local IP addresses to
+                    use for WHOIS queries. Addresses will be used used
+                    successively in the successive queries
 
 DESCRIPTION
-    Net::Whois::Raw queries NetworkSolutions and follows the Registrar:
-    answer for ORG, EDU, COM and NET domains. For other TLDs it uses the
-    whois-servers.net namespace. ($TLD.whois-servers.net).
+    Net::Whois::Raw queries WHOIS servers about domains. The module
+    supportts recursive WHOIS queries.
 
     Setting the variables $OMIT_MSG and $CHECK_FAIL will match the results
     against a set of known patterns. The first flag will try to omit the
@@ -62,7 +66,35 @@ DESCRIPTION
     IMPORTANT: these checks merely use pattern matching; they will work on
     several servers but certainly not on all of them.
 
-    (This features were contributed by Walery Studennikov despair@cpan.org)
+FUNCTIONS
+    whois( DOMAIN [, SRV] )
+       Returns Whois information for "DOMAIN". Without "SRV" argument
+       default Whois server for specified domain name zone will be used.
+       Caching is supported: if $CACHE_DIR variable is set and there is
+       cached entry for that domain - information from the cache will be
+       used.
+
+    get_whois( DOMAIN [, SRV [, WHICH_WHOIS]] )
+       Lower-level function to query Whois information for "DOMAIN". Caching
+       IS NOT supported (caching is implemented only in higher-level "whois"
+       function). Without "SRV" argument default Whois server for specified
+       domain name zone will be used. "WHICH_WHOIS" argument is used to
+       access a results if recursive queries; possible values:
+
+       'QRY_FIRST' - returns results of the first query. Non't make
+       recursive queries. In scalar context returns just whois text. In list
+       context returns two values: whois text and whois server which was
+       used to make query).
+
+       'QRY_LAST' - returns results of the last query. In scalar context
+       returns just whois text. In list context returns two values: whois
+       text and whois server which was used to make query). This is the
+       default option.
+
+       'QRY_ALL' - returns results of the all queries of the recursive
+       chain. Reference to array of references to hashes is returned. Hash
+       keys: "text" - result of whois query, "srv" - whois server which was
+       used to make query.
 
 AUTHOR
     Original author Ariel Brosh, schop@cpan.org, Inspired by jwhois.pl
@@ -96,12 +128,6 @@ CREDITS
 
 CHANGES
     See file "Changes" in the distribution
-
-CLARIFICATION
-    As NetworkSolutions got most of the domains of InterNic as legacy, we
-    start by querying their server, as this way one whois query would be
-    sufficient for many domains. Starting at whois.internic.net or
-    whois.crsnic.net will result in always two requests in any case.
 
 NOTE
     Some users complained that the die statements in the module make their

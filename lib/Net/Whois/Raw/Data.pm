@@ -208,10 +208,6 @@ use vars qw(%notfound %strip %servers %exceed);
     'whois.dns.be' => '^Status:      FREE',
 );
 
-%exceed = (
-    'whois.ripn.net' => 'excessive querying of the WHOIS database',
-);
-
 %strip = (
     'whois.crsnic.net' => [
 	'^TERMS OF USE:',
@@ -539,7 +535,28 @@ use vars qw(%notfound %strip %servers %exceed);
 	'^directNIC makes this information',
 	'^its accuracy\.',
     ],
+    'whois.alldomains.com' => [
+	'^MarkMonitor.com - ',
+	'^------------------',
+	'^For Global Domain ',
+	'^and Enterprise DNS,',
+	'^------------------',
+	'^The Data in MarkMon',
+	'^for information pur',
+	'^about or related to',
+	'^does not guarantee ',
+	'^that you will use t',
+	'^circumstances will ',
+	'^support the transmi',
+	'^solicitations via e',
+	'^electronic processe',
+	'^MarkMonitor.com res',
+	'^By submitting this ',
+    ],
 );
 
+%exceed = (
+    'whois.ripn.net' => 'excessive querying of the WHOIS database',
+);
 
 1;

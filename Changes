@@ -93,3 +93,7 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.43  Feb 04 2005	Walery Studennikov <despair@cpan.org>
 	- new options (exported variables): @SRC_IPS, $CHECK_EXCEED
+
+0.90  Mar 03 2005	Walery Studennikov <despair@cpan.org>
+	- total rewrite / restructuring of module
+	- new exported function: get_whois

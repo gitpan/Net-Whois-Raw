@@ -1,10 +1,15 @@
-# Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl test.pl'
+#!/usr/bin/perl -w
 
 use strict;
 
 use Test::More tests => 5;
-BEGIN { use_ok('Net::Whois::Raw',qw( whois )) };
+BEGIN {
+    use_ok('Net::Whois::Raw',qw( whois $CHECK_FAIL $OMIT_MSG $CHECK_EXCEED ));
+
+    $Net::Whois::Raw::CHECK_FAIL = 1;
+    $Net::Whois::Raw::OMIT_MSG = 1;
+    $Net::Whois::Raw::CHECK_EXCEED = 1;
+};
 
 my @domains = qw( 
 	yahoo.com
