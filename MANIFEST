@@ -1,7 +1,8 @@
 Changes
 MANIFEST
 Makefile.PL
-Raw.pm
+lib/Net/Whois/Raw.pm
+lib/Net/Whois/Raw/Data.pm
 test.pl
 pwhois.PL
 README

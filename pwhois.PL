@@ -1,14 +1,30 @@
 my $script = <<'END_OF_SCRIPT';
-~startperl~
+~startperl~ -w
 
 use Net::Whois::Raw;
 use Getopt::Std;
 use strict;
-use vars qw($opt_s $opt_c $opt_S $opt_C $opt_t $opt_T);
+use vars qw($opt_s $opt_c $opt_S $opt_C $opt_t $opt_T $opt_h);
 
-getopts("scSCtT:");
+getopts("scSCtT:h");
 
-$OMIT_MSG = $CHECK_FAIL = undef;
+if ($opt_h) {
+	print <<EOM;
+	$0 [ -s | -S ] [ -c | -C ] [ -t <timeout> ] [ -T] <domain> [ <server> ]
+
+The -s switch attempts to strip the copyright message or disclaimer.
+The -S switch will attempt some exra rules for it.
+The -c switch attempts to return an empty answer for failed searches.
+The -C switch will attempt some exra rules for it.
+The -T switch takes a parameter that is used for the timeout for
+connection attempts.
+The -t switch enables caching.
+EOM
+	exit; 
+}
+
+
+$OMIT_MSG = $CHECK_FAIL = 0;
 
 $OMIT_MSG = 1 if $opt_s;
 $OMIT_MSG = 2 if $opt_S;
@@ -42,7 +58,12 @@ my $dom = $ARGV[0] || die "Usage: $0 domain";
 my $server = $ARGV[1];
 
 eval {
-	print whois($dom, $server);
+	my $result = whois($dom, $server);
+	if ($result) {
+		print $result;
+	} else {
+		print STDERR "Failed.\n";
+	}
 };
 if ($@) {
 	my $err = $@;
@@ -59,12 +80,12 @@ pwhois   - Perl written whois client
 
 =head1 SYNOPSIS
 
-pwhois perl.com
-pwhois gnu.org
-pwhois -s police.co.il
-pwhois -c there.is.no.tld.called.foobar
-pwhois yahoo.com whois.networksolutions.com
-pwhois -T 10 funet.fi
+	pwhois perl.com
+	pwhois gnu.org
+	pwhois -s police.co.il
+	pwhois -c there.is.no.tld.called.foobar
+	pwhois yahoo.com whois.networksolutions.com
+	pwhois -T 10 funet.fi
 
 etc etc.....
 

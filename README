@@ -8,10 +8,38 @@ SYNOPSIS
       $s = whois('funet.fi');
       $s = whois('yahoo.co.uk');
 
-      $OMIT_MSG = 1; # This will attempt to strip several knwon copyright
-                    messages and disclaimers
+      $OMIT_MSG = 1; # This will attempt to strip several known copyright
+                    messages and disclaimers sorted by servers.
+                    Default is to give the whole response.
+
+      $OMIT_MSG = 2; # This will try some additional stripping rules
+                    if none are known for the spcific server.
+
       $CHECK_FAIL = 1; # This will return undef if the response matches
-                    one of the known patterns for a failed search.
+                    one of the known patterns for a failed search,
+                    sorted by servers.
+                    Default is to give the textual response.
+
+      $CHECK_FAIL = 2; # This will match against several more rules
+                    if none are known for the specific server.
+
+      $CACHE_DIR = "/var/spool/pwhois/"; # Whois information will be
+                    cached in this directory. Default is no cache.
+
+      $CACHE_TIME = 24; # Cache files will be cleared after not accessed
+                    for a specific number of hours. Documents will not be
+                    cleared if they keep get requested for, independent
+                    of disk space. Default is not to clear the cache.
+
+      $USE_CNAMES = 1; # Use whois-servers.net to get the whois server
+                    name when possible. Default is to use the 
+                    hardcoded defaults.
+
+      $TIMEOUT = 10; # Cancel the request if connection is not made within
+                    a specific number of seconds.
+
+      Note: as of version 0.21, extra data will be loaded only if the
+      OMIT_MSG or CHECK_FAIL flags were used, in order to reduce memory usage.
 
 DESCRIPTION
     Net::Whois::Raw queries NetworkSolutions and follows the Registrar:
@@ -31,28 +59,24 @@ DESCRIPTION
 AUTHOR
     Ariel Brosh, schop@cpan.org, Inspired by jwhois.pl available on the net.
 
-    Peter Chow, peter@interq.or.jp, Corrections. (See below)
-
-    Alex Withers awithers@gonzaga.edu, ARIN support. (See below)
-
-    Walery Studennikov despair@sama.ru, several servers and the pattern
-    matching idea.
-
-    Philip Hands phil@uk.alcove.com, Trevor Peirce trev@digitalcon.ca, RIPE
-    reverse lookup support. (See below)
-
-MODIFICATIONS
-
+CREDITS
     Fixed regular expression to match hyphens. (Peter Chow,
     peter@interq.or.jp)
 
-
     Added support for Tonga TLD. (.to) (Peter Chow, peter@interq.or.jp)
 
-
     Added support for reverse lookup of IP addresses via the ARIN registry.
-    (Alex Withers awithers@gonzaga.edu) This will work now for RIPE
-    addresses as well, according to a redirection from ARIN.
+    (Alex Withers awithers@gonzaga.edu)
+
+    This will work now for RIPE addresses as well, according to a
+    redirection from ARIN. (Philip Hands phil@uk.alcove.com, Trevor Peirce
+    trev@digitalcon.ca)
+
+    Added the pattern matching switches, (Walery Studennikov
+    despair@sama.ru)
+
+    Modified pattern matching, added cache. (Tony L. Svanstrom
+    tony@svanstrom.org)
 
 CLARIFICATION
     As NetworkSolutions got most of the domains of InterNic as legacy, we
@@ -60,8 +84,13 @@ CLARIFICATION
     sufficient for many domains. Starting at whois.internic.net or
     whois.crsnic.net will result in always two requests in any case.
 
+NOTE
+    Some users complained that the die statements in the module make their
+    CGI scripts crash. Please consult the entries on eval and die on the
+    perlfunc manpage about exception handling in Perl.
+
 COPYRIGHT
-    Copyright 2000-2001 Ariel Brosh.
+    Copyright 2000-2002 Ariel Brosh.
 
     This package is free software. You may redistribute it or modify it
     under the same terms as Perl itself.
@@ -70,13 +99,14 @@ COPYRIGHT
     licence in previous versions.
 
 COMMERCIAL SUPPORT
-    As of May 2001, commercial support for modules by SCHOP@CPAN is
-    available via Raz Information Systems, Israel. Mail raz@raz.co.il for
-    details. Note: this is only for commercial organizations in need of
-    support contracts. You are not requested to pay anything to use the
-    module in your organization for a commercial application and there are
-    no royalties for redistributing it to your customers.
+    Not available anymore.
+
+LEGAL
+    Notice that registrars forbid querying their whois servers as a part of
+    a search engine, or querying for a lot of domains by script. Also,
+    omitting the copyright information (that was requested by users of this
+    module) is forbidden by the registrars.
 
 SEE ALSO
-    the perl(1) manpage, the Net::Whois manpage.
+    the perl(1) manpage, the Net::Whois manpage, the whois manpage.
 

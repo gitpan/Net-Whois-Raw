@@ -7,7 +7,7 @@ sub MY::postamble {
         shift->SUPER::postamble . <<'MAKE';
 dist : README
 
-README : Raw.pm
+README : lib/Net/Whois/Raw.pm
 	@$(PERL) -MPod::Text -e "pod2text('$<');" > $@
 
 MAKE
@@ -15,7 +15,7 @@ MAKE
 
 WriteMakefile(
     'NAME'	=> 'Net::Whois::Raw',
-    'VERSION_FROM' => 'Raw.pm', # finds $VERSION
+    'VERSION_FROM' => 'lib/Net/Whois/Raw.pm', # finds $VERSION
     'PREREQ_PM' => {'IO::Socket' => 1.0},
     'EXE_FILES' => ['pwhois'],
     'dist' => {'COMPRESS' => 'gzip --best --force'},
