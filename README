@@ -1,9 +1,82 @@
-Net::Whois::Raw returns raw unparsed whois information.
-It follows references to other registrars by Network Solutions, it uses
-the <tld>.whois-servers.net notion
+NAME
+    Net::Whois::Raw - Perl extension for unparsed raw whois information
 
-APOLOGY
+SYNOPSIS
+      use Net::Whois::Raw;
+  
+      $s = whois('perl.com');
+      $s = whois('funet.fi');
+      $s = whois('yahoo.co.uk');
 
-Versions 0.08 to 0.10 of Net::Whois::Raw were primarily failed upload
-attempts, as I don't have any personal UNIX box now.
-I know you need this module, and apologize for the inconvience
+      $OMIT_MSG = 1; # This will attempt to strip several knwon copyright
+                    messages and disclaimers
+      $CHECK_FAIL = 1; # This will return undef if the response matches
+                    one of the known patterns for a failed search.
+
+DESCRIPTION
+    Net::Whois::Raw queries NetworkSolutions and follows the Registrar:
+    answer for ORG, EDU, COM and NET domains. For other TLDs it uses the
+    whois-servers.net namespace. ($TLD.whois-servers.net).
+
+    Setting the variables $OMIT_MSG and $CHECK_FAIL will match the results
+    against a set of known patterns. The first flag will try to omit the
+    copyright message/disclaimer, the second will attempt to determine if
+    the search failed and return undef in such a case.
+
+    IMPORTANT: these checks merely use pattern matching; they will work on
+    several servers but certainly not on all of them.
+
+    (This features were contributed by Walery Studennikov despair@sama.ru)
+
+AUTHOR
+    Ariel Brosh, schop@cpan.org, Inspired by jwhois.pl available on the net.
+
+    Peter Chow, peter@interq.or.jp, Corrections. (See below)
+
+    Alex Withers awithers@gonzaga.edu, ARIN support. (See below)
+
+    Walery Studennikov despair@sama.ru, several servers and the pattern
+    matching idea.
+
+    Philip Hands phil@uk.alcove.com, Trevor Peirce trev@digitalcon.ca, RIPE
+    reverse lookup support. (See below)
+
+MODIFICATIONS
+
+    Fixed regular expression to match hyphens. (Peter Chow,
+    peter@interq.or.jp)
+
+
+    Added support for Tonga TLD. (.to) (Peter Chow, peter@interq.or.jp)
+
+
+    Added support for reverse lookup of IP addresses via the ARIN registry.
+    (Alex Withers awithers@gonzaga.edu) This will work now for RIPE
+    addresses as well, according to a redirection from ARIN.
+
+CLARIFICATION
+    As NetworkSolutions got most of the domains of InterNic as legacy, we
+    start by querying their server, as this way one whois query would be
+    sufficient for many domains. Starting at whois.internic.net or
+    whois.crsnic.net will result in always two requests in any case.
+
+COPYRIGHT
+    Copyright 2000-2001 Ariel Brosh.
+
+    This package is free software. You may redistribute it or modify it
+    under the same terms as Perl itself.
+
+    I apologize for any misunderstandings caused by the lack of a clear
+    licence in previous versions.
+
+COMMERCIAL SUPPORT
+    As of May 2001, commercial support for modules by SCHOP@CPAN is
+    available via Raz Information Systems, Israel. Mail raz@raz.co.il for
+    details. Note: this is only for commercial organizations in need of
+    support contracts. You are not requested to pay anything to use the
+    module in your organization for a commercial application and there are
+    no royalties for redistributing it to your customers.
+
+SEE ALSO
+    the perl(1) manpage, the Net::Whois manpage.
+

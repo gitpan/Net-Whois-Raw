@@ -1,7 +1,7 @@
 package Net::Whois::Raw;
 
 use strict;
-use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %servers);
+use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %servers $OMIT_MSG $CHECK_FAIL);
 
 use IO::Socket;
 
@@ -12,9 +12,9 @@ require Exporter;
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 @EXPORT = qw(
-whois   
+whois $OMIT_MSG $CHECK_FAIL
 );
-$VERSION = '0.15';
+$VERSION = '0.17';
 
 %servers = qw(COM whois.networksolutions.com
          NET whois.networksolutions.com
@@ -26,7 +26,21 @@ $VERSION = '0.15';
          RU whois.ripn.net
          SU whois.ripn.net
          IL whois.isoc.org.il
-         TO whois.tonic.to);
+         TO whois.tonic.to
+	 COOP whois.nic.coop
+	 MUSEUM whois.museum
+	 DK whois.dk-hostmaster.dk
+	 DZ whois.ripe.net
+	 GS whois.adamsnames.tc
+	 IN whois.ncst.ernet.in
+	 KH whois.nic.net.kh
+	 MS whois.adamsnames.tc
+	 TC whois.adamsnames.tc
+	 TF whois.adamsnames.tc
+	 TJ whois.nic.tj
+	 US whois.isi.edu
+	 VG whois.adamsnames.tc
+);
 
 sub whois {
     my $tld;
@@ -67,7 +81,23 @@ sub _whois {
             }
         }
     }
-    join("", @lines);
+    local ($_) = join("", @lines);
+    if ($OMIT_MSG) {	
+        s/The Data.+(policy|connection)\.\n//is;
+        s/% NOTE:.+prohibited\.//is;
+        s/Disclaimer:.+\*\*\*\n?//is;
+        s/NeuLevel,.+A DOMAIN NAME\.//is;
+        s/For information about.+page=spec//is;
+        s/NOTICE: Access to.+this policy.//is;
+        s/The previous information.+completeness\.//s;
+    }
+    if ($CHECK_FAIL) {
+        return undef if /is unavailable/is ||
+	   /No entries found for the selected source/is ||
+	   /Not found:/s ||
+	   /No match\./s;
+    }
+    $_;
 }
 
 
@@ -91,12 +121,27 @@ Net::Whois::Raw - Perl extension for unparsed raw whois information
   $s = whois('funet.fi');
   $s = whois('yahoo.co.uk');
 
+  $OMIT_MSG = 1; # This will attempt to strip several knwon copyright
+		messages and disclaimers
+  $CHECK_FAIL = 1; # This will return undef if the response matches
+		one of the known patterns for a failed search.
+
 =head1 DESCRIPTION
 
 Net::Whois::Raw queries NetworkSolutions and follows the Registrar: answer
 for ORG, EDU, COM and NET domains.
 For other TLDs it uses the whois-servers.net namespace.
 (B<$TLD>.whois-servers.net).
+
+Setting the variables $OMIT_MSG and $CHECK_FAIL will match the results
+against a set of known patterns. The first flag will try to omit the
+copyright message/disclaimer, the second will attempt to determine if
+the search failed and return undef in such a case.
+
+B<IMPORTANT>: these checks merely use pattern matching; they will work
+on several servers but certainly not on all of them.
+
+(This features were contributed by Walery Studennikov B<despair@sama.ru>)
 
 =head1 AUTHOR
 
@@ -107,7 +152,7 @@ Peter Chow, B<peter@interq.or.jp>, Corrections. (See below)
 
 Alex Withers B<awithers@gonzaga.edu>, ARIN support. (See below)
 
-Walery Studennikov B<despair@sama.ru>, Russian server update.
+Walery Studennikov B<despair@sama.ru>, several servers and the pattern matching idea.
 
 Philip Hands B<phil@uk.alcove.com>, Trevor Peirce B<trev@digitalcon.ca>,
 RIPE reverse lookup support. (See below)
