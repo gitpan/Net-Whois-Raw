@@ -1,9 +1,9 @@
 package Net::Whois::Raw::Data;
 
 use strict;
-use vars qw(%notfound %strip);
+use vars qw(%notfound %strip %servers);
 
-our %servers = qw(
+%servers = qw(
     COM    whois.crsnic.net
     NET    whois.crsnic.net
     EDU    whois.educause.net
@@ -87,7 +87,7 @@ our %servers = qw(
     MS  whois.adamsnames.tc
     MT  whois.ripe.net
     MX  whois.nic.mx
-    NL  gw.domain-registry.nl
+    NL  whois.domain-registry.nl
     NO  ask.norid.no
     NU  whois.worldnames.net
     NZ  akl-iis.domainz.net.nz

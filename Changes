@@ -51,3 +51,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.31  Mar 19 2004	Walery Studennikov <despair@cpan.org>
 	- more robust recursive whois queries
+
+0.32  Apr 07 2004	IVAN <IVAN@cpan.org>
+	- small fix allows the module to work under 5.005
