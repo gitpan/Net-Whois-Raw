@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.40';
+$VERSION = '0.41';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -25,7 +25,7 @@ sub whois {
     unless ($srv) {
 	($res, $srv) = query($dom);
     } else {
-	($res, $srv) = _whois($dom, uc($srv));
+	($res, $srv) = do_whois($dom, uc $srv);
     }
     return finish($res, $srv);
 }
@@ -57,7 +57,7 @@ sub query {
 	}
 	unless ($tld) {
 	    my @tokens = split(/\./, $dom);
-	    $tld = uc($tokens[-1]); 
+	    $tld = uc $tokens[-1]; 
 	}
     }
 
@@ -75,7 +75,7 @@ sub query {
 	$tld eq 'ARPA'
     );
     my $res;
-    ($res, $srv) = do_whois($dom, uc($srv), $flag, [], $tld);
+    ($res, $srv) = do_whois($dom, uc $srv, $flag, [], $tld);
     wantarray ? ($res, $srv) : $res;
 }
 
@@ -190,7 +190,7 @@ sub _whois {
 	foreach (@lines) {
 	    $state ||= /Registrar/ || /Registered through/;
 	    if ( $state && /Whois Server:\s*([A-Za-z0-9\-_\.]+)/ ) {
-		my $newsrv = uc($1);
+		my $newsrv = uc $1;
 		#warn "recurse to $newsrv\n";
 		next if (($newsrv) eq uc($srv));
 		return undef if (grep {$_ eq $newsrv} @$ary);
@@ -201,7 +201,7 @@ sub _whois {
 		return ($whois, $newsrv);
 	    }
 	    if (/^\s+Maintainer:\s+RIPE\b/ && $tld eq 'ARPA') {
-		my $newsrv = uc($Net::Whois::Raw::Data::servers{'RIPE'});
+		my $newsrv = uc $Net::Whois::Raw::Data::servers{'RIPE'};
 		next if ($newsrv eq $srv);
 		return undef if (grep {$_ eq $newsrv} @$ary);
 		my ($whois) = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
@@ -215,7 +215,7 @@ sub _whois {
     my $whois = join("", @lines);
 
     if ($whois =~ /To single out one record, look it up with \"xxx\",/s) {
-	#my $newsrv = uc('whois.networksolutions.com');
+	#my $newsrv = uc 'whois.networksolutions.com';
 	return _whois( "=$dom", $srv, $flag, [@{$ary||[]}, $srv] );
     }
     
