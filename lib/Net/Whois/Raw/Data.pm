@@ -39,7 +39,7 @@ use vars qw(%notfound %strip %servers);
     CH  domex.switch.ch
     CK  whois.ck-nic.org.ck
     CL  nic.cl
-    CN  log.cnnic.net.cn
+    CN  whois.cnnic.net.cn
     CX  whois.nic.cx
     CY  whois.ripe.net
     CZ  dc1.eunet.cz

@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.41';
+$VERSION = '0.42';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
