@@ -14,7 +14,7 @@ require Exporter;
 @EXPORT = qw(
 whois $OMIT_MSG $CHECK_FAIL
 );
-$VERSION = '0.17';
+$VERSION = '0.18';
 
 %servers = qw(COM whois.networksolutions.com
          NET whois.networksolutions.com
@@ -159,19 +159,15 @@ RIPE reverse lookup support. (See below)
 
 =head1 MODIFICATIONS
 
-=item
-
 Fixed regular expression to match hyphens. (Peter Chow,
 B<peter@interq.or.jp>)
 
-=item
-
 Added support for Tonga TLD. (.to) (Peter Chow, B<peter@interq.or.jp>)
-
-=item
 
 Added support for reverse lookup of IP addresses via the ARIN registry. (Alex Withers B<awithers@gonzaga.edu>)
 This will work now for RIPE addresses as well, according to a redirection from ARIN.
+
+Added the pattern matching switches, (Walery Studennikov B<despair@sama.ru>)
 
 =head1 CLARIFICATION
 
