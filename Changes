@@ -97,3 +97,7 @@ Revision history for Perl extension Net::Whois::Raw.
 0.90  Mar 03 2005	Walery Studennikov <despair@cpan.org>
 	- total rewrite / restructuring of module
 	- new exported function: get_whois
+
+0.91  Mar 04 2005	Walery Studennikov <despair@cpan.org>
+	- fixed bug (introduced in v0.90) that caused fault of DNS server whois queries
+	- new test for DNS servers whois
