@@ -14,7 +14,7 @@ require Exporter;
 @EXPORT = qw(
 whois	
 );
-$VERSION = '0.03';
+$VERSION = '0.05';
 
 %servers = qw(COM whois.networksolutions.com
 	 NET whois.networksolutions.com
@@ -27,9 +27,8 @@ sub whois {
     my $dom = shift;
     my @tokens = split(/\./, $dom);
     my $tld = uc($tokens[-1]);
-    my $def = $servers{$tld};
-    my $srv = $def ? $def : "$tld.whois-servers.net";
-    my $flag = ($def eq 'whois.networksolutions.com');
+    my $srv = $servers{$tld} || "$tld.whois-servers.net";
+    my $flag = ($srv eq 'whois.networksolutions.com');
     _whois($dom, uc($srv), $flag, []);
 }
 
@@ -42,7 +41,7 @@ sub _whois {
     if ($flag) {
         foreach (@lines) {
             if (/^\s*Registrar: ([A-Za-z0-9_\.]+)/) {
-                my $newsrv = uc($1);
+                my $newsrv = uc("whois.$1");
                 next if ($newsrv eq $srv);
                 return undef if (grep {$_ eq $newsrv} @$ary);
                 return _whois($dom, $newsrv, $flag, [@$ary, $srv]);
