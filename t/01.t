@@ -3,25 +3,20 @@
 
 use strict;
 
-use Test::More tests => 2;
-BEGIN { use_ok('Net::Whois::Raw') };
+use Test::More tests => 5;
+BEGIN { use_ok('Net::Whois::Raw',qw( whois )) };
 
+my @domains = qw( 
 
-my $txt = whois("yahoo.com");
+	yahoo.com
+	freshmeat.net
+	freebsd.org
+	ucsb.edu
 
-ok($txt =~ /YAHOO.COM/, 'yahoo.com resolved');
+);
 
-#$txt = whois("perl.org.il");
-#ok($txt =~ /Gabor Szabo/, 'perl.org.il resolved');
+foreach my $domain ( @domains ) {
+	my $txt = whois( $domain );
+	ok($txt =~ /$domain/i, "$domain resolved");
+}
 
-
-#$txt = whois("atheist.org.il");
-#if ($txt =~ /Ariel Brosh/) {
-
-#$txt = whois("147.222.2.1");
-
-#if ($txt =~ /Gonzaga/) {
-#    print "ok 4\n";
-#} else {
-#    print "not ok 4\n";
-#}

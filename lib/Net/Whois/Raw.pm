@@ -1,7 +1,9 @@
 package Net::Whois::Raw;
 
+require Net::Whois::Raw::Data;
+
 use strict;
-use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %servers $OMIT_MSG $CHECK_FAIL
+use vars qw($VERSION @ISA @EXPORT @EXPORT_OK $OMIT_MSG $CHECK_FAIL
 	%notfound %strip $CACHE_DIR $CACHE_TIME $USE_CNAMES
 	$TIMEOUT);
 use IO::Socket;
@@ -10,127 +12,13 @@ require Exporter;
 
 @ISA = qw(Exporter);
 
-@EXPORT = qw(whois $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME
-	$USE_CNAMES $TIMEOUT);
-$VERSION = '0.22';
+@EXPORT    = qw( whois ); ### It's bad manners to export lots.
+@EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME,
-        $USE_CNAMES, $TIMEOUT) = (0) x 6;
+$VERSION = '0.23';
 
-%servers = qw(COM whois.networksolutions.com
-         NET whois.networksolutions.com
-         EDU whois.networksolutions.com
-         ORG whois.networksolutions.com
-         ARPA whois.arin.net
-         RIPE whois.ripe.net
-         MIL whois.nic.mil
-	 COOP whois.nic.coop
-	 MUSEUM whois.museum
-         AD  whois.ripe.net
-         AL  whois.ripe.net
-         AM  whois.ripe.net
-         AS  whois.gdns.net
-         AT  whois.nic.at
-         AU  box2.aunic.net
-         AZ  whois.ripe.net
-         BA  whois.ripe.net
-         BE  aardvark.dns.be
-         BG  whois.ripe.net
-         BR  whois.nic.br
-         BY  whois.ripe.net
-         CA  eider.cira.ca
-         CC  whois.nic.cc
-         CH  domex.switch.ch
-         CK  whois.ck-nic.org.ck
-         CL  nic.cl
-         CN  log.cnnic.net.cn
-         CX  whois.nic.cx
-         CY  whois.ripe.net
-         CZ  dc1.eunet.cz
-         DE  whois.denic.de
-         DK  whois.dk-hostmaster.dk
-         DO  ns.nic.do
-         DZ  whois.ripe.net
-         EE  whois.ripe.net
-         EG  whois.ripe.net
-         ES  whois.ripe.net
-         FI  whois.ripe.net
-         FO  whois.ripe.net
-         FR  winter.nic.fr
-         GA  whois.ripe.net
-         GB  whois.ripe.net
-         GE  whois.ripe.net
-         GL  whois.ripe.net
-         GM  whois.ripe.net
-         GR  whois.ripe.net
-         GS  whois.adamsnames.tc
-         HK  whois.hkdnr.net.hk
-         HR  whois.ripe.net
-         HU  whois.nic.hu
-         ID  muara.idnic.net.id
-         IE  whois.domainregistry.ie
-         IL  whois.isoc.org.il
-         IN  whois.ncst.ernet.in
-         IS  horus.isnic.is
-         IT  whois.nic.it
-         JO  whois.ripe.net
-         JP  whois.nic.ad.jp
-         KG  whois.domain.kg
-         KH  whois.nic.net.kh
-         KR  whois.krnic.net
-         LA  whois.nic.la
-         LI  domex.switch.ch
-         LK  arisen.nic.lk
-         LT  ns.litnet.lt
-         LU  whois.dns.lu
-         LV  whois.ripe.net
-         MA  whois.ripe.net
-         MC  whois.ripe.net
-         MD  whois.ripe.net
-         MM  whois.nic.mm
-         MS  whois.adamsnames.tc
-         MT  whois.ripe.net
-         MX  whois.nic.mx
-         NL  gw.domain-registry.nl
-         NO  ask.norid.no
-         NU  whois.worldnames.net
-         NZ  akl-iis.domainz.net.nz
-         PL  nazgul.nask.waw.pl
-         PT  whois.ripe.net
-         RO  whois.rotld.ro
-         RU  whois.ripn.net
-         SE  ear.nic-se.se
-         SG  qs.nic.net.sg
-         SH  whois.nic.sh
-         SI  whois.arnes.si
-         SK  whois.ripe.net
-         SM  whois.ripe.net
-         ST  whois.nic.st
-         SU  whois.ripn.net
-         TC  whois.adamsnames.tc
-         TF  whois.adamsnames.tc
-         TH  whois.thnic.net
-         TJ  whois.nic.tj
-         TN  whois.ripe.net
-         TO  whois.tonic.to
-         TR  whois.ripe.net
-         TW  whois.twnic.net
-         UA  whois.net.ua
-         UK  whois.nic.uk
-         US  whois.isi.edu
-         VA  whois.ripe.net
-         VG  whois.adamsnames.tc
-         WS  whois.worldsite.ws
-         YU  whois.ripe.net
-         ZA  apies.frd.ac.za
-);
+($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
-# These do not seem to work
-#         CN  log.cnnic.net.cn
-#         DK  whois.dk-hostmaster.dk
-#         US  whois.isi.edu
-# These serve only several subdomains
-#         ZA  apies.frd.ac.za
 sub whois {
     my ($dom, $srv) = @_;
     my $res;
@@ -152,9 +40,13 @@ sub query {
         $tld = uc($tokens[-1]); 
     }
     my $cname = "$tld.whois-servers.net";
-    my $srv = $servers{$tld} || $cname;
+    my $srv = $Net::Whois::Raw::Data::servers{$tld} || $cname;
     $srv = $cname if $USE_CNAMES && gethostbyname($cname); 
-    my $flag = ($srv eq 'whois.networksolutions.com' || $tld eq 'ARPA');
+    my $flag = (
+			$srv eq 'whois.crsnic.net' || 
+			$srv eq 'whois.publicinterestregistrey.net' || 
+			$tld eq 'ARPA'
+		);
     my $res = do_whois($dom, uc($srv), $flag, [], $tld);
     wantarray ? ($res, $srv) : $res;
 }
@@ -191,7 +83,6 @@ sub do_whois {
 sub finish {
     my ($text, $srv) = @_;
     return $text unless $CHECK_FAIL || $OMIT_MSG;
-    require Net::Whois::Raw::Data;
     *notfound = \%Net::Whois::Raw::Data::notfound;
     *strip = \%Net::Whois::Raw::Data::strip;
 
@@ -217,6 +108,9 @@ sub finish {
         s/For information about.+page=spec//is;
         s/NOTICE: Access to.+this policy.//is;
         s/The previous information.+completeness\.//s;
+        s/NOTICE AND TERMS OF USE:.*modify these terms at any time\.//s;
+        s/TERMS OF USE:.*modify these terms at any time\.//s;
+        s/NOTICE:.*expiration for this registration\.//s;
     }
     if ($CHECK_FAIL > 2) {
         return undef if /is unavailable/is ||
@@ -245,14 +139,14 @@ sub _whois {
     if ($flag) {
         foreach (@lines) {
             $state ||= (/^\s*Registrar:/);
-            if ($state && /^\s*Whois Server: ([A-Za-z0-9\-_\.]+)/) {
+            if ( $state && /^\s*Whois Server: ([A-Za-z0-9\-_\.]+)/ ) {
                 my $newsrv = uc("$1");
                 next if (($newsrv) eq uc($srv));
                 return undef if (grep {$_ eq $newsrv} @$ary);
                 return _whois($dom, $newsrv, $flag, [@$ary, $srv]);
             }
             if (/^\s+Maintainer:\s+RIPE\b/ && $tld eq 'ARPA') {
-                my $newsrv = uc($servers{'RIPE'});
+                my $newsrv = uc($Net::Whois::Raw::Data::servers{'RIPE'});
                 next if ($newsrv eq $srv);
                 return undef if (grep {$_ eq $newsrv} @$ary);
                 return _whois($dom, $newsrv, $flag, [@$ary, $srv]);
@@ -277,11 +171,15 @@ Net::Whois::Raw - Perl extension for unparsed raw whois information
 
 =head1 SYNOPSIS
 
-  use Net::Whois::Raw;
+  use Net::Whois::Raw qw( whois );
   
   $s = whois('perl.com');
   $s = whois('funet.fi');
   $s = whois('yahoo.co.uk');
+
+	### if you do "use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL 
+	###              $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT );
+	### you can use these:
 
   $OMIT_MSG = 1; # This will attempt to strip several known copyright
 		messages and disclaimers sorted by servers.
@@ -341,7 +239,9 @@ Inspired by jwhois.pl available on the net.
 
 Since Ariel has passed away in September 2002:
 
-Current maintainer Gabor Szabo, B<gabor@perl.org.il>
+Past maintainers Gabor Szabo, B<gabor@perl.org.il>
+
+Current Maintainer: Corris Randall B<corris@cpan.org>
 
 =head1 CREDITS
 
@@ -371,6 +271,13 @@ Modified pattern matching, added cache. (Tony L. Svanstrom B<tony@svanstrom.org>
         using Test::More
         removing failing tests. Later I'll add more test.
 
+0.23 Tue Mar 25 09:23:37 PST 2003
+        - only exports &whois by default, the other variables are exportable still.
+        - incorporated new whois servers ( thanks Toni Mueller <support@oeko.net> )
+        - now tests the main tlds
+        - added some more regexen to strip out disclaimers and such ( for $OMIT_MSG > 2 ).
+        - moved %servers to %Net::Whois::Raw::Data::servers
+
 
 =head1 CLARIFICATION
 
@@ -389,6 +296,7 @@ B<die> on L<perlfunc> about exception handling in Perl.
 
 Copyright 2000-2002 Ariel Brosh.
 Copyright 2003-2003 Gabor Szabo.
+Copyright 2003-2003 Corris Randall.
 
 This package is free software. You may redistribute it or modify it under
 the same terms as Perl itself.

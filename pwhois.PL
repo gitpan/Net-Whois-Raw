@@ -1,7 +1,7 @@
 my $script = <<'END_OF_SCRIPT';
 ~startperl~ -w
 
-use Net::Whois::Raw;
+use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL $TIMEOUT $CACHE_DIR );
 use Getopt::Std;
 use strict;
 use vars qw($opt_s $opt_c $opt_S $opt_C $opt_t $opt_T $opt_h);

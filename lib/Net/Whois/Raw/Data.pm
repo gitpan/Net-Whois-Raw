@@ -294,3 +294,129 @@ use vars qw(%notfound %strip);
                               '^%'
                             ]
         );
+
+
+our %servers = qw(
+	COM whois.crsnic.net
+	NET whois.crsnic.net
+	EDU whois.educause.net
+	ORG whois.publicinterestregistry.net
+	ARPA whois.arin.net
+	RIPE whois.ripe.net
+	MIL whois.nic.mil
+	COOP whois.nic.coop
+	MUSEUM whois.museum
+	BIZ whois.neulevel.biz
+	INFO whois.afilias.net
+	NAME whois.nic.name
+	AD  whois.ripe.net
+	AL  whois.ripe.net
+	AM  whois.ripe.net
+	AS  whois.gdns.net
+	AT  whois.nic.at
+	AU  box2.aunic.net
+	AZ  whois.ripe.net
+	BA  whois.ripe.net
+	BE  aardvark.dns.be
+	BG  whois.ripe.net
+	BR  whois.nic.br
+	BY  whois.ripe.net
+	CA  eider.cira.ca
+	CC  whois.nic.cc
+	CH  domex.switch.ch
+	CK  whois.ck-nic.org.ck
+	CL  nic.cl
+	CN  log.cnnic.net.cn
+	CX  whois.nic.cx
+	CY  whois.ripe.net
+	CZ  dc1.eunet.cz
+	DE  whois.denic.de
+	DK  whois.dk-hostmaster.dk
+	DO  ns.nic.do
+	DZ  whois.ripe.net
+	EE  whois.ripe.net
+	EG  whois.ripe.net
+	ES  whois.ripe.net
+	FI  whois.ripe.net
+	FO  whois.ripe.net
+	FR  winter.nic.fr
+	GA  whois.ripe.net
+	GB  whois.ripe.net
+	GE  whois.ripe.net
+	GL  whois.ripe.net
+	GM  whois.ripe.net
+	GR  whois.ripe.net
+	GS  whois.adamsnames.tc
+	HK  whois.hkdnr.net.hk
+	HR  whois.ripe.net
+	HU  whois.nic.hu
+	ID  muara.idnic.net.id
+	IE  whois.domainregistry.ie
+	IL  whois.isoc.org.il
+	IN  whois.ncst.ernet.in
+	IS  horus.isnic.is
+	IT  whois.nic.it
+	JO  whois.ripe.net
+	JP  whois.nic.ad.jp
+	KG  whois.domain.kg
+	KH  whois.nic.net.kh
+	KR  whois.krnic.net
+	LA  whois.nic.la
+	LI  domex.switch.ch
+	LK  arisen.nic.lk
+	LT  ns.litnet.lt
+	LU  whois.dns.lu
+	LV  whois.ripe.net
+	MA  whois.ripe.net
+	MC  whois.ripe.net
+	MD  whois.ripe.net
+	MM  whois.nic.mm
+	MS  whois.adamsnames.tc
+	MT  whois.ripe.net
+	MX  whois.nic.mx
+	NL  gw.domain-registry.nl
+	NO  ask.norid.no
+	NU  whois.worldnames.net
+	NZ  akl-iis.domainz.net.nz
+	PL  nazgul.nask.waw.pl
+	PT  whois.ripe.net
+	RO  whois.rotld.ro
+	RU  whois.ripn.net
+	SE  ear.nic-se.se
+	SG  qs.nic.net.sg
+	SH  whois.nic.sh
+	SI  whois.arnes.si
+	SK  whois.ripe.net
+	SM  whois.ripe.net
+	ST  whois.nic.st
+	SU  whois.ripn.net
+	TC  whois.adamsnames.tc
+	TF  whois.adamsnames.tc
+	TH  whois.thnic.net
+	TJ  whois.nic.tj
+	TN  whois.ripe.net
+	TO  whois.tonic.to
+	TR  whois.ripe.net
+	TW  whois.twnic.net
+	UA  whois.net.ua
+	UK  whois.nic.uk
+	US  whois.isi.edu
+	VA  whois.ripe.net
+	VG  whois.adamsnames.tc
+	WS  whois.worldsite.ws
+	YU  whois.ripe.net
+	ZA  apies.frd.ac.za
+);
+
+# These do not seem to work
+#         CN  log.cnnic.net.cn
+#         DK  whois.dk-hostmaster.dk
+#         US  whois.isi.edu
+# These serve only several subdomains
+#         ZA  apies.frd.ac.za
+
+
+
+1;
+
+
