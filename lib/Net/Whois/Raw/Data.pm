@@ -1,7 +1,7 @@
 package Net::Whois::Raw::Data;
 
 use strict;
-use vars qw(%notfound %strip %servers);
+use vars qw(%notfound %strip %servers %exceed);
 
 %servers = qw(
     COM    whois.crsnic.net
@@ -206,6 +206,10 @@ use vars qw(%notfound %strip %servers);
     'whois.neulevel.biz' => '^Not found:',
     'whois.afilias.net' => '^NOT FOUND',
     'whois.dns.be' => '^Status:      FREE',
+);
+
+%exceed = (
+    'whois.ripn.net' => 'excessive querying of the WHOIS database',
 );
 
 %strip = (

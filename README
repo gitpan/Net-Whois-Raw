@@ -8,9 +8,10 @@ SYNOPSIS
       $s = whois('funet.fi');
       $s = whois('yahoo.co.uk');
 
-            ### if you do "use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL 
-            ###              $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT );
-            ### you can use these:
+      ### if you do "use Net::Whois::Raw qw(
+      #             $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED
+      #             $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT @SRC_IPS );
+      ### you can use these:
 
       $OMIT_MSG = 1; # This will attempt to strip several known copyright
                     messages and disclaimers sorted by servers.
@@ -27,6 +28,10 @@ SYNOPSIS
       $CHECK_FAIL = 2; # This will match against several more rules
                     if none are known for the specific server.
 
+      $CHECK_EXCEED = 1; # When this option is set, "die" will be called
+                    is connection rate to specific whois server have been
+                    exceeded
+
       $CACHE_DIR = "/var/spool/pwhois/"; # Whois information will be
                     cached in this directory. Default is no cache.
 
@@ -42,8 +47,7 @@ SYNOPSIS
       $TIMEOUT = 10; # Cancel the request if connection is not made within
                     a specific number of seconds.
 
-      Note: as of version 0.21, extra data will be loaded only if the
-      OMIT_MSG or CHECK_FAIL flags were used, in order to reduce memory usage.
+      @SRC_IPS = (11.22.33.44); # List of local IP addresses to
 
 DESCRIPTION
     Net::Whois::Raw queries NetworkSolutions and follows the Registrar:

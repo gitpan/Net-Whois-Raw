@@ -88,5 +88,8 @@ Revision history for Perl extension Net::Whois::Raw.
 0.41  Dec 17 2004	Luis Moreno <luis@cantv.net>
 	- fix caching when using a particular whois server in whois function
 
-0.42  Jan 11 2004	Sun Guonian <sun@cnnic.cn>
+0.42  Jan 11 2005	Sun Guonian <sun@cnnic.cn>
 	- update hostname of CN whois server
+
+0.43  Feb 04 2005	Walery Studennikov <despair@cpan.org>
+	- new options (exported variables): @SRC_IPS, $CHECK_EXCEED

@@ -1,11 +1,11 @@
 #!/usr/bin/perl -w
 
-use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL $TIMEOUT $CACHE_DIR );
+use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED $TIMEOUT $CACHE_DIR );
 use Getopt::Std;
 use strict;
-use vars qw($opt_s $opt_c $opt_S $opt_C $opt_t $opt_T $opt_h);
+use vars qw($opt_s $opt_c $opt_S $opt_C $opt_e $opt_t $opt_T $opt_h);
 
-getopts("scSCtT:h");
+getopts("scSCetT:h");
 
 if ($opt_h) {
 	print <<EOM;
@@ -15,6 +15,7 @@ The -s switch attempts to strip the copyright message or disclaimer.
 The -S switch will attempt some exra rules for it.
 The -c switch attempts to return an empty answer for failed searches.
 The -C switch will attempt some exra rules for it.
+The -e switch forces die if connection rate to server have been exceeded.
 The -T switch takes a parameter that is used for the timeout for
 connection attempts.
 The -t switch enables caching.
@@ -22,16 +23,16 @@ EOM
 	exit; 
 }
 
-
 $OMIT_MSG = $CHECK_FAIL = 0;
 
 $OMIT_MSG = 1 if $opt_s;
 $OMIT_MSG = 2 if $opt_S;
 $CHECK_FAIL = 1 if $opt_c;
 $CHECK_FAIL = 2 if $opt_C;
+$CHECK_EXCEED = 1 if $opt_e;
 $TIMEOUT = $opt_T;
-
 $CACHE_DIR = undef;
+
 if ($opt_t) {
     if ($^O =~ /Win/) {
         $CACHE_DIR = $ENV{'TEMP'} || "C:\\temp";

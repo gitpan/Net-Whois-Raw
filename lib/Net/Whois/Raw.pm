@@ -3,9 +3,11 @@ package Net::Whois::Raw;
 require Net::Whois::Raw::Data;
 
 use strict;
-use vars qw($VERSION @ISA @EXPORT @EXPORT_OK $OMIT_MSG $CHECK_FAIL
-	%notfound %strip $CACHE_DIR $CACHE_TIME $USE_CNAMES
-	$TIMEOUT);
+use vars qw(
+    $VERSION @ISA @EXPORT @EXPORT_OK $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED
+    %notfound %strip $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT
+    @SRC_IPS
+);
 use IO::Socket;
 
 require Exporter;
@@ -13,11 +15,12 @@ require Exporter;
 @ISA = qw(Exporter);
 
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
-@EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
+@EXPORT_OK = qw(
+    $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT @SRC_IPS );
 
-$VERSION = '0.42';
+$VERSION = '0.43';
 
-($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
+($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 7;
 
 sub whois {
     my ($dom, $srv) = @_;
@@ -32,7 +35,7 @@ sub whois {
 
 sub whois_config {
     my ($par) = @_;
-    my @parnames = qw(OMIT_MSG CHECK_FAIL CACHE_DIR CACHE_TIME USE_CNAMES TIMEOUT);
+    my @parnames = qw(OMIT_MSG CHECK_FAIL CACHE_DIR CACHE_TIME USE_CNAMES TIMEOUT @SRC_IPS);
     foreach my $parname (@parnames) {
 	if (exists($par->{$parname})) {
 	    eval('$'.$parname.'='.int($par->{$parname}));
@@ -110,9 +113,14 @@ sub do_whois {
 
 sub finish {
     my ($text, $srv) = @_;
-    return $text unless $CHECK_FAIL || $OMIT_MSG;
+    return $text unless $CHECK_FAIL || $OMIT_MSG || $CHECK_EXCEED;
 
     $srv = lc($srv);
+
+    my $exceed = $Net::Whois::Raw::Data::exceed{$srv};
+    if ($CHECK_EXCEED && $exceed && $text =~ /$exceed/s) {
+	die "Connection rate exceeded";
+    }
 
     *notfound = \%Net::Whois::Raw::Data::notfound;
     *strip = \%Net::Whois::Raw::Data::strip;
@@ -121,7 +129,9 @@ sub finish {
     my @strip = $strip{$srv} ? @{$strip{$srv}} : ();
     my @lines;
     MAIN: foreach (split(/\n/, $text)) {
-	return undef if $CHECK_FAIL && $notfound && /$notfound/;
+	if ($CHECK_FAIL && $notfound && /$notfound/) {
+	    return undef;
+	};
 	if ($OMIT_MSG) {
 	    foreach my $re (@strip) {
 		next MAIN if (/$re/);
@@ -129,6 +139,7 @@ sub finish {
 	}
 	push(@lines, $_);
     }
+
     local ($_) = join("\n", @lines, "");
 
     if ($CHECK_FAIL > 1) {
@@ -169,7 +180,13 @@ sub _whois {
     eval {
 	local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
 	alarm $TIMEOUT if $TIMEOUT;
-	$sock = new IO::Socket::INET("$srv:43") || die "$srv: $!";
+	if (scalar(@SRC_IPS)) {
+	    my $src_ip = $SRC_IPS[0];
+	    push @SRC_IPS, shift @SRC_IPS; # rotate ips
+	    $sock = new IO::Socket::INET(PeerAddr => "$srv:43", LocalAddr => $src_ip) || die "$srv: $!";
+	} else {
+	    $sock = new IO::Socket::INET("$srv:43") || die "$srv: $!";
+	}
     };
     alarm 0;
     die $@ if $@;
@@ -273,9 +290,10 @@ Net::Whois::Raw - Perl extension for unparsed raw whois information
   $s = whois('funet.fi');
   $s = whois('yahoo.co.uk');
 
-	### if you do "use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL 
-	###              $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT );
-	### you can use these:
+  ### if you do "use Net::Whois::Raw qw(
+  #		$OMIT_MSG $CHECK_FAIL $CHECK_EXCEED
+  #	    	$CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT @SRC_IPS );
+  ### you can use these:
 
   $OMIT_MSG = 1; # This will attempt to strip several known copyright
 		messages and disclaimers sorted by servers.
@@ -291,6 +309,10 @@ Net::Whois::Raw - Perl extension for unparsed raw whois information
 
   $CHECK_FAIL = 2; # This will match against several more rules
 		if none are known for the specific server.
+
+  $CHECK_EXCEED = 1; # When this option is set, "die" will be called
+		is connection rate to specific whois server have been
+		exceeded
 
   $CACHE_DIR = "/var/spool/pwhois/"; # Whois information will be
 		cached in this directory. Default is no cache.
@@ -308,8 +330,7 @@ Net::Whois::Raw - Perl extension for unparsed raw whois information
   $TIMEOUT = 10; # Cancel the request if connection is not made within
 		a specific number of seconds.
 
-  Note: as of version 0.21, extra data will be loaded only if the
-  OMIT_MSG or CHECK_FAIL flags were used, in order to reduce memory usage.
+  @SRC_IPS = (11.22.33.44); # List of local IP addresses to
 
 =head1 DESCRIPTION
 
