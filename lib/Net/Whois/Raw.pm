@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.28';
+$VERSION = '0.29';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -132,7 +132,9 @@ sub finish {
 	    /Not found:/s ||
 	    /No match\./s ||
 	    /is available/is ||
-	    /Not found/is && !/ your query returns "NOT FOUND"/ ||
+	    /Not found/is &&
+		!/ your query returns "NOT FOUND"/ &&
+		!/Domain not found locally/ ||
 	    /No match for/is ||
 	    /No Objects Found/s ||
 	    /No domain records were found/s ||
@@ -151,7 +153,7 @@ sub finish {
         s/NOTICE: Access to.+this policy.//is;
         s/The previous information.+completeness\.//s;
         s/NOTICE AND TERMS OF USE:.*modify these terms at any time\.//s;
-        s/TERMS OF USE:.*modify these terms at any time\.//s;
+        s/TERMS OF USE:.*?modify these terms at any time\.//s;
         s/NOTICE:.*expiration for this registration\.//s;
 
 	s/By submitting a WHOIS query.+?DOMAIN AVAILABILITY.\n?//s;
@@ -161,7 +163,7 @@ sub finish {
 	s/Whois Server Version \d+\.\d+.//is;
 	s/NeuStar,.+www.whois.us\.//is;
         s/\n?Domain names in the \.com, .+ detailed information.\n?//s;
-        s/\n?The Registry database .+?Registrars\.\n?//s;
+        s/\n?The Registry database .+?Registrars\.\n//s;
         s/\n?>>> Last update of .+? <<<\n?//;
         s/% .+?\n//gs;
     }
