@@ -61,5 +61,10 @@ Revision history for Perl extension Net::Whois::Raw.
 0.34  May 18 2004	Richard Poole <rp@guests.deus.net>
 	- new whois server in Data.pm - whois.centralnic.com
 
-0.35  Jun 21 2004	Walery Studennikov <despair@cpan.org>
+0.35  Jun 29 2004	Walery Studennikov <despair@cpan.org>
 	- fix of regexp pattern in check_existance
+
+0.36  Jul 22 2004	Richard Poole <rp@guests.deus.net>
+	- fix for Raw.pm that ensures that we do not get confused when
+	  looking up a domain which has many entries in the whois database
+	  (for WHOIS.CRSNIC.NET)

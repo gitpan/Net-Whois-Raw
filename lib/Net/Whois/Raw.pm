@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.34';
+$VERSION = '0.36';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -169,6 +169,9 @@ sub _whois {
     die $@ if $@;
     my $israce = $dom =~ /ra--/ || $dom =~ /bq--/;
     my $whoisquery = $dom;
+    if ($srv eq 'WHOIS.CRSNIC.NET') {
+        $whoisquery = "domain $whoisquery";
+    }
     if ($srv eq 'WHOIS.MELBOURNEIT.COM' && $israce) {
 	$whoisquery .= ' race';
     }
@@ -236,6 +239,7 @@ sub check_existance {
 	/No domain records were found/s ||
 	/No such domain/s ||
 	/No entries found in the /s ||
+	/Could not find a match for/s ||
 	/Unable to find any information for your query/s ||
 	/is not registered and may be available for registration/s;
     return 1;
