@@ -14,7 +14,7 @@ require Exporter;
 @EXPORT = qw(
 whois	
 );
-$VERSION = '0.12';
+$VERSION = '0.13';
 
 %servers = qw(COM whois.networksolutions.com
 	 NET whois.networksolutions.com
@@ -110,11 +110,13 @@ whois.crsnic.net will result in always two requests in any case.
 
 =head1 COPYRIGHT
 
-Module can be copied, distributed and used with no fee, as long as it is
-not modified. Repackaging the module for embedding in other software
-products is allowed, including distribution as a feature of a commercial
-package. Nevertheless, I guarantee no support whatsoever and grant totally
-no liability for this module.
+Copyright 2000-2001 Ariel Brosh.
+
+This package is free software. You may redistribute it or modify it under
+the same terms as Perl itself.
+
+I apologize for any misunderstandings caused by the lack of a clear
+licence in previous versions.
 
 =head1 COMMERCIAL SUPPORT
 
