@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.30';
+$VERSION = '0.31';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -126,22 +126,7 @@ sub finish {
     local ($_) = join("\n", @lines, "");
 
     if ($CHECK_FAIL > 1) {
-        return undef if
-	    /is unavailable/is ||
-	    /No entries found for the selected source/is ||
-	    /Not found:/s ||
-	    /No match\./s ||
-	    /is available/is ||
-	    /Not found/is &&
-		!/ your query returns "NOT FOUND"/ &&
-		!/Domain not found locally/ ||
-	    /No match for/is ||
-	    /No Objects Found/s ||
-	    /No domain records were found/s ||
-	    /No such domain/s ||
-	    /No entries found in the /s ||
-	    /Unable to find any information for your query/s ||
-	    /is not registered and may be available for registration/s;
+	return undef unless check_existance($_);
     }
 
     if ($OMIT_MSG > 1) {	
@@ -191,6 +176,7 @@ sub _whois {
     print $sock "$whoisquery\r\n";
     my @lines = <$sock>;
     close($sock);
+    my $answer = join '', @lines;
     if ($flag) {
         foreach (@lines) {
             $state ||= (/Registrar:/);
@@ -199,8 +185,8 @@ sub _whois {
                 next if (($newsrv) eq uc($srv));
                 return undef if (grep {$_ eq $newsrv} @$ary);
 		my $whois = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
-		if ($@ && !$whois) {
-		    return join '', @lines;
+		if ($@ && !$whois || $whois && !check_existance($whois)) {
+		    return $answer;
 		}
                 return $whois;
             }
@@ -210,7 +196,7 @@ sub _whois {
                 return undef if (grep {$_ eq $newsrv} @$ary);
                 my $whois = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
 		if ($@ && !$whois) {
-		    return join '', @lines;
+		    return $answer;
 		}
                 return $whois;
             }
@@ -231,6 +217,30 @@ sub dlen {
     my $dotcount = $str =~ tr/././;
     return length($str) * (1 + $dotcount);
 }
+
+
+sub check_existance {
+    $_ = $_[0];
+
+    return undef if
+	/is unavailable/is ||
+	/No entries found for the selected source/is ||
+	/Not found:/s ||
+	/No match\./s ||
+	/is available/is ||
+	/Not found/is &&
+	    !/ your query returns "NOT FOUND"/ &&
+	    !/Domain not found locally/ ||
+	/No match for/is ||
+	/No Objects Found/s ||
+	/No domain records were found/s ||
+	/No such domain/s ||
+	/No entries found in the /s ||
+	/Unable to find any information for your query/s ||
+	/is not registered and may be available for registration/s;
+    return 1;
+}
+
 
 # Preloaded methods go here.
 

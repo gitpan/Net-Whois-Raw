@@ -48,3 +48,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.30  Mar 15 2004	Walery Studennikov <despair@cpan.org>
 	- added strip rules for whois.dns.be
+
+0.31  Mar 19 2004	Walery Studennikov <despair@cpan.org>
+	- more robust recursive whois queries
