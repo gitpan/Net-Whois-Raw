@@ -14,7 +14,7 @@ require Exporter;
 @EXPORT = qw(
 whois	
 );
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 %servers = qw(COM whois.networksolutions.com
 	 NET whois.networksolutions.com

@@ -1,0 +1,9 @@
+Net::Whois::Raw returns raw unparsed whois information.
+It follows references to other registrars by Network Solutions, it uses
+the <tld>.whois-servers.net notion
+
+APOLOGY
+
+Versions 0.08 to 0.10 of Net::Whois::Raw were primarily failed upload
+attempts, as I don't have any personal UNIX box now.
+I know you need this module, and apologize for the inconvience
