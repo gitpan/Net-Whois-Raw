@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.36';
+$VERSION = '0.37';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -70,6 +70,7 @@ sub query {
 	$srv eq 'whois.crsnic.net' ||
 	$srv eq 'whois.publicinterestregistry.net' ||
 	$srv eq 'whois.nic.cc' ||
+	$srv eq 'whois.nic.tv' ||
 	$tld eq 'ARPA'
     );
     my $res = do_whois($dom, uc($srv), $flag, [], $tld);
@@ -182,9 +183,10 @@ sub _whois {
     my $answer = join '', @lines;
     if ($flag) {
         foreach (@lines) {
-            $state ||= (/Registrar:/);
+            $state ||= (/Registrar/);
             if ( $state && /Whois Server:\s*([A-Za-z0-9\-_\.]+)/ ) {
                 my $newsrv = uc("$1");
+		warn "recurse to $newsrv\n";
                 next if (($newsrv) eq uc($srv));
                 return undef if (grep {$_ eq $newsrv} @$ary);
 		my $whois = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };

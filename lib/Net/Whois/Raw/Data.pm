@@ -111,6 +111,7 @@ use vars qw(%notfound %strip %servers);
     TO  whois.tonic.to
     TR  whois.ripe.net
     TW  whois.twnic.net
+    TV  whois.nic.tv
     UA  whois.net.ua
     UK  whois.nic.uk
     US  whois.nic.us

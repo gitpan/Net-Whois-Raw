@@ -68,3 +68,6 @@ Revision history for Perl extension Net::Whois::Raw.
 	- fix for Raw.pm that ensures that we do not get confused when
 	  looking up a domain which has many entries in the whois database
 	  (for WHOIS.CRSNIC.NET)
+
+0.37  Aug 11 2004	Walery Studennikov <despair@cpan.org>
+	- fixed recursive whois requests for .tv domains
