@@ -7,3 +7,4 @@ t/01.t
 pwhois.PL
 README
 COPYRIGHT
+META.yml                                Module meta-data (added by MakeMaker)

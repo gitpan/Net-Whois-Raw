@@ -21,3 +21,10 @@ Revision history for Perl extension Net::Whois::Raw.
 	- more verbose error messages
 	- added support for third level domains
 	- some bugfixes
+
+0.25  Fri Nov 21 2003	Walery Studennikov <despair@cpan.org>
+	- fixed multilingual domains whois via whois.melbourneit.com server
+	- whois_config function for setting config variables
+	  (if setting imported variables $OMIT_MSG, $CHECK_FAIL etc.
+	  doesn't work for some reason, for example because of
+	  namespace problems in mod_perl scripts)

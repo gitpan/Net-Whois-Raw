@@ -7,13 +7,13 @@ use Test::More tests => 5;
 BEGIN { use_ok('Net::Whois::Raw',qw( whois )) };
 
 my @domains = qw( 
-
 	yahoo.com
 	freshmeat.net
 	freebsd.org
 	ucsb.edu
-
 );
+
+print "The following tests requires internet connection...\n";
 
 foreach my $domain ( @domains ) {
 	my $txt = whois( $domain );

@@ -12,10 +12,10 @@ require Exporter;
 
 @ISA = qw(Exporter);
 
-@EXPORT    = qw( whois ); ### It's bad manners to export lots.
+@EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.24';
+$VERSION = '0.25';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -25,9 +25,19 @@ sub whois {
     unless ($srv) {
         ($res, $srv) = query($dom);
     } else {
-        $res = _whois($dom ,uc($srv));
+        $res = _whois($dom, uc($srv));
     }
     finish($res, $srv);
+}
+
+sub whois_config {
+    my ($par) = @_;
+    my @parnames = qw(OMIT_MSG CHECK_FAIL CACHE_DIR CACHE_TIME USE_CNAMES TIMEOUT);
+    foreach my $parname (@parnames) {
+	if (exists($par->{$parname})) {
+	    eval('$'.$parname.'='.int($par->{$parname}));
+	}
+    }
 }
 
 sub query {
@@ -120,7 +130,6 @@ sub finish {
 	    /No entries found for the selected source/is ||
 	    /Not found:/s ||
 	    /No match\./s ||
-
 	    /is available/is ||
 	    /Not found/is && !/ your query returns "NOT FOUND"/ ||
 	    /No match for/is ||
@@ -170,7 +179,13 @@ sub _whois {
     };
     alarm 0;
     die $@ if $@;
-    print $sock "$dom\r\n";
+    my $israce = $dom =~ /ra--/ || $dom =~ /bq--/;
+    my $whoisquery = $dom;
+    if ($srv eq 'WHOIS.MELBOURNEIT.COM' && $israce) {
+	$whoisquery .= ' race';
+    }
+    #warn "$srv: $whoisquery ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT)\n";
+    print $sock "$whoisquery\r\n";
     my @lines = <$sock>;
     close($sock);
     if ($flag) {
@@ -296,9 +311,10 @@ Inspired by jwhois.pl available on the net.
 
 Since Ariel has passed away in September 2002:
 
-Past maintainers Gabor Szabo, B<gabor@perl.org.il>
+Past maintainers Gabor Szabo, B<gabor@perl.org.il>,
+Corris Randall B<corris@cpan.org>
 
-Current Maintainer: Corris Randall B<corris@cpan.org>
+Current Maintainer: Walery Studennikov B<despair@cpan.org>
 
 =head1 CREDITS
 
@@ -317,23 +333,7 @@ Modified pattern matching, added cache. (Tony L. Svanstrom B<tony@svanstrom.org>
 
 =head1 CHANGES
 
-0.22 2003.01.12
-     After Ariel Brosh, the original author has passed away this is the
-     first release by Gabor Szabo, the new maintainer.
-
-     It comes mainly to record the change in ownership.
-
-     Tests:
-        moving test.pl to t/01.t
-        using Test::More
-        removing failing tests. Later I'll add more test.
-
-0.23 Tue Mar 25 09:23:37 PST 2003
-        - only exports &whois by default, the other variables are exportable still.
-        - incorporated new whois servers ( thanks Toni Mueller <support@oeko.net> )
-        - now tests the main tlds
-        - added some more regexen to strip out disclaimers and such ( for $OMIT_MSG > 2 ).
-        - moved %servers to %Net::Whois::Raw::Data::servers
+See file "Changes" in the distribution
 
 
 =head1 CLARIFICATION
@@ -354,6 +354,7 @@ B<die> on L<perlfunc> about exception handling in Perl.
 Copyright 2000-2002 Ariel Brosh.
 Copyright 2003-2003 Gabor Szabo.
 Copyright 2003-2003 Corris Randall.
+Copyright 2003-2003 Walery Studennikov.
 
 This package is free software. You may redistribute it or modify it under
 the same terms as Perl itself.
