@@ -4,9 +4,9 @@ my $script = <<'END_OF_SCRIPT';
 use Net::Whois::Raw;
 use Getopt::Std;
 use strict;
-use vars qw($opt_s $opt_c $opt_S $opt_C $opt_t);
+use vars qw($opt_s $opt_c $opt_S $opt_C $opt_t $opt_T);
 
-getopts("scSCt");
+getopts("scSCtT:");
 
 $OMIT_MSG = $CHECK_FAIL = undef;
 
@@ -14,6 +14,8 @@ $OMIT_MSG = 1 if $opt_s;
 $OMIT_MSG = 2 if $opt_S;
 $CHECK_FAIL = 1 if $opt_c;
 $CHECK_FAIL = 2 if $opt_C;
+$TIMEOUT = $opt_T;
+
 $CACHE_DIR = undef;
 if ($opt_t) {
     if ($^O =~ /Win/) {
@@ -39,8 +41,15 @@ my $dom = $ARGV[0] || die "Usage: $0 domain";
 
 my $server = $ARGV[1];
 
-print whois($dom, $server);
-
+eval {
+	print whois($dom, $server);
+};
+if ($@) {
+	my $err = $@;
+	$err =~ s/\s+at \S+ line \d+\.$//;
+	print "\nWhois information could not be fetched:\n$err\n";
+	exit -1;
+}	
 
 __END__
 
@@ -55,6 +64,7 @@ pwhois gnu.org
 pwhois -s police.co.il
 pwhois -c there.is.no.tld.called.foobar
 pwhois yahoo.com whois.networksolutions.com
+pwhois -T 10 funet.fi
 
 etc etc.....
 
@@ -63,6 +73,8 @@ etc etc.....
 Just invoke with a domain name, optionally with a whois server name.
 The -s switch attempts to strip the copyright message or disclaimer.
 The -c switch attempts to return an empty answer for failed searches.
+The -T switch takes a parameter that is used for the timeout for
+connection attempts.
  
 =head1 AUTHOR
 

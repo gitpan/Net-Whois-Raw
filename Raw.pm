@@ -2,7 +2,8 @@ package Net::Whois::Raw;
 
 use strict;
 use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %servers $OMIT_MSG $CHECK_FAIL
-	%notfound %strip $CACHE_DIR $CACHE_TIME $USE_CNAMES);
+	%notfound %strip $CACHE_DIR $CACHE_TIME $USE_CNAMES
+	$TIMEOUT);
 use IO::Socket;
 
 require Exporter;
@@ -10,8 +11,8 @@ require Exporter;
 @ISA = qw(Exporter);
 
 @EXPORT = qw(whois $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME
-	$USE_CNAMES);
-$VERSION = '0.19';
+	$USE_CNAMES $TIMEOUT);
+$VERSION = '0.20';
 
 %servers = qw(COM whois.networksolutions.com
          NET whois.networksolutions.com
@@ -516,7 +517,14 @@ sub _whois {
     my ($dom, $srv, $flag, $ary, $tld) = @_;
     my $state;
 
-    my $sock = new IO::Socket::INET("$srv:43") || die $!;
+    my $sock;
+    eval {
+        local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
+        alarm $TIMEOUT if $TIMEOUT;
+        $sock = new IO::Socket::INET("$srv:43") || die $!;
+    };
+    alarm 0;
+    die $@ if $@;
     print $sock "$dom\r\n";
     my @lines = <$sock>;
     close($sock);
@@ -588,6 +596,10 @@ Net::Whois::Raw - Perl extension for unparsed raw whois information
 		name when possible. Default is to use the 
 		hardcoded defaults.
 
+
+  $TIMEOUT = 10; # Cancel the request if connection is not made within
+		a specific number of seconds.
+
 =head1 DESCRIPTION
 
 Net::Whois::Raw queries NetworkSolutions and follows the Registrar: answer
@@ -632,6 +644,12 @@ start by querying their server, as this way one whois query would be
 sufficient for many domains. Starting at whois.internic.net or
 whois.crsnic.net will result in always two requests in any case.
 
+=head1 NOTE
+
+Some users complained that the B<die> statements in the module make their
+CGI scripts crash. Please consult the entries on B<eval> and
+B<die> on L<perlfunc> about exception handling in Perl.
+
 =head1 COPYRIGHT
 
 Copyright 2000-2002 Ariel Brosh.
@@ -654,6 +672,6 @@ and not of the supporting company.
 
 =head1 SEE ALSO
 
-L<perl(1)>, L<Net::Whois>.
+L<perl(1)>, L<Net::Whois>, L<whois>.
 
 =cut
