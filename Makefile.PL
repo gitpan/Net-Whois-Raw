@@ -5,4 +5,5 @@ WriteMakefile(
     'NAME'	=> 'Net::Whois::Raw',
     'VERSION_FROM' => 'Raw.pm', # finds $VERSION
     'PREREQ_PM' => {'IO::Socket' => 1.0},
+    'EXE_FILES' => ['pwhois']
 );

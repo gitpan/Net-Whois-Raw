@@ -14,14 +14,15 @@ require Exporter;
 @EXPORT = qw(
 whois	
 );
-$VERSION = '0.05';
+$VERSION = '0.07';
 
 %servers = qw(COM whois.networksolutions.com
 	 NET whois.networksolutions.com
 	 EDU whois.networksolutions.com
 	 ORG whois.networksolutions.com
 	 ARPA whois.arin.net
-	 MIL whois.nic.mil);
+	 MIL whois.nic.mil
+	 TO whois.tonic.to);
 
 sub whois {
     my $dom = shift;
@@ -34,14 +35,17 @@ sub whois {
 
 sub _whois {
     my ($dom, $srv, $flag, $ary) = @_;
+    my $state;
+
     my $sock = new IO::Socket::INET("$srv:43") || die $!;
     print $sock "$dom\r\n";
     my @lines = <$sock>;
     close($sock);
     if ($flag) {
         foreach (@lines) {
-            if (/^\s*Registrar: ([A-Za-z0-9_\.]+)/) {
-                my $newsrv = uc("whois.$1");
+            $state ||= (/^\s*Registrar:/);
+            if ($state && /^\s*Whois Server: ([A-Za-z0-9\-_\.]+)/) {
+                my $newsrv = uc("$1");
                 next if ($newsrv eq $srv);
                 return undef if (grep {$_ eq $newsrv} @$ary);
                 return _whois($dom, $newsrv, $flag, [@$ary, $srv]);
@@ -83,6 +87,26 @@ For other TLDs it uses the whois-servers.net namespace.
 
 Ariel Brosh, B<schop@cpan.org>, Inspired by jwhois.pl available on the
 net.
+
+Peter Chow, B<peter@interq.or.jp>, Corrections. (See below)
+
+=head1 MODIFICATIONS
+
+=item
+
+Fixed regular expression to match hyphens. (Peter Chow,
+B<peter@interq.or.jp>)
+
+=item
+
+Added support for Tonga TLD. (.to) (Peter Chow, B<peter@interq.or.jp>)
+
+=head1 CLARIFICATION
+
+As NetworkSolutions got most of the domains of InterNic as legacy, we
+start by querying their server, as this way one whois query would be
+sufficient for many domains. Starting at whois.internic.net or
+whois.crsnic.net will result in always two requests in any case.
 
 =head1 SEE ALSO
 
