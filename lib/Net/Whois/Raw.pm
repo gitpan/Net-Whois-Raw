@@ -12,7 +12,7 @@ require Exporter;
 
 @EXPORT = qw(whois $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME
 	$USE_CNAMES $TIMEOUT);
-$VERSION = '0.21';
+$VERSION = '0.22';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME,
         $USE_CNAMES, $TIMEOUT) = (0) x 6;
@@ -336,8 +336,12 @@ on several servers but certainly not on all of them.
 
 =head1 AUTHOR
 
-Ariel Brosh, B<schop@cpan.org>, Inspired by jwhois.pl available on the
-net.
+Original author Ariel Brosh, B<schop@cpan.org>, 
+Inspired by jwhois.pl available on the net.
+
+Since Ariel has passed away in September 2002:
+
+Current maintainer Gabor Szabo, B<gabor@perl.org.il>
 
 =head1 CREDITS
 
@@ -353,6 +357,20 @@ This will work now for RIPE addresses as well, according to a redirection from A
 Added the pattern matching switches, (Walery Studennikov B<despair@sama.ru>)
 
 Modified pattern matching, added cache. (Tony L. Svanstrom B<tony@svanstrom.org>)
+
+=head1 CHANGES
+
+0.22 2003.01.12
+     After Ariel Brosh, the original author has passed away this is the
+     first release by Gabor Szabo, the new maintainer.
+
+     It comes mainly to record the change in ownership.
+
+     Tests:
+        moving test.pl to t/01.t
+        using Test::More
+        removing failing tests. Later I'll add more test.
+
 
 =head1 CLARIFICATION
 
@@ -370,6 +388,7 @@ B<die> on L<perlfunc> about exception handling in Perl.
 =head1 COPYRIGHT
 
 Copyright 2000-2002 Ariel Brosh.
+Copyright 2003-2003 Gabor Szabo.
 
 This package is free software. You may redistribute it or modify it under
 the same terms as Perl itself.

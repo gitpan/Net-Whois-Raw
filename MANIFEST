@@ -3,7 +3,7 @@ MANIFEST
 Makefile.PL
 lib/Net/Whois/Raw.pm
 lib/Net/Whois/Raw/Data.pm
-test.pl
+t/01.t
 pwhois.PL
 README
 COPYRIGHT
