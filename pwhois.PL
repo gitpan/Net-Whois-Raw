@@ -92,9 +92,9 @@ etc etc.....
 =head1 DESCRIPTION
 
 Just invoke with a domain name, optionally with a whois server name.
-The -s switch attempts to strip the copyright message or disclaimer.
-The -c switch attempts to return an empty answer for failed searches.
-The -T switch takes a parameter that is used for the timeout for
+The B<-s> switch attempts to strip the copyright message or disclaimer.
+The B<-c> switch attempts to return an empty answer for failed searches.
+The B<-T> switch takes a parameter that is used for the timeout for
 connection attempts.
  
 =head1 AUTHOR

@@ -35,3 +35,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.27  Feb 10 2004	Alex Kapranoff <alex@kapranoff.ru>
 	- patch to check availability of .info and .biz domains
+
+0.27  Feb 20 2004	Alex Kapranoff <alex@kapranoff.ru>
+	- fixed documentation for pwhois.PL
