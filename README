@@ -1,0 +1,3 @@
+Net::Whois::Raw returns raw unparsed whois information.
+It follows references to other registrars by Network Solutions, it uses
+the <tld>.whois-servers.net notion

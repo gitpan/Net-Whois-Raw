@@ -14,7 +14,7 @@ require Exporter;
 @EXPORT = qw(
 whois	
 );
-$VERSION = '0.01';
+$VERSION = '0.03';
 
 %servers = qw(COM whois.networksolutions.com
 	 NET whois.networksolutions.com
@@ -36,7 +36,7 @@ sub whois {
 sub _whois {
     my ($dom, $srv, $flag, $ary) = @_;
     my $sock = new IO::Socket::INET("$srv:43") || die $!;
-    print $sock "$dom\n";
+    print $sock "$dom\r\n";
     my @lines = <$sock>;
     close($sock);
     if ($flag) {
