@@ -205,6 +205,7 @@ use vars qw(%notfound %strip %servers);
     'whois.thnic.net' => 'No entries found',
     'whois.neulevel.biz' => '^Not found:',
     'whois.afilias.net' => '^NOT FOUND',
+    'whois.dns.be' => '^Status:      FREE',
 );
 
 %strip = (

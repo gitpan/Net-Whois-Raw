@@ -10,7 +10,7 @@ my @domains = qw(
 	yahoo.com
 	freshmeat.net
 	freebsd.org
-	ucsb.edu
+	webnames.ru
 );
 
 print "The following tests requires internet connection...\n";

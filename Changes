@@ -76,3 +76,11 @@ Revision history for Perl extension Net::Whois::Raw.
 	- fixed recursive whois requests for .ws domains
 	- strip patterns for whois.directnic.com
 	- fix strip mechanism in case of recusive whois requests
+
+0.39  Oct 29 2004	Walery Studennikov <despair@cpan.org>
+	- more fixes for Raw.pm that ensures that we do not get confused when
+	  looking up a domain which has many entries in the whois database
+	  (for WHOIS.CRSNIC.NET)
+
+0.40  Dec 09 2004	Walery Studennikov <despair@cpan.org>
+	- add fail pattern for whois.dns.be
