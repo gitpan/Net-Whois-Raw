@@ -45,5 +45,6 @@ if (!(open(FILE, ">$file"))  ||
     !(close(FILE))) {
     die "Error while writing $file: $!\n";
 }
+chmod 0755, $file;
 print "Extracted $file from ",__FILE__," with variable substitutions.\n";
 
