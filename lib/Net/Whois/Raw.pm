@@ -227,7 +227,7 @@ sub check_existance {
 	/No entries found for the selected source/is ||
 	/Not found:/s ||
 	/No match\./s ||
-	/is available/is ||
+	/is available for/is ||
 	/Not found/is &&
 	    !/ your query returns "NOT FOUND"/ &&
 	    !/Domain not found locally/ ||
