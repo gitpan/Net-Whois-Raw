@@ -508,6 +508,32 @@ use vars qw(%notfound %strip %servers);
     'whois.nic.at' => [
 	'^%',
     ],
+    'whois.directnic.com' => [
+	'^By submitting a WHOIS query',
+	'^lawful purposes\.  You also agree',
+	'^this data to:',
+	'^email, telephone,',
+	'^or solicitations to',
+	'^customers; or to \(b\) enable',
+	'^that send queries or data to',
+	'^ICANN-Accredited registrar\.',
+	'^The compilation, repackaging,',
+	'^data is expressly prohibited',
+	'^directNIC.com\.',
+	'^directNIC.com reserves the right',
+	'^database in its sole discretion,',
+	'^excessive querying of the database',
+	'^this policy\.',
+	'^directNIC reserves the right to',
+	'^NOTE: THE WHOIS DATABASE IS A',
+	'^LACK OF A DOMAIN RECORD DOES',
+	'^Intercosmos Media Group, Inc',
+	'^Registrar WHOIS database for',
+	'^may only be used to assist in',
+	'^registration record\.',
+	'^directNIC makes this information',
+	'^its accuracy\.',
+    ],
 );
 
 

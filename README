@@ -58,7 +58,7 @@ DESCRIPTION
     IMPORTANT: these checks merely use pattern matching; they will work on
     several servers but certainly not on all of them.
 
-    (This features were contributed by Walery Studennikov despair@sama.ru)
+    (This features were contributed by Walery Studennikov despair@cpan.org)
 
 AUTHOR
     Original author Ariel Brosh, schop@cpan.org, Inspired by jwhois.pl
@@ -85,7 +85,7 @@ CREDITS
     trev@digitalcon.ca)
 
     Added the pattern matching switches, (Walery Studennikov
-    despair@sama.ru)
+    despair@cpan.org)
 
     Modified pattern matching, added cache. (Tony L. Svanstrom
     tony@svanstrom.org)
@@ -106,7 +106,7 @@ NOTE
 
 COPYRIGHT
     Copyright 2000-2002 Ariel Brosh. Copyright 2003-2003 Gabor Szabo.
-    Copyright 2003-2003 Corris Randall. Copyright 2003-2003 Walery
+    Copyright 2003-2003 Corris Randall. Copyright 2003-2004 Walery
     Studennikov.
 
     This package is free software. You may redistribute it or modify it

@@ -15,7 +15,7 @@ require Exporter;
 @EXPORT    = qw( whois whois_config ); ### It's bad manners to export lots.
 @EXPORT_OK = qw( $OMIT_MSG $CHECK_FAIL $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT);
 
-$VERSION = '0.37';
+$VERSION = '0.38';
 
 ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 
@@ -25,9 +25,9 @@ sub whois {
     unless ($srv) {
         ($res, $srv) = query($dom);
     } else {
-        $res = _whois($dom, uc($srv));
+        ($res, $srv) = _whois($dom, uc($srv));
     }
-    finish($res, $srv);
+    return finish($res, $srv);
 }
 
 sub whois_config {
@@ -71,15 +71,17 @@ sub query {
 	$srv eq 'whois.publicinterestregistry.net' ||
 	$srv eq 'whois.nic.cc' ||
 	$srv eq 'whois.nic.tv' ||
+	$srv eq 'whois.worldsite.ws' ||
 	$tld eq 'ARPA'
     );
-    my $res = do_whois($dom, uc($srv), $flag, [], $tld);
+    my $res;
+    ($res, $srv) = do_whois($dom, uc($srv), $flag, [], $tld);
     wantarray ? ($res, $srv) : $res;
 }
 
 sub do_whois {
     my ($dom) = @_; # receives 4 parameters, do NOT shift
-    return _whois(@_) unless $CACHE_DIR;
+    return (_whois(@_)) unless $CACHE_DIR;
     mkdir $CACHE_DIR, 0644;
     if (-f "$CACHE_DIR/$dom") {
         if (open(I, "$CACHE_DIR/$dom")) {
@@ -88,7 +90,7 @@ sub do_whois {
             return $res;
         }
     }
-    my $res = _whois(@_);
+    my ($res) = _whois(@_);
     return $res unless $res;
     return $res unless open(O, ">$CACHE_DIR/$dom");
     print O $res;
@@ -109,11 +111,14 @@ sub do_whois {
 sub finish {
     my ($text, $srv) = @_;
     return $text unless $CHECK_FAIL || $OMIT_MSG;
+
+    $srv = lc($srv);
+
     *notfound = \%Net::Whois::Raw::Data::notfound;
     *strip = \%Net::Whois::Raw::Data::strip;
 
-    my $notfound = $notfound{lc($srv)};
-    my @strip = $strip{lc($srv)} ? @{$strip{lc($srv)}} : ();
+    my $notfound = $notfound{$srv};
+    my @strip = $strip{$srv} ? @{$strip{$srv}} : ();
     my @lines;
     MAIN: foreach (split(/\n/, $text)) {
         return undef if $CHECK_FAIL && $notfound && /$notfound/;
@@ -183,27 +188,27 @@ sub _whois {
     my $answer = join '', @lines;
     if ($flag) {
         foreach (@lines) {
-            $state ||= (/Registrar/);
+            $state ||= /Registrar/ || /Registered through/;
             if ( $state && /Whois Server:\s*([A-Za-z0-9\-_\.]+)/ ) {
-                my $newsrv = uc("$1");
-		warn "recurse to $newsrv\n";
+                my $newsrv = uc($1);
+		#warn "recurse to $newsrv\n";
                 next if (($newsrv) eq uc($srv));
                 return undef if (grep {$_ eq $newsrv} @$ary);
-		my $whois = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
+		my ($whois) = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
 		if ($@ && !$whois || $whois && !check_existance($whois)) {
-		    return $answer;
+		    return ($answer, $srv);
 		}
-                return $whois;
+                return ($whois, $newsrv);
             }
             if (/^\s+Maintainer:\s+RIPE\b/ && $tld eq 'ARPA') {
                 my $newsrv = uc($Net::Whois::Raw::Data::servers{'RIPE'});
                 next if ($newsrv eq $srv);
                 return undef if (grep {$_ eq $newsrv} @$ary);
-                my $whois = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
+                my ($whois) = eval { _whois($dom, $newsrv, $flag, [@$ary, $srv]) };
 		if ($@ && !$whois) {
-		    return $answer;
+		    return ($answer, $srv);
 		}
-                return $whois;
+                return ($whois, $newsrv);
             }
         }
     }
@@ -214,7 +219,7 @@ sub _whois {
         return _whois($dom, $newsrv, $flag, [@{$ary||[]}, $srv]);
     }
     
-    return $whois;
+    return ($whois, $srv);
 }
 
 sub dlen {
@@ -243,7 +248,7 @@ sub check_existance {
 	/No entries found in the /s ||
 	/Could not find a match for/s ||
 	/Unable to find any information for your query/s ||
-	/is not registered and may be available for registration/s;
+	/is not registered/s;
     return 1;
 }
 

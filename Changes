@@ -71,3 +71,8 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.37  Aug 11 2004	Walery Studennikov <despair@cpan.org>
 	- fixed recursive whois requests for .tv domains
+
+0.38  Sep 23 2004	Walery Studennikov <despair@cpan.org>
+	- fixed recursive whois requests for .ws domains
+	- strip patterns for whois.directnic.com
+	- fix strip mechanism in case of recusive whois requests
