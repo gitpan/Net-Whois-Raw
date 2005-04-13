@@ -27,7 +27,7 @@ use vars qw(%notfound %strip %servers %exceed);
     AM  whois.ripe.net
     AS  whois.gdns.net
     AT  whois.nic.at
-    AU  box2.aunic.net
+    AU  whois.ausregistry.net.au
     AZ  whois.ripe.net
     BA  whois.ripe.net
     BE  whois.dns.be

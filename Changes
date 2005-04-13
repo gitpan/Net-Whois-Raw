@@ -104,3 +104,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.92  Mar 28 2005	Walery Studennikov <despair@cpan.org>
 	- new fail check patterns
+
+0.93  Apr 13 2005	Walery Studennikov <despair@cpan.org>
+	- updated WHOIS server for AU zone
