@@ -107,3 +107,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.93  Apr 13 2005	Walery Studennikov <despair@cpan.org>
 	- updated WHOIS server for AU zone
+
+0.94  Apr 26 2005	Marc Jauvin <marc@r4l.com>
+	- TIMEOUT implementation fix

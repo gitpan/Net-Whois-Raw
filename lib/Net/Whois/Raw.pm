@@ -21,7 +21,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '0.93';
+$VERSION = '0.94';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -286,9 +286,10 @@ sub whois_query {
     my ($dom, $srv) = @_;
 
     my $sock;
+    my $prev_alarm=0;
     eval {
         local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
-        alarm $TIMEOUT if $TIMEOUT;
+        $prev_alarm = alarm $TIMEOUT if $TIMEOUT;
         if (scalar(@SRC_IPS)) {
             my $src_ip = $SRC_IPS[0];
             push @SRC_IPS, shift @SRC_IPS; # rotate ips
@@ -297,7 +298,7 @@ sub whois_query {
             $sock = new IO::Socket::INET("$srv:43") || die "$srv: $!";
         }
     };
-    alarm 0;
+    alarm $prev_alarm;
     die $@ if $@;
     my $israce = $dom =~ /ra--/ || $dom =~ /bq--/;
     my $whoisquery = $dom;
