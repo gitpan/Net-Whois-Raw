@@ -1,15 +1,16 @@
 #!/usr/bin/perl -w
 
-use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED $TIMEOUT $CACHE_DIR );
+use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED $TIMEOUT $CACHE_DIR @SRC_IPS );
 use Getopt::Std;
 use strict;
-use vars qw($opt_s $opt_c $opt_S $opt_C $opt_e $opt_t $opt_T $opt_h);
+use vars qw($opt_s $opt_c $opt_S $opt_C $opt_e $opt_t $opt_T $opt_a $opt_h);
 
-getopts("scSCetT:h");
+getopts("scSCetT:a:h");
 
 if ($opt_h) {
+USAGE:
 	print <<EOM;
-	$0 [ -s | -S ] [ -c | -C ] [ -t <timeout> ] [ -T] <domain> [ <server> ]
+Usage:	$0 [ -s | -S ] [ -c | -C ] [ -T <timeout> ] [ -a <src_ip> ] [ -t ] <domain> [ <server> ]
 
 The -s switch attempts to strip the copyright message or disclaimer.
 The -S switch will attempt some exra rules for it.
@@ -19,6 +20,8 @@ The -e switch forces die if connection rate to server have been exceeded.
 The -T switch takes a parameter that is used for the timeout for
 connection attempts.
 The -t switch enables caching.
+The -a switch takes a parameter: ip address that should be used as source
+address instead of a default one.
 EOM
 	exit; 
 }
@@ -32,6 +35,7 @@ $CHECK_FAIL = 2 if $opt_C;
 $CHECK_EXCEED = 1 if $opt_e;
 $TIMEOUT = $opt_T;
 $CACHE_DIR = undef;
+@SRC_IPS = ($opt_a) if $opt_a;
 
 if ($opt_t) {
     if ($^O =~ /Win/) {
@@ -53,7 +57,7 @@ if ($opt_t) {
     }
 }
 
-my $dom = $ARGV[0] || die "Usage: $0 domain";
+my $dom = $ARGV[0] || goto USAGE;
 
 my $server = $ARGV[1];
 
