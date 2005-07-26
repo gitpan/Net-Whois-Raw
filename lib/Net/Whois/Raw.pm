@@ -21,7 +21,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '0.95';
+$VERSION = '0.97';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -307,6 +307,9 @@ sub whois_query {
     }
     if ($srv eq 'whois.melbourneit.com' && $israce) {
         $whoisquery .= ' race';
+    }
+    if ($srv eq 'whois.denic.de') {
+        $whoisquery = "-T dn,ace -C ISO-8859-1 $whoisquery";
     }
     #warn "$srv: $whoisquery ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT)\n";
     print $sock "$whoisquery\r\n";

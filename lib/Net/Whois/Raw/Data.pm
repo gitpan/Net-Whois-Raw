@@ -356,6 +356,7 @@ use vars qw(%notfound %strip %servers %exceed);
     ],
     'whois.ripn.net' => [
 	'^%',
+	'Last updated on ',
     ],
     'whois.nic.uk' => [
 	'^The .* Registration Host contains information',
