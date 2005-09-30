@@ -21,7 +21,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '0.97';
+$VERSION = '0.98';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -454,7 +454,7 @@ Net::Whois::Raw - Get Whois information for domains
 =head1 DESCRIPTION
 
 Net::Whois::Raw queries WHOIS servers about domains.
-The module supportts recursive WHOIS queries.
+The module supports recursive WHOIS queries.
 
 Setting the variables $OMIT_MSG and $CHECK_FAIL will match the results
 against a set of known patterns. The first flag will try to omit the

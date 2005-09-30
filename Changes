@@ -119,3 +119,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 0.97  Jul 26 2005	Bernd Ahlers <b.ahlers@ba-net.org>
 	- update for DENIC whois server
+
+0.98  Sep 19 2005	Bernd Ahlers <b.ahlers@ba-net.org>
+	- small typo fixes
