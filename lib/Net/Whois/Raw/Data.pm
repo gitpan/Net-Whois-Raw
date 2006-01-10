@@ -74,6 +74,7 @@ use vars qw(%notfound %strip %servers %exceed);
     KG  whois.domain.kg
     KH  whois.nic.net.kh
     KR  whois.krnic.net
+    KZ  www.nic.kz
     LA  whois.nic.la
     LI  domex.switch.ch
     LK  arisen.nic.lk

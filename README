@@ -55,8 +55,8 @@ SYNOPSIS
                     successively in the successive queries
 
 DESCRIPTION
-    Net::Whois::Raw queries WHOIS servers about domains. The module
-    supports recursive WHOIS queries.
+    Net::Whois::Raw queries WHOIS servers about domains. The module supports
+    recursive WHOIS queries.
 
     Setting the variables $OMIT_MSG and $CHECK_FAIL will match the results
     against a set of known patterns. The first flag will try to omit the
