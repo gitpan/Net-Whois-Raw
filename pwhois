@@ -101,9 +101,11 @@ The B<-c> switch attempts to return an empty answer for failed searches.
 The B<-T> switch takes a parameter that is used for the timeout for
 connection attempts.
  
-=head1 AUTHOR
+=head1 AUTHORS
 
-Ariel Brosh, B<schop@cpan.org>
+Ariel Brosh B<schop@cpan.org>
+
+Current Maintainer: Walery Studennikov B<despair@cpan.org>
 
 =head1 SEE ALSO
 

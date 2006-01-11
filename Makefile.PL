@@ -18,7 +18,12 @@ MAKE
 WriteMakefile(
     'NAME'	=> 'Net::Whois::Raw',
     'VERSION_FROM' => 'lib/Net/Whois/Raw.pm', # finds $VERSION
-    'PREREQ_PM' => {'IO::Socket' => 1.0},
+    'PREREQ_PM' => {
+	'IO::Socket' => 1.0,
+	'URI::URL' => 0,
+	'LWP::UserAgent' => 0,
+	'HTTP::Request' => 0,
+    },
     'EXE_FILES' => ['pwhois'],
     'dist' => {'COMPRESS' => 'gzip --best --force'},
 );

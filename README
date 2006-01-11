@@ -56,7 +56,8 @@ SYNOPSIS
 
 DESCRIPTION
     Net::Whois::Raw queries WHOIS servers about domains. The module supports
-    recursive WHOIS queries.
+    recursive WHOIS queries. Also queries via HTTP is supported for some
+    TLDs.
 
     Setting the variables $OMIT_MSG and $CHECK_FAIL will match the results
     against a set of known patterns. The first flag will try to omit the
@@ -69,10 +70,11 @@ DESCRIPTION
 FUNCTIONS
     whois( DOMAIN [, SRV] )
        Returns Whois information for "DOMAIN". Without "SRV" argument
-       default Whois server for specified domain name zone will be used.
-       Caching is supported: if $CACHE_DIR variable is set and there is
-       cached entry for that domain - information from the cache will be
-       used.
+       default Whois server for specified domain name zone will be used. Use
+       'www_whois' as server name to force WHOIS querying via HTTP (only few
+       TLDs are supported in HTTP queries). Caching is supported: if
+       $CACHE_DIR variable is set and there is cached entry for that domain
+       - information from the cache will be used.
 
     get_whois( DOMAIN [, SRV [, WHICH_WHOIS]] )
        Lower-level function to query Whois information for "DOMAIN". Caching
@@ -97,18 +99,18 @@ FUNCTIONS
        used to make query.
 
 AUTHOR
-    Original author Ariel Brosh, schop@cpan.org, Inspired by jwhois.pl
+    Original author Ariel Brosh schop@cpan.org, Inspired by jwhois.pl
     available on the net.
 
     Since Ariel has passed away in September 2002:
 
-    Past maintainers Gabor Szabo, gabor@perl.org.il, Corris Randall
+    Past maintainers Gabor Szabo gabor@perl.org.il, Corris Randall
     corris@cpan.org
 
     Current Maintainer: Walery Studennikov despair@cpan.org
 
 CREDITS
-    Fixed regular expression to match hyphens. (Peter Chow,
+    Fixed regular expression to match hyphens. (Peter Chow
     peter@interq.or.jp)
 
     Added support for Tonga TLD. (.to) (Peter Chow, peter@interq.or.jp)
@@ -136,7 +138,7 @@ NOTE
 
 COPYRIGHT
     Copyright 2000-2002 Ariel Brosh. Copyright 2003-2003 Gabor Szabo.
-    Copyright 2003-2003 Corris Randall. Copyright 2003-2004 Walery
+    Copyright 2003-2003 Corris Randall. Copyright 2003-2006 Walery
     Studennikov.
 
     This package is free software. You may redistribute it or modify it

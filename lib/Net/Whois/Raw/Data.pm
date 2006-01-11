@@ -1,7 +1,12 @@
 package Net::Whois::Raw::Data;
 
 use strict;
-use vars qw(%notfound %strip %servers %exceed);
+use vars qw(%notfound %strip %servers %exceed @www_whois);
+
+@www_whois = qw(
+    IN
+    KZ
+);
 
 %servers = qw(
     COM    whois.crsnic.net
@@ -88,6 +93,7 @@ use vars qw(%notfound %strip %servers %exceed);
     MS  whois.adamsnames.tc
     MT  whois.ripe.net
     MX  whois.nic.mx
+    MU  whois.nic.mu
     NL  whois.domain-registry.nl
     NO  ask.norid.no
     NU  whois.worldnames.net
@@ -128,6 +134,7 @@ use vars qw(%notfound %strip %servers %exceed);
     XN--E1APQ	whois.i-dns.net
     XN--C1AVG	whois.i-dns.net
 
+    COM.RU	whois.ripn.net
     NET.RU	whois.ripn.net
     ORG.RU	whois.ripn.net
     PP.RU	whois.ripn.net

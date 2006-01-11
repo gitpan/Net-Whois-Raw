@@ -9,6 +9,7 @@ use vars qw(
     %notfound %strip $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT
     @SRC_IPS
 );
+
 use IO::Socket;
 
 require Exporter;
@@ -21,7 +22,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '0.99';
+$VERSION = '1.0';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -129,21 +130,30 @@ sub get_all_whois {
 
     $srv ||= get_srv( $dom );
 
+    if ($srv eq 'www_whois') {
+	my ($responce, $ishtml) = www_whois_query( $dom );
+	return $responce ? [ { text => $responce, srv => $srv } ] : $responce;
+    }
+
     $dom =~ s/.NS$//i;
 
     my @whois = recursive_whois($dom, $srv, [], $norecurse);
 
-    return process_whois_answers( \@whois );
+    return process_whois_answers( \@whois, $dom );
 }
 
 sub get_srv {
     my ($dom) = @_;
 
-    my $tld = get_dom_tld( $dom );
+    my $tld = uc get_dom_tld( $dom );
+
+    if (grep { $_ eq $tld } @Net::Whois::Raw::Data::www_whois) {
+	return 'www_whois';
+    }
 
     my $cname = "$tld.whois-servers.net";
 
-    my $srv = $Net::Whois::Raw::Data::servers{uc $tld} || $cname;
+    my $srv = $Net::Whois::Raw::Data::servers{$tld} || $cname;
     $srv = $cname if $USE_CNAMES && gethostbyname($cname);
 
     return $srv;
@@ -174,19 +184,29 @@ sub get_dom_tld {
     return $tld;
 }
 
+sub split_domname {
+    my ($dom) = @_;
+
+    my $tld = get_dom_tld( $dom );
+    $dom =~ /(.+?)\.$tld$/ or die "Can't match $tld in $dom";
+
+    my $name = $1;
+    return ($name, $tld);
+}
+
 sub is_ipaddr {
     $_[0] =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
 }
 
 sub process_whois_answers {
-    my ($raw_whois) = @_;
+    my ($raw_whois, $dom) = @_;
 
     my @processed_whois;
 
     my $level = 0;
     foreach my $whois_rec (@{$raw_whois}) {
        $whois_rec->{level} = $level;
-       my $text = process_whois( $whois_rec );
+       my $text = process_whois( $whois_rec, $dom );
        if ($text) {
            $whois_rec->{text} = $text;
            push @processed_whois, $whois_rec;
@@ -198,11 +218,19 @@ sub process_whois_answers {
 }
 
 sub process_whois {
-    my ($whois_rec) = @_;
+    my ($whois_rec, $dom) = @_;
 
     my $text = $whois_rec->{text};
     my $srv = lc $whois_rec->{srv};
     my $level = $whois_rec->{level} || 0;
+
+    my ($name, $tld) = split_domname( $dom );
+
+    if ($tld eq 'mu') {
+	if ($text =~ /.MU Domain Information\n(.+?\n)\n/s) {
+	    $text = $1;
+	}
+    }
 
     return $text unless $CHECK_FAIL || $OMIT_MSG || $CHECK_EXCEED;
     
@@ -321,6 +349,201 @@ sub whois_query {
     return \@lines;
 }
 
+sub www_whois_query {
+    my ($dom) = (lc shift);
+
+    my ($name, $tld) = split_domname( $dom );
+
+    my ($url, $curl, %form);
+
+    if ($tld eq 'tv') {
+        $url = "http://www.tv/cgi-bin/whois.cgi?domain=$name&tld=tv";
+    } elsif ($tld eq 'mu') {
+        $url = 'http://www.mu/cgi-bin/mu_whois.cgi';
+        $form{whois} = $name;
+    } elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
+        $url = "http://www.relcom.ru/Services/Whois/?fullName=$name.$tld";
+    } elsif ($tld eq 'ru' || $tld eq 'su') {
+        $url = "http://www.nic.ru/whois/?domain=$name.$tld";
+    } elsif ($tld eq 'ip') {
+        $url = "http://www.nic.ru/whois/?ip=$name";
+    } elsif ($tld eq 'in') {
+        $url = "http://www.registry.in/cgi-bin/whois.cgi?whois_query_field=$name";
+    } elsif ($tld eq 'cn') {
+        $url = "http://ewhois.cnnic.net.cn/whois?value=$name.$tld&entity=domain";
+    } elsif ($tld eq 'ws') {
+	$url = "http://worldsite.ws/utilities/lookup.dhtml?domain=$name&tld=$tld";
+    } elsif ($tld eq 'kz') {
+	$url = "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0";
+    } else {
+        return 0;
+    }
+
+    # load-on-demand
+    unless ($INC{'LWP/UserAgent.pm'}) {
+	require LWP::UserAgent;
+	require HTTP::Request;
+	require URI::URL;
+	import LWP::UserAgent;
+	import HTTP::Request;
+	import URI::URL;
+    }
+
+    my $method = scalar(keys %form) ? 'POST' : 'GET';
+
+    my $ua = new LWP::UserAgent( parse_head => 0 );
+    my $req = new HTTP::Request $method, $url;
+
+    if ($method eq 'POST') {
+        $curl = url("http:");
+        $req->content_type('application/x-www-form-urlencoded');
+        $curl->query_form( %form );
+        $req->content( $curl->equery );
+    }
+
+    my $resp = eval {
+        local $SIG{ALRM} = sub { die "www_whois connection timeout" };
+        alarm 10;
+        $ua->request($req)->content;
+    };
+    alarm 0;
+    return undef if !$resp || $@ || $resp =~ /www_whois connection timeout/;
+
+    chomp $resp;
+    $resp =~ s/\r//g;
+
+    my $ishtml;
+
+    if ($tld eq 'tv') {
+
+        return 0 unless
+        $resp =~ /(<TABLE BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="95%">.+?<\/TABLE>)/is;
+        $resp = $1;
+        $resp =~ s/<BR><BR>.+?The data in The.+?any time.+?<BR><BR>//is;
+        return 0 if $resp =~ /Whois information is not available for domain/s;
+        $ishtml = 1;
+
+    } elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
+
+        $resp = koi2win( $resp );
+        return undef unless $resp =~ m|<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2"><TR><TD BGCOLOR="#990000"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="20"><TR><TD BGCOLOR="white">(.+?)</TD></TR></TABLE></TD></TR></TABLE>|s;
+        $resp = $1;
+
+        return 0 if $resp =~ m/СВОБОДНО/;
+
+        if ($resp =~ m|<PRE>(.+?)</PRE>|s) {
+            $resp = $1;
+        } elsif ($resp =~ m|DNS \(name-серверах\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE><H3>Дополнительную информацию можно получить по адресу:</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
+            my $nameservers = $1;
+            my $emails = $2;
+            my (@nameservers, @emails);
+            while ($nameservers =~ m|<CODE CLASS="h2black">(.+?)</CODE>|g) {
+                push @nameservers, $1;
+            }
+            while ($emails =~ m|<CODE CLASS="h2black"><A HREF=".+?">(.+?)</A></CODE>|g) {
+                push @emails, $1;
+            }
+            if (scalar @nameservers && scalar @emails) {
+                $resp = '';
+                foreach my $ns (@nameservers) {
+                    $resp .= "nserver:      $ns\n";
+                }
+                foreach my $email (@emails) {
+                    $resp .= "e-mail:       $email\n";
+                }
+            }
+        }
+
+    } elsif ($tld eq 'mu') {
+
+        return 0 unless
+        $resp =~ /(<p><b>Domain Name:<\/b><br>.+?)<hr width="75%">/s;
+        $resp = $1;
+        $ishtml = 1;
+
+    } elsif ($tld eq 'ru' || $tld eq 'su') {
+
+        my $m1='<script>.*?</script>';
+        my $m2='</td></tr></table>';
+        my $m3='Доменное имя .*? не зарегистрировано';
+        my $m4='Информация о домене .+? \(по данным WHOIS.RIPN.NET\):';
+        my $m5='Error:';
+        $resp=koi2win($resp);
+        (undef,$resp)=split($m1,$resp);
+        ($resp)=split($m2,$resp);
+        $resp=~ s/&nbsp;/ /gi;
+        $resp=~ s/<([^>]|\n)*>//gi;
+
+        return 0 if ($resp=~ m/$m3/i);
+        $resp='ERROR' if ($resp=~ m/$m5/i);
+        $resp='ERROR' if ($resp!~ m/$m4/i);
+
+    } elsif ($tld eq 'ip') {
+
+        unless ($resp =~ m|<p ID="whois">(.+?)</p>|s) {
+            return 0;
+        }
+
+        $resp = $1;
+        
+        $resp =~ s|<a.+?>||g;
+        $resp =~ s|</a>||g;
+        $resp =~ s|<br>||g;
+        $resp =~ s|&nbsp;| |g;
+
+    } elsif ($tld eq 'in') {
+
+        if ($resp =~ /Domain ID:\w{3,10}-\w{4}\n(.+?)\n\n/s) {
+            $resp = $1;
+            $resp =~ s/<br>//g;
+        } else {
+            return 0;
+        }
+
+    } elsif ($tld eq 'cn') {
+
+        if ($resp =~ m|<table border=1 cellspacing=0 cellpadding=2>\n\n(.+?)\n</table>|s) {
+            $resp = $1;
+            $resp =~ s|<a.+?>||isg;
+            $resp =~ s|</a>||isg;
+            $resp =~ s|<font.+?>||isg;
+            $resp =~ s|</font>||isg;
+            $resp =~ s|<tr><td class="t_blue">.+?</td><td class="t_blue">||isg;
+            $resp =~ s|</td></tr>||isg;
+            $resp =~ s|\n\s+|\n|sg;
+            $resp =~ s|\n\n|\n|sg;
+        } else {
+            return 0;
+        }
+
+    } elsif ($tld eq 'ws') {
+
+	if ($resp =~ /Whois information for .+?:(.+?)<table>/s) {
+	    $resp = $1;
+            $resp =~ s|<font.+?>||isg;
+            $resp =~ s|</font>||isg;
+
+            $ishtml = 1;
+	} else {
+	    return 0;
+	}
+
+    } elsif ($tld eq 'kz') {
+    
+	if ($resp =~ /Domain Name\.{10}/s && $resp =~ /<pre>(.+?)<\/pre>/s) {
+	    $resp = $1;
+	} else {
+	    return 0;
+	}
+
+    } else {
+        return 'ERROR';
+    }
+
+    return wantarray ? ($resp, $ishtml) : $resp;
+}
+
+
 sub dlen {
     my ($str) = @_;
     my $dotcount = $str =~ tr/././;
@@ -390,7 +613,6 @@ sub strip_whois {
 
 1;
 __END__
-# Below is the stub of documentation for your module. You better edit it!
 
 =head1 NAME
 
@@ -455,6 +677,7 @@ Net::Whois::Raw - Get Whois information for domains
 
 Net::Whois::Raw queries WHOIS servers about domains.
 The module supports recursive WHOIS queries.
+Also queries via HTTP is supported for some TLDs.
 
 Setting the variables $OMIT_MSG and $CHECK_FAIL will match the results
 against a set of known patterns. The first flag will try to omit the
@@ -472,7 +695,8 @@ on several servers but certainly not on all of them.
 
 Returns Whois information for C<DOMAIN>.
 Without C<SRV> argument default Whois server for specified domain name
-zone will be used.
+zone will be used. Use 'www_whois' as server name to force
+WHOIS querying via HTTP (only few TLDs are supported in HTTP queries).
 Caching is supported: if $CACHE_DIR variable is set and there is cached
 entry for that domain - information from the cache will be used.
 
@@ -509,20 +733,19 @@ C<'QRY_ALL'> -
 
 =head1 AUTHOR
 
-Original author Ariel Brosh, B<schop@cpan.org>, 
+Original author Ariel Brosh B<schop@cpan.org>, 
 Inspired by jwhois.pl available on the net.
 
 Since Ariel has passed away in September 2002:
 
-Past maintainers Gabor Szabo, B<gabor@perl.org.il>,
+Past maintainers Gabor Szabo B<gabor@perl.org.il>,
 Corris Randall B<corris@cpan.org>
 
 Current Maintainer: Walery Studennikov B<despair@cpan.org>
 
 =head1 CREDITS
 
-Fixed regular expression to match hyphens. (Peter Chow,
-B<peter@interq.or.jp>)
+Fixed regular expression to match hyphens. (Peter Chow B<peter@interq.or.jp>)
 
 Added support for Tonga TLD. (.to) (Peter Chow, B<peter@interq.or.jp>)
 
@@ -549,7 +772,7 @@ B<die> on L<perlfunc> about exception handling in Perl.
 Copyright 2000-2002 Ariel Brosh.
 Copyright 2003-2003 Gabor Szabo.
 Copyright 2003-2003 Corris Randall.
-Copyright 2003-2004 Walery Studennikov.
+Copyright 2003-2006 Walery Studennikov.
 
 This package is free software. You may redistribute it or modify it under
 the same terms as Perl itself.
@@ -570,6 +793,6 @@ module) is forbidden by the registrars.
 
 =head1 SEE ALSO
 
-L<perl(1)>, L<Net::Whois>, L<whois>.
+L<pwhois>, L<whois>.
 
 =cut
