@@ -126,8 +126,11 @@ Revision history for Perl extension Net::Whois::Raw.
 0.99  Jan 10 2006	Walery Studennikov <despair@cpan.org>
 	- added whois server for .KZ
 
-1.00  Jan 11 2006	Walery Studennikov <despair@cpan.org>
-	- new major release: added obtaining WHOIS results via HTTP:
-	  now .IN and .KZ domains are queried via HTTP by default.
-	  To force querying other domain via HTTP you should provide
-	  server name 'www_whois'
+1.0.0	Jan 11 2006	Walery Studennikov <despair@cpan.org>
+	  - new major release: added obtaining WHOIS results via HTTP:
+	    now .IN and .KZ domains are queried via HTTP by default.
+	    To force querying other domain via HTTP you should provide
+	    server name 'www_whois'
+
+1.0.1	Jan 13 2006	Danil Krivopustov <KrivopustovDA@regtime.net>
+	  - fixed obtaining WHOIS of IP addresses (split_domname function)

@@ -22,7 +22,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '1.0';
+$VERSION = '1.0.1';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -188,9 +188,15 @@ sub split_domname {
     my ($dom) = @_;
 
     my $tld = get_dom_tld( $dom );
-    $dom =~ /(.+?)\.$tld$/ or die "Can't match $tld in $dom";
 
-    my $name = $1;
+    my $name;
+    if (uc$tld eq 'IP') {
+	$name = $dom;
+    } else {
+	$dom =~ /(.+?)\.$tld$/ or die "Can't match $tld in $dom";
+	$name = $1;
+    }
+
     return ($name, $tld);
 }
 

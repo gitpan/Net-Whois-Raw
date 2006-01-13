@@ -157,5 +157,5 @@ LEGAL
     module) is forbidden by the registrars.
 
 SEE ALSO
-    perl(1), Net::Whois, whois.
+    pwhois, whois.
 
