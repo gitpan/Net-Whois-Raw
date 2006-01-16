@@ -1,7 +1,7 @@
 package Net::Whois::Raw::Data;
 
 use strict;
-use vars qw(%notfound %strip %servers %exceed @www_whois);
+use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 
 @www_whois = qw(
     IN
@@ -25,7 +25,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois);
     GOV    whois.nic.gov
     AERO   whois.information.aero
     NS     whois.internic.net
-    IP     whois.ripe.net
+    IP     whois.arin.net
 
     AD  whois.ripe.net
     AL  whois.ripe.net
@@ -156,6 +156,14 @@ use vars qw(%notfound %strip %servers %exceed @www_whois);
 #         US  whois.isi.edu
 # These serve only several subdomains
 #         ZA  apies.frd.ac.za
+
+%ip_whois_servers = qw(
+    RIPE	whois.ripe.net
+    APNIC	whois.apnic.net
+    KRNIC	whois.krnic.net
+    LACNIC	whois.lacnic.net
+    ARIN	whois.arin.net
+);
 
 
 %notfound = (

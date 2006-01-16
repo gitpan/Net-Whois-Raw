@@ -3,14 +3,14 @@
 use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED $TIMEOUT $CACHE_DIR @SRC_IPS );
 use Getopt::Std;
 use strict;
-use vars qw($opt_s $opt_c $opt_S $opt_C $opt_e $opt_t $opt_T $opt_a $opt_h);
+use vars qw($opt_s $opt_c $opt_S $opt_C $opt_d $opt_e $opt_t $opt_T $opt_a $opt_h);
 
-getopts("scSCetT:a:h");
+getopts("scSCetdT:a:h");
 
 if ($opt_h) {
 USAGE:
 	print <<EOM;
-Usage:	$0 [ -s | -S ] [ -c | -C ] [ -T <timeout> ] [ -a <src_ip> ] [ -t ] <domain> [ <server> ]
+Usage:	$0 [ -s | -S ] [ -c | -C ] [ -d ] [ -T <timeout> ] [ -a <src_ip> ] [ -t ] <domain> [ <server> ]
 
 The -s switch attempts to strip the copyright message or disclaimer.
 The -S switch will attempt some exra rules for it.
@@ -22,6 +22,7 @@ connection attempts.
 The -t switch enables caching.
 The -a switch takes a parameter: ip address that should be used as source
 address instead of a default one.
+The -d switch enables debugging messages.
 EOM
 	exit; 
 }
@@ -36,6 +37,8 @@ $CHECK_EXCEED = 1 if $opt_e;
 $TIMEOUT = $opt_T;
 $CACHE_DIR = undef;
 @SRC_IPS = ($opt_a) if $opt_a;
+
+$Net::Whois::Raw::DEBUG = 1 if $opt_d;
 
 if ($opt_t) {
     if ($^O =~ /Win/) {

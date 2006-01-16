@@ -134,3 +134,9 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.0.1	Jan 13 2006	Danil Krivopustov <KrivopustovDA@regtime.net>
 	  - fixed obtaining WHOIS of IP addresses (split_domname function)
+
+1.1.0	Jan 16 2006	Walery Studennikov <despair@cpan.org>
+	  - improved obtaining WHOIS of IP addresses.
+	    Patterns for recursive WHOIS queries were borrowed
+	    from Net::Whois::IP. Many thanks to Net::Whois::IP author
+	    Ben Schmitz <ben@foink.com>

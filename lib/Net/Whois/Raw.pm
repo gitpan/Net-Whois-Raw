@@ -22,7 +22,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '1.0.1';
+$VERSION = '1.1.0';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -284,7 +284,7 @@ sub recursive_whois {
     my ($dom, $srv, $was_srv, $norecurse) = @_;
 
     my $lines = whois_query( $dom, $srv );
-    my $whois = $_ = join("", @{$lines});
+    my $whois = join("", @{$lines});
 
     my ($newsrv, $registrar);
     foreach (@{$lines}) {
@@ -292,11 +292,23 @@ sub recursive_whois {
 
     	if ( $registrar && !$norecurse && /Whois Server:\s*([A-Za-z0-9\-_\.]+)/ ) {
             $newsrv = lc $1;
-    	} elsif (/^\s+Maintainer:\s+RIPE\b/ && is_ipaddr($dom)) {
-            $newsrv = lc $Net::Whois::Raw::Data::servers{'RIPE'};
     	} elsif ($whois =~ /To single out one record, look it up with \"xxx\",/s) {
             return recursive_whois( "=$dom", $srv, $was_srv );
-        }
+	} elsif (/ReferralServer: whois:\/\/([-.\w]+)/) {
+	    warn "SEX!!!!\n";
+	    $newsrv = $1;
+	    last;
+	} elsif (/Contact information can be found in the (\S+)\s+database/) {
+	    $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $1 };
+    	} elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && is_ipaddr($dom)) {
+	    my $val = $1;	
+	    if($val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/) {
+		$newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $val };
+		last;
+	    }
+    	} elsif (/^\s+Maintainer:\s+RIPE\b/ && is_ipaddr($dom)) {
+            $newsrv = $Net::Whois::Raw::Data::servers{RIPE};
+	}
     }
 
     my @whois_recs = ( { text => $whois, srv => $srv } );
@@ -751,17 +763,7 @@ Current Maintainer: Walery Studennikov B<despair@cpan.org>
 
 =head1 CREDITS
 
-Fixed regular expression to match hyphens. (Peter Chow B<peter@interq.or.jp>)
-
-Added support for Tonga TLD. (.to) (Peter Chow, B<peter@interq.or.jp>)
-
-Added support for reverse lookup of IP addresses via the ARIN registry. (Alex Withers B<awithers@gonzaga.edu>)
-
-This will work now for RIPE addresses as well, according to a redirection from ARIN. (Philip Hands B<phil@uk.alcove.com>, Trevor Peirce B<trev@digitalcon.ca>)
-
-Added the pattern matching switches, (Walery Studennikov B<despair@cpan.org>)
-
-Modified pattern matching, added cache. (Tony L. Svanstrom B<tony@svanstrom.org>)
+See file "Changes" in the distribution for the complete list of contributors.
 
 =head1 CHANGES
 
