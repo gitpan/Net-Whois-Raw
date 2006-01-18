@@ -110,23 +110,8 @@ AUTHOR
     Current Maintainer: Walery Studennikov despair@cpan.org
 
 CREDITS
-    Fixed regular expression to match hyphens. (Peter Chow
-    peter@interq.or.jp)
-
-    Added support for Tonga TLD. (.to) (Peter Chow, peter@interq.or.jp)
-
-    Added support for reverse lookup of IP addresses via the ARIN registry.
-    (Alex Withers awithers@gonzaga.edu)
-
-    This will work now for RIPE addresses as well, according to a
-    redirection from ARIN. (Philip Hands phil@uk.alcove.com, Trevor Peirce
-    trev@digitalcon.ca)
-
-    Added the pattern matching switches, (Walery Studennikov
-    despair@cpan.org)
-
-    Modified pattern matching, added cache. (Tony L. Svanstrom
-    tony@svanstrom.org)
+    See file "Changes" in the distribution for the complete list of
+    contributors.
 
 CHANGES
     See file "Changes" in the distribution

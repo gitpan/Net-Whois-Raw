@@ -22,7 +22,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '1.1.0';
+$VERSION = '1.1.1';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -628,6 +628,13 @@ sub strip_whois {
     $_;
 }
 
+# charset / conversion functions
+
+sub koi2win($) {
+    my $val = $_[0];
+    $val =~ tr/бвчздецъйклмнопртуфхжигюыэшщяьасБВЧЗДЕЦЪЙКЛМНОПРТУФХЖИГЮЫЭЯЩШЬАСіЈ/А-яЁё/;
+    return $val;
+}
 
 1;
 __END__

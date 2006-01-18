@@ -140,3 +140,6 @@ Revision history for Perl extension Net::Whois::Raw.
 	    Patterns for recursive WHOIS queries were borrowed
 	    from Net::Whois::IP. Many thanks to Net::Whois::IP author
 	    Ben Schmitz <ben@foink.com>
+
+1.1.1	Jan 18 2006	Walery Studennikov <despair@cpan.org>
+	  - fix WHOIS-over-HTTP: added missing function koi2win,
