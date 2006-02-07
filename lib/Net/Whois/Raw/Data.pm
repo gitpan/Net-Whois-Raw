@@ -6,6 +6,8 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 @www_whois = qw(
     IN
     KZ
+    SPB.RU
+    MSK.RU
 );
 
 %servers = qw(
@@ -128,11 +130,11 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     YU  whois.ripe.net
     ZA  apies.frd.ac.za
 
-    XN--P1AG	ru.whois.i-dns.net
-    XN--P1AG	ru.whois.i-dns.net
-    XN--J1AEF	whois.i-dns.net
-    XN--E1APQ	whois.i-dns.net
-    XN--C1AVG	whois.i-dns.net
+    XN---P1AG	ru.whois.i-dns.net
+    XN---P1AG	ru.whois.i-dns.net
+    XN---J1AEF	whois.i-dns.net
+    XN---E1APQ	whois.i-dns.net
+    XN---C1AVG	whois.i-dns.net
 
     COM.RU	whois.ripn.net
     NET.RU	whois.ripn.net

@@ -143,3 +143,10 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.1.1	Jan 18 2006	Walery Studennikov <despair@cpan.org>
 	  - fix WHOIS-over-HTTP: added missing function koi2win,
+
+1.1.2	Jan 18 2006	Walery Studennikov <despair@cpan.org>
+	  - switch .spb.ru and .msk.ru to HTTP
+
+1.02	Feb 04 2006	Walery Studennikov <despair@cpan.org>
+	  - change version numbering scheme
+	  - change pynycode names of IDN names

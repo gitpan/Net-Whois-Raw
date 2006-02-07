@@ -22,7 +22,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '1.1.1';
+$VERSION = '1.02';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -146,6 +146,7 @@ sub get_srv {
     my ($dom) = @_;
 
     my $tld = uc get_dom_tld( $dom );
+    $tld =~ s/^XN--(\w)/XN---$1/;
 
     if (grep { $_ eq $tld } @Net::Whois::Raw::Data::www_whois) {
 	return 'www_whois';
