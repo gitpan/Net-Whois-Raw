@@ -41,7 +41,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     BG  whois.ripe.net
     BR  whois.nic.br
     BY  whois.ripe.net
-    CA  eider.cira.ca
+    CA  whois.cira.ca
     CC  whois.nic.cc
     CH  domex.switch.ch
     CK  whois.ck-nic.org.ck
@@ -192,7 +192,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.rotld.ro' => 'No entries found',
     'whois.nic.st' => '^No entries found',
     'whois.isoc.org.il' => 'No data was found',
-    'eider.cira.ca' => 'Status:\\s*UNAV',
+    'whois.cira.ca' => 'Status:\\s*UNAV',
     'whois.nic.tj' => '^No match for',
     'aardvark.dns.be' => 'No such domain',
     'nazgul.nask.waw.pl' => '^Domain name .* does not exists',

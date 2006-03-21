@@ -150,3 +150,6 @@ Revision history for Perl extension Net::Whois::Raw.
 1.02	Feb 04 2006	Walery Studennikov <despair@cpan.org>
 	  - change version numbering scheme
 	  - change pynycode names of IDN names
+
+1.03	Mar 21 2006	David Parry <dparry@vanguardintegration.com>
+	  - change whois server name for .CA
