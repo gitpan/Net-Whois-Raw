@@ -57,6 +57,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     EE  whois.ripe.net
     EG  whois.ripe.net
     ES  whois.ripe.net
+    EU  whois.eu
     FI  whois.ripe.net
     FO  whois.ripe.net
     FR  winter.nic.fr
@@ -224,6 +225,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.neulevel.biz' => '^Not found:',
     'whois.afilias.net' => '^NOT FOUND',
     'whois.dns.be' => '^Status:      FREE',
+    'whois.eu' => '^Status:      FREE',
 );
 
 %strip = (
@@ -518,6 +520,9 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^%',
     ],
     'whois.dns.be' => [
+	'^%-',
+    ],
+    'whois.eu' => [
 	'^%-',
     ],
     'whois.nic.tj' => [

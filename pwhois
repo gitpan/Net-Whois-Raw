@@ -3,26 +3,30 @@
 use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED $TIMEOUT $CACHE_DIR @SRC_IPS );
 use Getopt::Std;
 use strict;
-use vars qw($opt_s $opt_c $opt_S $opt_C $opt_d $opt_e $opt_t $opt_T $opt_a $opt_h);
+use vars qw(
+    $opt_s $opt_c $opt_S $opt_C $opt_d $opt_e $opt_t $opt_T $opt_a $opt_h $opt_F $opt_L $opt_A
+);
 
-getopts("scSCetdT:a:h");
+getopts("scSCetdFLAT:a:h");
 
 if ($opt_h) {
 USAGE:
 	print <<EOM;
-Usage:	$0 [ -s | -S ] [ -c | -C ] [ -d ] [ -T <timeout> ] [ -a <src_ip> ] [ -t ] <domain> [ <server> ]
+Usage:	$0 [ -s | -S ] [ -c | -C ] [ -d ] [ -T <timeout> ] [ -a <src_ip> ] [ -t ] [ -F | -L | -A ] <domain> [ <server> ]
 
-The -s switch attempts to strip the copyright message or disclaimer.
-The -S switch will attempt some exra rules for it.
-The -c switch attempts to return an empty answer for failed searches.
-The -C switch will attempt some exra rules for it.
-The -e switch forces die if connection rate to server have been exceeded.
-The -T switch takes a parameter that is used for the timeout for
-connection attempts.
-The -t switch enables caching.
-The -a switch takes a parameter: ip address that should be used as source
-address instead of a default one.
-The -d switch enables debugging messages.
+Switches:
+-s	attempt to strip the copyright message or disclaimer.
+-S	some exra rules for above
+-c	attempts to return an empty answer for failed searches.
+-C	some exra rules for above
+-e	forces die if connection rate to server have been exceeded.
+-T	set timeout for connection attempts
+-t	enables caching.
+-a	specify an ip address that should be used as source address
+-d	enables debugging messages.
+-F	returns results of the first query of recursive whois requests
+-L	returns results of the last query of recursive whois requests (the default)
+-A	returns results of the last query of recursive whois requests
 EOM
 	exit; 
 }
@@ -46,6 +50,7 @@ if ($opt_t) {
     } else {
         $CACHE_DIR = $ENV{'TEMP'} || "/tmp";
         my @ent = getpwuid($>);
+	# clear cache
         if (@ent) {
             foreach ("/tmp/$ent[0]", "$ent[7]/.pwhois") {
                 mkdir $_, 0644;
@@ -65,7 +70,14 @@ my $dom = $ARGV[0] || goto USAGE;
 my $server = $ARGV[1];
 
 eval {
-	my $result = whois($dom, $server);
+	my $result;
+	if ($opt_F || $opt_L || $opt_A) {
+	    my $which_whois = $opt_F ? 'QRY_FIRST' : $opt_L ? 'QRY_LAST' : 'QRY_ALL';
+	    $result = Net::Whois::Raw::get_whois($dom, $server, $which_whois);
+	} else {
+	    $result = Net::Whois::Raw::whois($dom, $server);
+	}
+	
 	if ($result) {
 		print $result;
 	} else {
@@ -99,10 +111,19 @@ etc etc.....
 =head1 DESCRIPTION
 
 Just invoke with a domain name, optionally with a whois server name.
-The B<-s> switch attempts to strip the copyright message or disclaimer.
-The B<-c> switch attempts to return an empty answer for failed searches.
-The B<-T> switch takes a parameter that is used for the timeout for
-connection attempts.
+Switches:
+    B<-s> attempt to strip the copyright message or disclaimer.
+    B<-S> some exra rules for above
+    B<-c> attempts to return an empty answer for failed searches.
+    B<-C> some exra rules for above
+    B<-e> forces die if connection rate to server have been exceeded.
+    B<-T> set timeout for connection attempts
+    B<-t> enables caching.
+    B<-a> specify an ip address that should be used as source address
+    B<-d> enables debugging messages.
+    B<-F> returns results of the first query of recursive whois requests
+    B<-L> returns results of the last query of recursive whois requests (the default)
+    B<-A> returns results of the last query of recursive whois requests
  
 =head1 AUTHORS
 
@@ -113,4 +134,3 @@ Current Maintainer: Walery Studennikov B<despair@cpan.org>
 =head1 SEE ALSO
 
 L<Net::Whois::Raw>.
-
