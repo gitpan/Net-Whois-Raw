@@ -159,6 +159,3 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.05	Apr 03 2006	Walery Studennikov <despair@cpan.org>
 	  - added new options to pwhois script
-
-1.06	Apr 03 2006	Walery Studennikov <despair@cpan.org>
-	  - fix manual page for pwhois script
