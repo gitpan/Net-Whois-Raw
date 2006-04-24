@@ -78,7 +78,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     IS  horus.isnic.is
     IT  whois.nic.it
     JO  whois.ripe.net
-    JP  whois.nic.ad.jp
+    JP  whois.jprs.jp
     KG  whois.domain.kg
     KH  whois.nic.net.kh
     KR  whois.krnic.net
@@ -200,7 +200,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.ncst.ernet.in' => '^No matches',
     'whois.krnic.net' => 'Above domain name is not registered',
     'whois.museum' => '^No information for',
-    'whois.net.ua' => 'No entries found',
+    'whois.net.ua' => 'No entries found for domain',
     'apies.frd.ac.za' => 'No information is available',
     'gw.domain-registry.nl' => 'invalid query',
     'whois.denic.de' => 'No entries found',
