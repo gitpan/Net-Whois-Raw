@@ -43,7 +43,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     BY  whois.ripe.net
     CA  whois.cira.ca
     CC  whois.nic.cc
-    CH  domex.switch.ch
+    CH  whois.nic.ch
     CK  whois.ck-nic.org.ck
     CL  nic.cl
     CN  whois.cnnic.net.cn
@@ -84,7 +84,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     KR  whois.krnic.net
     KZ  www.nic.kz
     LA  whois.nic.la
-    LI  domex.switch.ch
+    LI  whois.nic.ch
     LK  arisen.nic.lk
     LT  ns.litnet.lt
     LU  whois.dns.lu

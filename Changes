@@ -127,41 +127,44 @@ Revision history for Perl extension Net::Whois::Raw.
 	- added whois server for .KZ
 
 1.0.0	Jan 11 2006	Walery Studennikov <despair@cpan.org>
-	  - new major release: added obtaining WHOIS results via HTTP:
-	    now .IN and .KZ domains are queried via HTTP by default.
-	    To force querying other domain via HTTP you should provide
-	    server name 'www_whois'
+	- new major release: added obtaining WHOIS results via HTTP:
+	  now .IN and .KZ domains are queried via HTTP by default.
+	  To force querying other domain via HTTP you should provide
+	  server name 'www_whois'
 
 1.0.1	Jan 13 2006	Danil Krivopustov <KrivopustovDA@regtime.net>
-	  - fixed obtaining WHOIS of IP addresses (split_domname function)
+	- fixed obtaining WHOIS of IP addresses (split_domname function)
 
 1.1.0	Jan 16 2006	Walery Studennikov <despair@cpan.org>
-	  - improved obtaining WHOIS of IP addresses.
-	    Patterns for recursive WHOIS queries were borrowed
-	    from Net::Whois::IP. Many thanks to Net::Whois::IP author
-	    Ben Schmitz <ben@foink.com>
+	- improved obtaining WHOIS of IP addresses.
+	  Patterns for recursive WHOIS queries were borrowed
+	  from Net::Whois::IP. Many thanks to Net::Whois::IP author
+	  Ben Schmitz <ben@foink.com>
 
 1.1.1	Jan 18 2006	Walery Studennikov <despair@cpan.org>
-	  - fix WHOIS-over-HTTP: added missing function koi2win,
+	- fix WHOIS-over-HTTP: added missing function koi2win,
 
 1.1.2	Jan 18 2006	Walery Studennikov <despair@cpan.org>
-	  - switch .spb.ru and .msk.ru to HTTP
+	- switch .spb.ru and .msk.ru to HTTP
 
 1.02	Feb 04 2006	Walery Studennikov <despair@cpan.org>
-	  - change version numbering scheme
-	  - change pynycode names of IDN names
+	- change version numbering scheme
+	- change pynycode names of IDN names
 
 1.03	Mar 21 2006	David Parry <dparry@vanguardintegration.com>
-	  - change whois server name for .CA
+	- change whois server name for .CA
 
 1.04	Mar 22 2006	Bram <bram_net_whois@perl.wizbit.be>
-	  - added whois.eu server
+	- added whois.eu server
 
 1.05	Apr 03 2006	Walery Studennikov <despair@cpan.org>
-	  - added new options to pwhois script
+	- added new options to pwhois script
 
 1.06	Apr 03 2006	Walery Studennikov <despair@cpan.org>
-	  - fix manual page for pwhois script
+	- fix manual page for pwhois script
 
-1.07	Apr 12 2006	Martin Lee <mlee at messagelabs dot com>
-	  - replaced .JP whois server address
+1.07	Apr 12 2006	Martin Lee
+	- replaced .JP whois server address
+
+1.08	Oct 26 2006	Reto Grossenbacher
+	- changed WHOIS servers for .CH and .LI domains
