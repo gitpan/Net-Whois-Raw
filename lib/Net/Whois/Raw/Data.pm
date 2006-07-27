@@ -177,7 +177,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.nic.sh' => '^No match for',
     'whois.nic.mx' => '^Nombre del Dominio:',
     'whois.domainregistry.ie' => 'There was no match',
-    'domex.switch.ch' => '^We do not have an entry in our database matching your',
+    'whois.nic.ch' => '^We do not have an entry in our database matching your',
     'whois.dns.lu' => 'No entries found',
     'whois.worldsite.ws' => 'No match for',
     'whois.nic.it' => '^No entries found',
@@ -340,7 +340,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^ The .COOP Registration',
 	'^ Please use the',
     ],
-    'domex.switch.ch' => [
+    'whois.nic.ch' => [
 	'^whois: This information is subject',
 	'^See http',
     ],
