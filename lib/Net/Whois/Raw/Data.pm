@@ -581,6 +581,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 
 %exceed = (
     'whois.ripn.net' => 'excessive querying of the WHOIS database',
+    'whois.nic.uk' => 'has been exceeded and will be replenished',
 );
 
 1;

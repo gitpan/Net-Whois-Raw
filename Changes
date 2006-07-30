@@ -171,3 +171,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.09	Oct 27 2006	Reto Grossenbacher
 	- fixed strip patterns for yesterday's changes
+
+1.10	Oct 30 2006	K. J. Cheetham
+	- addons to %Net::Whois::Raw::Data::exceed hash
