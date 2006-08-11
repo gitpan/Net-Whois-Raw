@@ -226,6 +226,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.afilias.net' => '^NOT FOUND',
     'whois.dns.be' => '^Status:      FREE',
     'whois.eu' => '^Status:      FREE',
+    'whois.melbourneit.com' => '^Invalid/Unsupported whois name check',
 );
 
 %strip = (

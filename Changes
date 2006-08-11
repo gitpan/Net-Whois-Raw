@@ -174,3 +174,7 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.10	Oct 30 2006	K. J. Cheetham
 	- addons to %Net::Whois::Raw::Data::exceed hash
+
+1.11	Aug 10 2006	
+	- changed whois server for .aero (Danil Krivopustov)
+	- added fail check for whois.melbourneit.com (Yulia Shtyrjakova)
