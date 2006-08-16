@@ -13,7 +13,7 @@ Revision history for Perl extension Net::Whois::Raw.
 	- added some more regexen to strip out disclaimers and such ( for $OMIT_MSG > 2 ).
 	- moved %servers to %Net::Whois::Raw::Data::servers
 
-0.24  Nov 18 2003	Walery Studennikov <despair@cpan.org>
+0.24  Nov 18 2003	Walery Studennikov
 	- fixed whois server for .org domains and add new whois servers
 	  for multilingual domains
 	- fixed recursive whois requests for .org domains
@@ -22,99 +22,99 @@ Revision history for Perl extension Net::Whois::Raw.
 	- added support for third level domains
 	- some bugfixes
 
-0.25  Nov 21 2003	Walery Studennikov <despair@cpan.org>
+0.25  Nov 21 2003	Walery Studennikov
 	- fixed multilingual domains whois via whois.melbourneit.com server
 	- whois_config function for setting config variables
 	  (if setting imported variables $OMIT_MSG, $CHECK_FAIL etc.
 	  doesn't work for some reason, for example because of
 	  namespace problems in mod_perl scripts)
 
-0.26  Jan 09 2004	Walery Studennikov <despair@cpan.org>
+0.26  Jan 09 2004	Walery Studennikov
 	- added recursive whois requests for .cc domains
 	- fixed recursive whois requests for whois.crsnic.net
 
-0.27  Feb 10 2004	Alex Kapranoff <alex@kapranoff.ru>
+0.27  Feb 10 2004	Alex Kapranoff
 	- patch to check availability of .info and .biz domains
 
-0.28  Feb 20 2004	Alex Kapranoff <alex@kapranoff.ru>
+0.28  Feb 20 2004	Alex Kapranoff
 	- fixed documentation for pwhois.PL
 
-0.29  Feb 24 2004	Walery Studennikov <despair@cpan.org>
+0.29  Feb 24 2004	Walery Studennikov
 	- fixed extra rules which strips the copyright message or disclaimer
 	- removed pwhois.PL. "pwhois" is shipped now instead.
 	- data structures in Net/Whois/Raw/Data.pm reformatted
 	- new strip patterns for whois.crsnic.net
 
 
-0.30  Mar 15 2004	Walery Studennikov <despair@cpan.org>
+0.30  Mar 15 2004	Walery Studennikov
 	- added strip rules for whois.dns.be
 
-0.31  Mar 19 2004	Walery Studennikov <despair@cpan.org>
+0.31  Mar 19 2004	Walery Studennikov
 	- more robust recursive whois queries
 
-0.32  Apr 07 2004	IVAN <IVAN@cpan.org>
+0.32  Apr 07 2004	IVAN
 	- small fix allows the module to work under 5.005
 
-0.33  Apr 21 2004	Walery Studennikov <despair@cpan.org>
+0.33  Apr 21 2004	Walery Studennikov
 	- new whois server in Data.pm - whois.regtime.net
 
-0.34  May 18 2004	Richard Poole <rp@guests.deus.net>
+0.34  May 18 2004	Richard Poole
 	- new whois server in Data.pm - whois.centralnic.com
 
-0.35  Jun 29 2004	Walery Studennikov <despair@cpan.org>
+0.35  Jun 29 2004	Walery Studennikov
 	- fix of regexp pattern in check_existance
 
-0.36  Jul 22 2004	Richard Poole <rp@guests.deus.net>
+0.36  Jul 22 2004	Richard Poole
 	- fix for Raw.pm that ensures that we do not get confused when
 	  looking up a domain which has many entries in the whois database
 	  (for WHOIS.CRSNIC.NET)
 
-0.37  Aug 11 2004	Walery Studennikov <despair@cpan.org>
+0.37  Aug 11 2004	Walery Studennikov
 	- fixed recursive whois requests for .tv domains
 
-0.38  Sep 23 2004	Walery Studennikov <despair@cpan.org>
+0.38  Sep 23 2004	Walery Studennikov
 	- fixed recursive whois requests for .ws domains
 	- strip patterns for whois.directnic.com
 	- fix strip mechanism in case of recusive whois requests
 
-0.39  Oct 29 2004	Walery Studennikov <despair@cpan.org>
+0.39  Oct 29 2004	Walery Studennikov
 	- more fixes for Raw.pm that ensures that we do not get confused when
 	  looking up a domain which has many entries in the whois database
 	  (for WHOIS.CRSNIC.NET)
 
-0.40  Dec 09 2004	Walery Studennikov <despair@cpan.org>
+0.40  Dec 09 2004	Walery Studennikov
 	- add fail pattern for whois.dns.be
 
-0.41  Dec 17 2004	Luis Moreno <luis@cantv.net>
+0.41  Dec 17 2004	Luis Moreno
 	- fix caching when using a particular whois server in whois function
 
-0.42  Jan 11 2005	Sun Guonian <sun@cnnic.cn>
+0.42  Jan 11 2005	Sun Guonian
 	- update hostname of CN whois server
 
-0.43  Feb 04 2005	Walery Studennikov <despair@cpan.org>
+0.43  Feb 04 2005	Walery Studennikov
 	- new options (exported variables): @SRC_IPS, $CHECK_EXCEED
 
-0.90  Mar 03 2005	Walery Studennikov <despair@cpan.org>
+0.90  Mar 03 2005	Walery Studennikov
 	- total rewrite / restructuring of module
 	- new exported function: get_whois
 
-0.91  Mar 04 2005	Walery Studennikov <despair@cpan.org>
+0.91  Mar 04 2005	Walery Studennikov
 	- fixed bug (introduced in v0.90) that caused fault of DNS server whois queries
 	- new test for DNS servers whois
 
-0.92  Mar 28 2005	Walery Studennikov <despair@cpan.org>
+0.92  Mar 28 2005	Walery Studennikov
 	- new fail check patterns
 
-0.93  Apr 13 2005	Walery Studennikov <despair@cpan.org>
+0.93  Apr 13 2005	Walery Studennikov
 	- updated WHOIS server for AU zone
 
-0.94  Apr 26 2005	Marc Jauvin <marc@r4l.com>
+0.94  Apr 26 2005	Marc Jauvin
 	- TIMEOUT implementation fix
 
-0.95  May 16 2005	Walery Studennikov <despair@cpan.org>
+0.95  May 16 2005	Walery Studennikov
 	- new parameter "-a" (source ip address) in pwhois script
 
-0.96  Jun 28 2005	Walery Studennikov <despair@cpan.org>
+0.96  Jun 28 2005	Walery Studennikov
 	- ???
 
 0.97  Jul 26 2005	Bernd Ahlers <b.ahlers@ba-net.org>
@@ -123,10 +123,10 @@ Revision history for Perl extension Net::Whois::Raw.
 0.98  Sep 19 2005	Bernd Ahlers <b.ahlers@ba-net.org>
 	- small typo fixes
 
-0.99  Jan 10 2006	Walery Studennikov <despair@cpan.org>
+0.99  Jan 10 2006	Walery Studennikov
 	- added whois server for .KZ
 
-1.0.0	Jan 11 2006	Walery Studennikov <despair@cpan.org>
+1.0.0	Jan 11 2006	Walery Studennikov
 	- new major release: added obtaining WHOIS results via HTTP:
 	  now .IN and .KZ domains are queried via HTTP by default.
 	  To force querying other domain via HTTP you should provide
@@ -135,32 +135,31 @@ Revision history for Perl extension Net::Whois::Raw.
 1.0.1	Jan 13 2006	Danil Krivopustov <KrivopustovDA@regtime.net>
 	- fixed obtaining WHOIS of IP addresses (split_domname function)
 
-1.1.0	Jan 16 2006	Walery Studennikov <despair@cpan.org>
+1.1.0	Jan 16 2006	Walery Studennikov
 	- improved obtaining WHOIS of IP addresses.
 	  Patterns for recursive WHOIS queries were borrowed
-	  from Net::Whois::IP. Many thanks to Net::Whois::IP author
-	  Ben Schmitz <ben@foink.com>
+	  from Net::Whois::IP. Many thanks to Net::Whois::IP author Ben Schmitz
 
-1.1.1	Jan 18 2006	Walery Studennikov <despair@cpan.org>
+1.1.1	Jan 18 2006	Walery Studennikov
 	- fix WHOIS-over-HTTP: added missing function koi2win,
 
-1.1.2	Jan 18 2006	Walery Studennikov <despair@cpan.org>
+1.1.2	Jan 18 2006	Walery Studennikov
 	- switch .spb.ru and .msk.ru to HTTP
 
-1.02	Feb 04 2006	Walery Studennikov <despair@cpan.org>
+1.02	Feb 04 2006	Walery Studennikov
 	- change version numbering scheme
 	- change pynycode names of IDN names
 
-1.03	Mar 21 2006	David Parry <dparry@vanguardintegration.com>
+1.03	Mar 21 2006	David Parry
 	- change whois server name for .CA
 
-1.04	Mar 22 2006	Bram <bram_net_whois@perl.wizbit.be>
+1.04	Mar 22 2006	Bram
 	- added whois.eu server
 
-1.05	Apr 03 2006	Walery Studennikov <despair@cpan.org>
+1.05	Apr 03 2006	Walery Studennikov
 	- added new options to pwhois script
 
-1.06	Apr 03 2006	Walery Studennikov <despair@cpan.org>
+1.06	Apr 03 2006	Walery Studennikov
 	- fix manual page for pwhois script
 
 1.07	Apr 12 2006	Martin Lee
@@ -178,3 +177,6 @@ Revision history for Perl extension Net::Whois::Raw.
 1.11	Aug 10 2006	
 	- changed whois server for .aero (Danil Krivopustov)
 	- added fail check for whois.melbourneit.com (Yulia Shtyrjakova)
+
+1.12	Aug 16 2006	Roman Filippov
+	- changed whois server for .gs

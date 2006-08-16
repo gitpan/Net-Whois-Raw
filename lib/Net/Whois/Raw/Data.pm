@@ -67,7 +67,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     GL  whois.ripe.net
     GM  whois.ripe.net
     GR  whois.ripe.net
-    GS  whois.adamsnames.tc
+    GS  whois.nic.gs
     HK  whois.hkdnr.net.hk
     HR  whois.ripe.net
     HU  whois.nic.hu
