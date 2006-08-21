@@ -180,3 +180,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.12	Aug 16 2006	Roman Filippov
 	- changed whois server for .gs
+
+1.13	Aug 20 2006	Doug Barton
+	- Addons + restyling of Net::Whois::Raw::Data 

@@ -11,125 +11,118 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 );
 
 %servers = qw(
-    COM    whois.crsnic.net
-    NET    whois.crsnic.net
-    EDU    whois.educause.net
-    ORG    whois.publicinterestregistry.net
-    ARPA   whois.arin.net
-    RIPE   whois.ripe.net
-    MIL    whois.nic.mil
-    COOP   whois.nic.coop
-    MUSEUM whois.museum
-
-    BIZ    whois.neulevel.biz
-    INFO   whois.afilias.net
-    NAME   whois.nic.name
-    GOV    whois.nic.gov
-    AERO   whois.information.aero
     NS     whois.internic.net
+    RIPE   whois.ripe.net
     IP     whois.arin.net
 
-    AD  whois.ripe.net
-    AL  whois.ripe.net
-    AM  whois.ripe.net
-    AS  whois.gdns.net
+    AERO   whois.aero
+    ARPA   whois.arin.net
+    BIZ    whois.biz
+    CAT    whois.cat
+    COM    whois.crsnic.net
+    COOP   whois.nic.coop
+    EDU    whois.educause.edu
+    GOV    whois.dotgov.gov
+    INFO   whois.afilias.net
+    INT    whois.iana.org
+    MIL    whois.nic.mil
+    MOBI   whois.dotmobiregistry.net
+    MUSEUM whois.museum
+    NAME   whois.nic.name
+    NET    whois.crsnic.net
+    ORG    whois.pir.org
+    PRO    whois.registrypro.pro
+
+    AC  whois.nic.ac
+    AG  whois.nic.ag
+    AM  whois.amnic.net
     AT  whois.nic.at
-    AU  whois.ausregistry.net.au
-    AZ  whois.ripe.net
-    BA  whois.ripe.net
+    AU  whois.aunic.net
     BE  whois.dns.be
-    BG  whois.ripe.net
-    BR  whois.nic.br
-    BY  whois.ripe.net
+    BG  whois.register.bg
+    BJ  whois.nic.bj
+    BR  whois.registro.br
     CA  whois.cira.ca
-    CC  whois.nic.cc
     CH  whois.nic.ch
-    CK  whois.ck-nic.org.ck
-    CL  nic.cl
+    CI  whois.nic.cI
+    CL  Whois.nic.cl
     CN  whois.cnnic.net.cn
     CX  whois.nic.cx
-    CY  whois.ripe.net
-    CZ  dc1.eunet.cz
+    CZ  whois.nic.cz
     DE  whois.denic.de
     DK  whois.dk-hostmaster.dk
-    DO  ns.nic.do
-    DZ  whois.ripe.net
-    EE  whois.ripe.net
-    EG  whois.ripe.net
-    ES  whois.ripe.net
+    EE  whois.eenet.ee
     EU  whois.eu
-    FI  whois.ripe.net
-    FO  whois.ripe.net
-    FR  winter.nic.fr
-    GA  whois.ripe.net
-    GB  whois.ripe.net
-    GE  whois.ripe.net
-    GL  whois.ripe.net
-    GM  whois.ripe.net
-    GR  whois.ripe.net
+    FI  whois.ficora.fi
+    FR  whois.nic.fr
+    GG  whois.channelisles.net
+    GI  whois2.afilias-grs.net
     GS  whois.nic.gs
-    HK  whois.hkdnr.net.hk
-    HR  whois.ripe.net
-    HU  whois.nic.hu
-    ID  muara.idnic.net.id
+    HK  whois.hkirc.hk
+    HN  whois2.afilias-grs.net
     IE  whois.domainregistry.ie
     IL  whois.isoc.org.il
-    IN  whois.ncst.ernet.in
-    IS  horus.isnic.is
+    IN  whois.inregistry.net
+    IO  whois.nic.io
+    IS  whois.isnic.is
     IT  whois.nic.it
-    JO  whois.ripe.net
+    JE  whois.channelisles.net
     JP  whois.jprs.jp
-    KG  whois.domain.kg
-    KH  whois.nic.net.kh
-    KR  whois.krnic.net
+    KE  whois.kenic.or.ke
+    KR  whois.nic.or.kr
     KZ  www.nic.kz
-    LA  whois.nic.la
-    LI  whois.nic.ch
-    LK  arisen.nic.lk
-    LT  ns.litnet.lt
+    LA  whois2.afilias-grs.net
+    LI  whois.nic.li
+    LT  whois.domreg.lt
     LU  whois.dns.lu
-    LV  whois.ripe.net
-    MA  whois.ripe.net
-    MC  whois.ripe.net
-    MD  whois.ripe.net
-    MM  whois.nic.mm
+    LV  whois.nic.lv
+    MG  whois.nic.mg
+    MN  whois.nic.mn
     MS  whois.adamsnames.tc
-    MT  whois.ripe.net
     MX  whois.nic.mx
-    MU  whois.nic.mu
+    MY  whois.mynic.net.my
+    NA  whois.na-nic.com.na
     NL  whois.domain-registry.nl
-    NO  ask.norid.no
-    NU  whois.worldnames.net
-    NZ  akl-iis.domainz.net.nz
-    PL  nazgul.nask.waw.pl
-    PT  whois.ripe.net
+    NO  whois.norid.no
+    NU  whois.nic.nu
+    NZ  whois.srs.net.nz
+    PL  whois.dns.pl
+    PM  whois.nic.pm
+    PR  whois.uprr.pr
+    RE  whois.nic.re
     RO  whois.rotld.ro
     RU  whois.ripn.net
-    SE  ear.nic-se.se
-    SG  qs.nic.net.sg
+    SB  whois.nic.net.sb
+    SC  whois2.afilias-grs.net
+    SE  whois.iis.se
+    SG  whois.nic.net.sg
     SH  whois.nic.sh
     SI  whois.arnes.si
-    SK  whois.ripe.net
-    SM  whois.ripe.net
     ST  whois.nic.st
     SU  whois.ripn.net
     TC  whois.adamsnames.tc
-    TF  whois.adamsnames.tc
-    TH  whois.thnic.net
-    TJ  whois.nic.tj
-    TN  whois.ripe.net
-    TO  whois.tonic.to
-    TR  whois.ripe.net
-    TW  whois.twnic.net
-    TV  whois.nic.tv
+    TF  whois.nic.tf
+    TK  whois.dot.tk
+    TL  whois.nic.tl
+    TM  whois.nic.tm
+    TR  whois.nic.tr
+    TW  whois.twnic.net.tw
     UA  whois.net.ua
     UK  whois.nic.uk
     US  whois.nic.us
-    VA  whois.ripe.net
+    UZ  whois.cctld.uz
+    VC  whois2.afilias-grs.net
+    VE  whois.nic.ve
     VG  whois.adamsnames.tc
+    WF  whois.nic.wf
+    YT  whois.nic.yt
+
+    CC  whois.nic.cc
+    DO  ns.nic.do
+    HU  whois.nic.hu
+    PT  whois.dns.pt
+    TO  whois.tonic.to
     WS  whois.worldsite.ws
-    YU  whois.ripe.net
-    ZA  apies.frd.ac.za
 
     XN---P1AG	ru.whois.i-dns.net
     XN---P1AG	ru.whois.i-dns.net
@@ -153,80 +146,88 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     EU.COM      whois.centralnic.com
 );
 
-# These do not seem to work
-#         CN  log.cnnic.net.cn
-#         DK  whois.dk-hostmaster.dk
-#         US  whois.isi.edu
 # These serve only several subdomains
 #         ZA  apies.frd.ac.za
 
 %ip_whois_servers = qw(
-    RIPE	whois.ripe.net
+    AFRINIC	whois.afrinic.net
     APNIC	whois.apnic.net
-    KRNIC	whois.krnic.net
-    LACNIC	whois.lacnic.net
     ARIN	whois.arin.net
+    LACNIC	whois.lacnic.net
+    RIPE	whois.ripe.net
+
+    JPNIC	whois.nic.ad.jp
+    KRNIC	whois.krnic.net
 );
 
 
 %notfound = (
-    'whois.nic.cc' => '^No match for',
     'whois.arin.net' => '^No match for',
-    'whois.nic.br' => 'No match for',
-    'ear.nic-se.se' => 'No data found',
-    'whois.nic.sh' => '^No match for',
-    'whois.nic.mx' => '^Nombre del Dominio:',
-    'whois.domainregistry.ie' => 'There was no match',
-    'whois.nic.ch' => '^We do not have an entry in our database matching your',
-    'whois.dns.lu' => 'No entries found',
-    'whois.worldsite.ws' => 'No match for',
-    'whois.nic.it' => '^No entries found',
-    'whois.nic.coop' => 'No Objects Found',
-    'whois.nic.at' => 'nothing found',
-    'ask.norid.no' => 'no matches',
-    'whois.nic.uk' => '^\\s*No match for',
-    'whois.nic.ad.jp' => 'No match',
-    'whois.arnes.si' => 'No entries found',
-    'whois.tonic.to' => 'No match for',
-    'whois.hkdnr.net.hk' => '^No Match for',
-    'whois.worldnames.net' => 'NO MATCH for domain',
-    'whois.rotld.ro' => 'No entries found',
-    'whois.nic.st' => '^No entries found',
-    'whois.isoc.org.il' => 'No data was found',
-    'whois.cira.ca' => 'Status:\\s*UNAV',
-    'whois.nic.tj' => '^No match for',
-    'aardvark.dns.be' => 'No such domain',
-    'nazgul.nask.waw.pl' => '^Domain name .* does not exists',
-    'whois.ncst.ernet.in' => '^No matches',
-    'whois.krnic.net' => 'Above domain name is not registered',
-    'whois.museum' => '^No information for',
-    'whois.net.ua' => 'No entries found for domain',
-    'apies.frd.ac.za' => 'No information is available',
-    'gw.domain-registry.nl' => 'invalid query',
-    'whois.denic.de' => 'No entries found',
-    'whois.nic.mil' => '^No match for',
-    'horus.isnic.is' => 'No entries found',
-    'winter.nic.fr' => 'No entries found',
     'whois.ripe.net' => 'No entries found',
-    'whois.ripn.net' => 'No entries found',
-    'qs.nic.net.sg' => 'NO entry found',
-    'whois.twnic.net' => '^NO MATCH: This domain is',
-    'nic.cl' => 'Invalid domain name',
-    'whois.gdns.net' => '^Domain Not Found',
-    'box2.aunic.net' => 'No entries found',
-    'whois.nic.cx' => '^No match for',
-    'dc1.eunet.cz' => 'No data found',
-    'akl-iis.domainz.net.nz' => 'domain_name_status: 00 Not Listed',
-    'ns.litnet.lt' => 'No matches found',
-    'whois.adamsnames.tc' => 'is not a domain controlled by',
-    'whois.nic.la' => '^NO MATCH for',
-    'whois.networksolutions.com' => '(?i)no match',
-    'whois.thnic.net' => 'No entries found',
-    'whois.neulevel.biz' => '^Not found:',
+
+    'whois.biz' => '^Not found:',
+    'whois.nic.coop' => 'No Objects Found',
     'whois.afilias.net' => '^NOT FOUND',
+    'whois.nic.mil' => '^No match for',
+    'whois.museum' => '^No information for',
+
+    'whois.nic.at' => 'nothing found',
+    'whois.aunic.net' => 'No Data Found',
     'whois.dns.be' => '^Status:      FREE',
+    'whois.registro.br' => 'No match for',
+    'whois.cira.ca' => 'Status:\\s*UNAV',
+    'whois.nic.ch' => '^We do not have an entry in our database matching your',
+    'whois.nic.cl' => 'Invalid domain name',
+    'whois.nic.cx' => '^No match for',
+    'whois.nic.cz' => 'No data found',
+    'whois.denic.de' => 'No entries found',
     'whois.eu' => '^Status:      FREE',
+    'whois.nic.fr' => 'No entries found',
+    'whois.hkirc.hk' => '^No Match for',
+    'whois.nic.hu' => 'No match',
+    'whois.domainregistry.ie' => 'There was no match',
+    'whois.isoc.org.il' => 'No data was found',
+    'whois.inregistry.net' => '^No matches',
+    'whois.isnic.is' => 'No entries found',
+    'whois.nic.it' => '^No entries found',
+    'whois.jprs.jp' => 'No match',
+    'whois.nic.or.kr' => 'Above domain name is not registered',
+    'whois2.afilias-grs.net' => '^NO MATCH for',
+    'whois.domreg.lt' => 'No matches found',
+    'whois.dns.lu' => 'No entries found',
+    'whois.nic.mx' => '^Nombre del Dominio:',
+    'whois.mynic.net.my' => 'does not Exist in database',
+    'whois.na-nic.com.na' => 'No records matching',
+    'whois.domain-registry.nl' => 'invalid query',
+    'whois.norid.no' => 'no matches',
+    'whois.srs.net.nz' => 'query_status: 220 Available',
+    'whois.dns.pl' => '^Domain name .* does not exists',
+    'whois.dns.pt' => 'no match',
+    'whois.rotld.ro' => 'No entries found',
+    'whois.ripn.net' => 'No entries found',
+    'whois.iis.se' => 'No data found',
+    'whois.nic.net.sg' => 'NO entry found',
+    'whois.nic.sh' => 'Not available',
+    'whois.arnes.si' => 'No entries found',
+    'whois.nic.st' => '^No entries found',
+    'whois.adamsnames.tc' => 'is not a domain controlled by',
+    'whois.twnic.net.tw' => '^No Found',
+    'whois.net.ua' => 'No entries found for domain',
+    'whois.nic.uk' => '^\\s*No match for',
+    'whois.nic.ve' => 'No match for',
+
+    'whois.nic.cc' => '^No match for',
+    'whois.tonic.to' => 'No match for',
+    'whois.worldsite.ws' => 'No match for',
+
+    'whois.networksolutions.com' => '(?i)no match',
     'whois.melbourneit.com' => '^Invalid/Unsupported whois name check',
+
+    'apies.frd.ac.za' => 'No information is available',
+    'whois.worldnames.net' => 'NO MATCH for domain',
+    'whois.nic.tj' => '^No match for',
+    'whois.gdns.net' => '^Domain Not Found',
+    'whois.thnic.net' => 'No entries found',
 );
 
 %strip = (
@@ -292,113 +293,99 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^>>> Last update of whois database',
 	'^$',
     ],
-    'whois.tonic.to' => [
-	'^Tonic whoisd',
+
+    'whois.arin.net' => [
+	'^The ARIN Registration Services Host contains',
+	'^Network Information:.*Networks',
+	'^Please use the whois server at',
+	'^Information and .* for .* Information.',
     ],
-    'whois.net.ua' => [
+    'whois.ripe.net' => [
 	'^%',
     ],
-    'whois.nic.cx' => [
-	'^ Registrar: Christmas Island',
-	'^ Whois Server: whois.nic.cx',
-    ],
-    'gw.domain-registry.nl' => [
-	'Rights restricted by copyright',
-	'http://www.domain-registry.nl',
-    ],
-    'whois.denic.de' => [
-	'^%',
-    ],
-    'whois.gdns.net' => [
-	'^\\w+ Whois Server',
-	'^Access to .* WHOIS information is provided to',
-	'^determining the contents of a domain name',
-	'^registrar database.  The data in',
-	'^informational purposes only, and',
-	'^Compilation, repackaging, dissemination,',
-	'^in its entirety, or a substantial portion',
-	'prior written permission.  By',
-	'^by this policy.  All rights reserved.',
-    ],
-    'whois.isoc.org.il' => [
-	'^%',
-    ],
-    'whois.dns.lu' => [
-	'^%',
-    ],
-    'whois.worldnames.net' => [
-	'^----------------------------------',
-	'^.\\w+ Domain .* Whois service',
-	'^Copyright by .* Domain LTD',
-	'^----------------------------------',
-	'^Database last updated',
-    ],
-    'whois.nic.sh' => [
-	'^NIC Whois Server',
-    ],
+
     'whois.nic.coop' => [
 	'^%',
 	'^ The .COOP Registration',
 	'^ Please use the',
     ],
+    'whois.nic.mil' => [
+	'^To single out one record',
+	'^handle, shown in parenthesis',
+	'^Please be advised that this whois',
+	'^All INTERNET Domain, IP Network Number,',
+	'^the Internet Registry, RS.INTERNIC.NET.',
+    ],
+
+    'whois.nic.at' => [
+	'^%',
+    ],
+    'whois.aunic.net' => [
+	'^%',
+    ],
+    'whois.dns.be' => [
+	'^%-',
+    ],
+    'whois.registro.br' => [
+	'^%',
+    ],
     'whois.nic.ch' => [
 	'^whois: This information is subject',
 	'^See http',
     ],
-    'whois.twnic.net' => [
-	'^Registrar:',
-	'^URL: http://rs.twnic.net.tw',
-    ],
-    'nic.cl' => [
+    'whois.nic.cl' => [
 	'^cl.cl:',
 	'^Más información: http://www.nic.cl/',
     ],
-    'whois.nic.mx' => [
-	'^------------------',
-	'^La información que ha',
-	'^relacionados con la',
-	'^DNS administrado por el NIC-México.',
-	'^Queda absolutamente prohibido',
-	'^envío de e-mail no solicitado',
-	'^productos y servicios',
-	'^del NIC-México.',
-	'^La base de datos generada',
-	'^protegida por las leyes de',
-	'^internacionales sobre la materia.',
+    'whois.nic.cx' => [
+	'^ Registrar: Christmas Island',
+	'^ Whois Server: whois.nic.cx',
+    ],
+    'whois.nic.cz' => [
+	'^%',
+    ],
+    'whois.denic.de' => [
+	'^%',
+    ],
+    'whois.eu' => [
+	'^%-',
+    ],
+    'whois.nic.fr' => [
+	'^Tous droits reserves par copyright.',
+	'^Voir http://www.nic.fr',
+	'^Rights restricted by copyright.',
+	'^See http://www.nic.fr/outils',
+    ],
+    'whois.hkirc.hk' => [
+	'^Whois server',
+	'^Domain names in the',
+	'^and .* can now be registered',
+	'^Go to http://www.hkdnr.net.hk',
+	'^---------',
+	'^The Registry contains ONLY',
+	'^.* and .*\\.HK domains.',
+    ],
+    'whois.nic.hu' => [
+	'^%',
     ],
     'whois.domainregistry.ie' => [
 	'^%',
     ],
-    'ns.litnet.lt' => [
+    'whois.isoc.org.il' => [
 	'^%',
     ],
-    'dc1.eunet.cz' => [
+    'whois.isnic.is' => [
 	'^%',
     ],
-    'whois.ripn.net' => [
-	'^%',
-	'Last updated on ',
+    'whois.jprs.jp' => [
+	'^\[',
     ],
-    'whois.nic.uk' => [
-	'^The .* Registration Host contains information',
-	'^registrations in the .*co.uk',
-	'and .*\\.uk second-level domains.',
-    ],
-    'whois.nic.br' => [
-	'^%',
-    ],
-    'whois.krnic.net' => [
+    'whois.nic.or.kr' => [
 	'^Korea Internet Information Service',
 	'^20\\d\\d³â 7¿ù 2ÀÏºÎÅÍ´Â °³¼±µÈ Whois',
 	'^.com, .net, .org',
     ],
-    'whois.arnes.si' => [
-	'^\\*',
-    ],
-    'nazgul.nask.waw.pl' => [
-	'^%',
-    ],
-    'whois.nic.la' => [
+    'whois2.afilias-grs.net' => [
 	'^   WHOIS server',
 	'^   The Data in the',
 	'for information purposes,',
@@ -415,11 +402,56 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^   terms at any time. By submitting this',
 	'^   policy.',
     ],
-    'horus.isnic.is' => [
+    'whois.domreg.lt' => [
+	'^%',
+    ],
+    'whois.dns.lu' => [
+	'^%',
+    ],
+    'whois.nic.mx' => [
+	'^------------------',
+	'^La información que ha',
+	'^relacionados con la',
+	'^DNS administrado por el NIC-México.',
+	'^Queda absolutamente prohibido',
+	'^envío de e-mail no solicitado',
+	'^productos y servicios',
+	'^del NIC-México.',
+	'^La base de datos generada',
+	'^protegida por las leyes de',
+	'^internacionales sobre la materia.',
+    ],
+    'whois.domain-registry.nl' => [
+	'Rights restricted by copyright',
+	'http://www.domain-registry.nl',
+    ],
+    'whois.norid.no' => [
+	'^%',
+    ],
+    'whois.srs.net.nz' => [
+	'^%',
+    ],
+    'whois.dns.pl' => [
 	'^%',
     ],
     'whois.rotld.ro' => [
 	'^%',
+    ],
+    'whois.ripn.net' => [
+	'^%',
+	'Last updated on ',
+    ],
+    'whois.iis.se' => [
+	'^#',
+    ],
+    'whois.nic.net.sg' => [
+	'^\\*',
+    ],
+    'whois.nic.sh' => [
+	'^NIC Whois Server',
+    ],
+    'whois.arnes.si' => [
+	'^\\*',
     ],
     'whois.nic.st' => [
 	'^The data in the .* database is provided',
@@ -428,43 +460,22 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^By submitting a .* query, you agree that you will',
 	'^The Domain Council of .* reserves the right',
     ],
-    'ask.norid.no' => [
+    'whois.tonic.to' => [
+	'^Tonic whoisd',
+    ],
+    'whois.twnic.net.tw' => [
+	'^Registrar:',
+	'^URL: http://rs.twnic.net.tw',
+    ],
+    'whois.net.ua' => [
 	'^%',
     ],
-    'whois.hkdnr.net.hk' => [
-	'^Whois server',
-	'^Domain names in the',
-	'^and .* can now be registered',
-	'^Go to http://www.hkdnr.net.hk',
-	'^---------',
-	'^The Registry contains ONLY',
-	'^.* and .*\\.HK domains.',
+    'whois.nic.uk' => [
+	'^The .* Registration Host contains information',
+	'^registrations in the .*co.uk',
+	'and .*\\.uk second-level domains.',
     ],
-    'whois.arin.net' => [
-	'^The ARIN Registration Services Host contains',
-	'^Network Information:.*Networks',
-	'^Please use the whois server at',
-	'^Information and .* for .* Information.',
-    ],
-    'qs.nic.net.sg' => [
-	'^\\*',
-    ],
-    'akl-iis.domainz.net.nz' => [
-	'^%',
-    ],
-    'whois.nic.hu' => [
-	'^%',
-    ],
-    'whois.worldsite.ws' => [
-	'^Welcome to the .* Whois Server',
-	'^Use of this service for any',
-	'^than determining the',
-	'^in the .* to be registered',
-	'^prohibited.',
-    ],
-    'whois.ripe.net' => [
-	'^%',
-    ],
+
     'whois.nic.cc' => [
 	'^This information is',
 	'^The Data in eNIC',
@@ -481,28 +492,14 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^reserves the right to',
 	'^submitting this query,',
     ],
-    'whois.nic.mil' => [
-	'^To single out one record',
-	'^handle, shown in parenthesis',
-	'^Please be advised that this whois',
-	'^All INTERNET Domain, IP Network Number,',
-	'^the Internet Registry, RS.INTERNIC.NET.',
+    'whois.worldsite.ws' => [
+	'^Welcome to the .* Whois Server',
+	'^Use of this service for any',
+	'^than determining the',
+	'^in the .* to be registered',
+	'^prohibited.',
     ],
-    'box2.aunic.net' => [
-	'^%',
-    ],
-    'whois.nic.ad.jp' => [
-	'^[',
-    ],
-    'winter.nic.fr' => [
-	'^Tous droits reserves par copyright.',
-	'^Voir http://www.nic.fr',
-	'^Rights restricted by copyright.',
-	'^See http://www.nic.fr/outils',
-    ],
-    'ear.nic-se.se' => [
-	'^#',
-    ],
+
     'whois.networksolutions.com' => [
 	'^The Data in',
 	'^Solutions for information',
@@ -516,23 +513,6 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^that apply to Network',
 	'^reserves the right',
 	'^this query, you',
-    ],
-    'aardvark.dns.be' => [
-	'^%',
-    ],
-    'whois.dns.be' => [
-	'^%-',
-    ],
-    'whois.eu' => [
-	'^%-',
-    ],
-    'whois.nic.tj' => [
-	'^This Whois server looks up only',
-	'^Please see http://nic.tj for more',
-	'^Tajikistan, and the Public Registrar Network.',
-    ],
-    'whois.nic.at' => [
-	'^%',
     ],
     'whois.directnic.com' => [
 	'^By submitting a WHOIS query',
@@ -578,11 +558,33 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^MarkMonitor.com res',
 	'^By submitting this ',
     ],
+
+    'whois.gdns.net' => [
+	'^\\w+ Whois Server',
+	'^Access to .* WHOIS information is provided to',
+	'^determining the contents of a domain name',
+	'^registrar database.  The data in',
+	'^informational purposes only, and',
+	'^Compilation, repackaging, dissemination,',
+	'^in its entirety, or a substantial portion',
+	'prior written permission.  By',
+	'^by this policy.  All rights reserved.',
+    ],
+    'whois.worldnames.net' => [
+	'^----------------------------------',
+	'^.\\w+ Domain .* Whois service',
+	'^Copyright by .* Domain LTD',
+	'^----------------------------------',
+	'^Database last updated',
+    ],
 );
 
 %exceed = (
+    'whois.eu' => 'Excessive querying, grace period of',
+    'whois.dns.lu' => 'Excessive querying, grace period of',
     'whois.ripn.net' => 'excessive querying of the WHOIS database',
-    'whois.nic.uk' => 'has been exceeded and will be replenished',
+    'whois.domain-registry.nl' => 'too many requests',
+    'whois.nic.uk' => 'and will be replenished',
 );
 
 1;
