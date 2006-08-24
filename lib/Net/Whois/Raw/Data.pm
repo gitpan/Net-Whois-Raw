@@ -118,11 +118,18 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     YT  whois.nic.yt
 
     CC  whois.nic.cc
+    DM  whois.nic.cx
     DO  ns.nic.do
     HU  whois.nic.hu
+    MU  whois.nic.cx
+    NF  whois.nic.cx
     PT  whois.dns.pt
     TO  whois.tonic.to
+    TP  whois.nic.cx
     WS  whois.worldsite.ws
+
+    AC.UK	whois.ja.net
+    GOV.UK	whois.ja.net
 
     XN---P1AG	ru.whois.i-dns.net
     XN---P1AG	ru.whois.i-dns.net
@@ -178,11 +185,12 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.cira.ca' => 'Status:\\s*UNAV',
     'whois.nic.ch' => '^We do not have an entry in our database matching your',
     'whois.nic.cl' => 'Invalid domain name',
-    'whois.nic.cx' => '^No match for',
+    'whois.nic.cx' => 'Status: Not Registered',
     'whois.nic.cz' => 'No data found',
     'whois.denic.de' => 'No entries found',
     'whois.eu' => '^Status:      FREE',
     'whois.nic.fr' => 'No entries found',
+    'whois.nic.gs' => 'Status: Not Registered',
     'whois.hkirc.hk' => '^No Match for',
     'whois.nic.hu' => 'No match',
     'whois.domainregistry.ie' => 'There was no match',
@@ -194,14 +202,15 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.nic.or.kr' => 'Above domain name is not registered',
     'whois2.afilias-grs.net' => '^NO MATCH for',
     'whois.domreg.lt' => 'No matches found',
-    'whois.dns.lu' => 'No entries found',
+    'whois.dns.lu' => 'No such domain',
     'whois.nic.mx' => '^Nombre del Dominio:',
     'whois.mynic.net.my' => 'does not Exist in database',
     'whois.na-nic.com.na' => 'No records matching',
-    'whois.domain-registry.nl' => 'invalid query',
+    'whois.domain-registry.nl' => 'is free',
     'whois.norid.no' => 'no matches',
     'whois.srs.net.nz' => 'query_status: 220 Available',
-    'whois.dns.pl' => '^Domain name .* does not exists',
+    'whois.dns.pl' => 'No information about domain',
+    'whois.uprr.pr' => 'No records matching',
     'whois.dns.pt' => 'no match',
     'whois.rotld.ro' => 'No entries found',
     'whois.ripn.net' => 'No entries found',
@@ -211,6 +220,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.arnes.si' => 'No entries found',
     'whois.nic.st' => '^No entries found',
     'whois.adamsnames.tc' => 'is not a domain controlled by',
+    'whois.nic.tl' => 'Status: Not Registered',
     'whois.twnic.net.tw' => '^No Found',
     'whois.net.ua' => 'No entries found for domain',
     'whois.nic.uk' => '^\\s*No match for',
@@ -378,7 +388,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^%',
     ],
     'whois.jprs.jp' => [
-	'^\[',
+	'^\[\s+',
     ],
     'whois.nic.or.kr' => [
 	'^Korea Internet Information Service',
@@ -582,6 +592,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 %exceed = (
     'whois.eu' => 'Excessive querying, grace period of',
     'whois.dns.lu' => 'Excessive querying, grace period of',
+    'whois.mynic.net.my' => 'Query limitation is',
     'whois.ripn.net' => 'excessive querying of the WHOIS database',
     'whois.domain-registry.nl' => 'too many requests',
     'whois.nic.uk' => 'and will be replenished',

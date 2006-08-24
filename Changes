@@ -183,3 +183,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.13	Aug 20 2006	Doug Barton
 	- Addons + restyling of Net::Whois::Raw::Data 
+
+1.14	Aug 24 2006	Doug Barton
+	- Addons to Net::Whois::Raw::Data 
