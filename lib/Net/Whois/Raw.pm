@@ -22,7 +22,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '1.14';
+$VERSION = '1.20';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
 $CACHE_TIME = 1;
@@ -42,7 +42,8 @@ sub whois_config {
     my @parnames = qw(OMIT_MSG CHECK_FAIL CACHE_DIR CACHE_TIME USE_CNAMES TIMEOUT @SRC_IPS);
     foreach my $parname (@parnames) {
         if (exists($par->{$parname})) {
-            eval('$'.$parname.'='.int($par->{$parname}));
+	    no strict 'refs';
+            ${$parname} = $par->{$parname};
         }
     }
 }
@@ -92,15 +93,15 @@ sub get_from_cache {
 
     return undef unless $CACHE_DIR;
 
-    mkdir $CACHE_DIR, 0755;
+    mkdir $CACHE_DIR, 0755 unless -d $CACHE_DIR;
 
     my $now = time;
-    if ($CACHE_TIME && (!$last_cache_clear_time || $last_cache_clear_time < $now - 1000)) {
+    if ($CACHE_TIME && (!$last_cache_clear_time || $last_cache_clear_time < $now - 60)) {
         # clear the cache
         foreach (glob("$CACHE_DIR/*.*")) {
             my $mtime = (stat($_))[8];
             my $elapsed = $now - $mtime;
-            unlink $_ if ($elapsed / 3600 > $CACHE_TIME); 
+            unlink $_ if ($elapsed / 60 > $CACHE_TIME); 
         }
 	$last_cache_clear_time = time;
     }
@@ -682,8 +683,8 @@ Net::Whois::Raw - Get Whois information for domains
   $CACHE_DIR = "/var/spool/pwhois/"; # Whois information will be
                 cached in this directory. Default is no cache.
 
-  $CACHE_TIME = 24; # Cache files will be cleared after not accessed
-                for a specific number of hours. Documents will not be
+  $CACHE_TIME = 60; # Cache files will be cleared after not accessed
+                for a specific number of minutes. Documents will not be
                 cleared if they keep get requested for, independent
                 of disk space. Default is not to clear the cache.
 
@@ -717,7 +718,7 @@ on several servers but certainly not on all of them.
 
 =over 3
 
-=item whois( DOMAIN [, SRV] )
+=item whois( DOMAIN [, SRV [, WHICH_WHOIS]] )
 
 Returns Whois information for C<DOMAIN>.
 Without C<SRV> argument default Whois server for specified domain name
@@ -725,6 +726,7 @@ zone will be used. Use 'www_whois' as server name to force
 WHOIS querying via HTTP (only few TLDs are supported in HTTP queries).
 Caching is supported: if $CACHE_DIR variable is set and there is cached
 entry for that domain - information from the cache will be used.
+C<WHICH_WHOIS> argument - look get_whois docs below.
 
 =item get_whois( DOMAIN [, SRV [, WHICH_WHOIS]] )
 

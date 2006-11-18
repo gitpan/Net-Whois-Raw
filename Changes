@@ -165,13 +165,13 @@ Revision history for Perl extension Net::Whois::Raw.
 1.07	Apr 12 2006	Martin Lee
 	- replaced .JP whois server address
 
-1.08	Oct 26 2006	Reto Grossenbacher
+1.08	Jul 26 2006	Reto Grossenbacher
 	- changed WHOIS servers for .CH and .LI domains
 
-1.09	Oct 27 2006	Reto Grossenbacher
+1.09	Jul 27 2006	Reto Grossenbacher
 	- fixed strip patterns for yesterday's changes
 
-1.10	Oct 30 2006	K. J. Cheetham
+1.10	Jul 30 2006	K. J. Cheetham
 	- addons to %Net::Whois::Raw::Data::exceed hash
 
 1.11	Aug 10 2006	
@@ -186,3 +186,8 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.14	Aug 24 2006	Doug Barton
 	- Addons to Net::Whois::Raw::Data 
+
+1.20	Nov 18 2006	Walery Studennikov
+	- !INTERFACE CHANGE: CACHE_TIME now specifies time in minutes,
+	  not in hours. Hours are too rough for some applications. Sorry :(
+	- Bumped version number for the above reason

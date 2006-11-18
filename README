@@ -38,8 +38,8 @@ SYNOPSIS
       $CACHE_DIR = "/var/spool/pwhois/"; # Whois information will be
                     cached in this directory. Default is no cache.
 
-      $CACHE_TIME = 24; # Cache files will be cleared after not accessed
-                    for a specific number of hours. Documents will not be
+      $CACHE_TIME = 60; # Cache files will be cleared after not accessed
+                    for a specific number of minutes. Documents will not be
                     cleared if they keep get requested for, independent
                     of disk space. Default is not to clear the cache.
 
@@ -68,13 +68,14 @@ DESCRIPTION
     several servers but certainly not on all of them.
 
 FUNCTIONS
-    whois( DOMAIN [, SRV] )
+    whois( DOMAIN [, SRV [, WHICH_WHOIS]] )
        Returns Whois information for "DOMAIN". Without "SRV" argument
        default Whois server for specified domain name zone will be used. Use
        'www_whois' as server name to force WHOIS querying via HTTP (only few
        TLDs are supported in HTTP queries). Caching is supported: if
        $CACHE_DIR variable is set and there is cached entry for that domain
-       - information from the cache will be used.
+       - information from the cache will be used. "WHICH_WHOIS" argument -
+       look get_whois docs below.
 
     get_whois( DOMAIN [, SRV [, WHICH_WHOIS]] )
        Lower-level function to query Whois information for "DOMAIN". Caching
