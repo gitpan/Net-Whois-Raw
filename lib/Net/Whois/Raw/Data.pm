@@ -5,13 +5,12 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 
 @www_whois = qw(
     IN
-    KZ
     SPB.RU
     MSK.RU
 );
 
 %servers = qw(
-    NS     whois.internic.net
+    NS     whois.nsiregistry.net
     RIPE   whois.ripe.net
     IP     whois.arin.net
 
@@ -70,7 +69,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     JP  whois.jprs.jp
     KE  whois.kenic.or.ke
     KR  whois.nic.or.kr
-    KZ  www.nic.kz
+    KZ  whois.nic.kz
     LA  whois2.afilias-grs.net
     LI  whois.nic.li
     LT  whois.domreg.lt
@@ -177,7 +176,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.afilias.net' => '^NOT FOUND',
     'whois.nic.mil' => '^No match for',
     'whois.museum' => '^No information for',
-
+    'whois.nic.kz' => 'Nothing found for this query',
     'whois.nic.at' => 'nothing found',
     'whois.aunic.net' => 'No Data Found',
     'whois.dns.be' => '^Status:      FREE',
@@ -197,7 +196,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.isoc.org.il' => 'No data was found',
     'whois.inregistry.net' => '^No matches',
     'whois.isnic.is' => 'No entries found',
-    'whois.nic.it' => '^No entries found',
+    'whois.nic.it' => 'Status:             AVAILABLE',
     'whois.jprs.jp' => 'No match',
     'whois.nic.or.kr' => 'Above domain name is not registered',
     'whois2.afilias-grs.net' => '^NO MATCH for',
