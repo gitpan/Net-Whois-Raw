@@ -22,20 +22,12 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '1.21';
+$VERSION = '1.22';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
-$CACHE_TIME = 1;
+$CACHE_TIME = 60;
 
 my $last_cache_clear_time;
-
-sub BEGIN {
-    $DEBUG = 0;
-    if ($DEBUG) {
-	require Data::Dumper;
-	import Data::Dumper;
-    }
-}
 
 sub whois_config {
     my ($par) = @_;
@@ -333,38 +325,55 @@ sub recursive_whois {
 sub whois_query {
     my ($dom, $srv) = @_;
 
-    my $sock;
-    my $prev_alarm=0;
-    eval {
-        local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
-        $prev_alarm = alarm $TIMEOUT if $TIMEOUT;
-        if (scalar(@SRC_IPS)) {
-            my $src_ip = $SRC_IPS[0];
-            push @SRC_IPS, shift @SRC_IPS; # rotate ips
-            $sock = new IO::Socket::INET(PeerAddr => "$srv:43", LocalAddr => $src_ip) || die "$srv: $!";
-        } else {
-            $sock = new IO::Socket::INET("$srv:43") || die "$srv: $!";
-        }
-    };
-    alarm $prev_alarm;
-    die $@ if $@;
-    my $israce = $dom =~ /ra--/ || $dom =~ /bq--/;
+    # Prepare query
     my $whoisquery = $dom;
     if ($srv eq 'whois.crsnic.net') {
         $whoisquery = "domain $whoisquery";
     }
-    if ($srv eq 'whois.melbourneit.com' && $israce) {
-        $whoisquery .= ' race';
-    }
     if ($srv eq 'whois.denic.de') {
         $whoisquery = "-T dn,ace -C ISO-8859-1 $whoisquery";
     }
-    #warn "$srv: $whoisquery ($OMIT_MSG, $CHECK_FAIL, $CACHE_DIR, $CACHE_TIME, $USE_CNAMES, $TIMEOUT)\n";
-    print $sock "$whoisquery\r\n";
-    my @lines = <$sock>;
-    close($sock);
+
+    # Prepare for query
+
+    my @sockparams;
+    if (scalar(@SRC_IPS)) {
+        my $src_ip = $SRC_IPS[0];
+        push @SRC_IPS, shift @SRC_IPS; # rotate ips
+	@sockparams = (PeerAddr => "$srv:43", LocalAddr => $src_ip);
+    } else {
+	@sockparams = "$srv:43";
+    }
+
+    print "QUERY: $whoisquery; SRV: $srv, ".
+	    "OMIT_MSG: $OMIT_MSG, CHECK_FAIL: $CHECK_FAIL, CACHE_DIR: $CACHE_DIR, ".
+	    "CACHE_TIME: $CACHE_TIME, USE_CNAMES: $USE_CNAMES, TIMEOUT: $TIMEOUT\n" if $DEBUG >= 2;
+
+    my $prev_alarm = 0;
+    my @lines;
+
+    # Make query
+
+    eval {
+        local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
+        $prev_alarm = alarm $TIMEOUT if $TIMEOUT;
+        my $sock = new IO::Socket::INET(@sockparams) || die "$srv: $!";
+
+	if ($DEBUG >= 2) {
+	    _require_once('Data::Dumper');
+	    print "Socket: ".Dumper($sock);
+	}
+	print $sock "$whoisquery\r\n";
+	@lines = <$sock>;
+	close $sock;
+    };
+
+    alarm $prev_alarm;
+    die $@ if $@;
 
     foreach (@lines) { s/\r//g; }
+
+    print "Received ".scalar(@lines)." lines\n" if $DEBUG >= 2;
 
     return \@lines;
 }
@@ -445,7 +454,7 @@ sub www_whois_query {
 
     } elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
 
-        $resp = koi2win( $resp );
+        $resp = _koi2win( $resp );
         return undef unless $resp =~ m|<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2"><TR><TD BGCOLOR="#990000"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="20"><TR><TD BGCOLOR="white">(.+?)</TD></TR></TABLE></TD></TR></TABLE>|s;
         $resp = $1;
 
@@ -483,20 +492,14 @@ sub www_whois_query {
 
     } elsif ($tld eq 'ru' || $tld eq 'su') {
 
-        my $m1='<script>.*?</script>';
-        my $m2='</td></tr></table>';
-        my $m3='Доменное имя .*? не зарегистрировано';
-        my $m4='Информация о домене .+? \(по данным WHOIS.RIPN.NET\):';
-        my $m5='Error:';
-        $resp=koi2win($resp);
-        (undef,$resp)=split($m1,$resp);
-        ($resp)=split($m2,$resp);
-        $resp=~ s/&nbsp;/ /gi;
-        $resp=~ s/<([^>]|\n)*>//gi;
+        $resp = _koi2win($resp);
+        (undef, $resp) = split('<script>.*?</script>',$resp);
+        ($resp) = split('</td></tr></table>', $resp);
+        $resp =~ s/&nbsp;/ /gi;
+        $resp =~ s/<([^>]|\n)*>//gi;
 
-        return 0 if ($resp=~ m/$m3/i);
-        $resp='ERROR' if ($resp=~ m/$m5/i);
-        $resp='ERROR' if ($resp!~ m/$m4/i);
+        return 0 if ($resp=~ m/Доменное имя .*? не зарегистрировано/i);
+        $resp = 'ERROR' if $resp =~ m/Error:/i || $resp !~ m/Информация о домене .+? \(по данным WHOIS.RIPN.NET\):/;;
 
     } elsif ($tld eq 'ip') {
 
@@ -632,11 +635,24 @@ sub strip_whois {
 
 # charset / conversion functions
 
-sub koi2win($) {
+sub _koi2win($) {
     my $val = $_[0];
     $val =~ tr/бвчздецъйклмнопртуфхжигюыэшщяьасБВЧЗДЕЦЪЙКЛМНОПРТУФХЖИГЮЫЭЯЩШЬАСіЈ/А-яЁё/;
     return $val;
 }
+
+sub _require_once ($) {
+    my ($module) = @_;
+
+    my $module_file = $module.'.pm';
+    $module_file =~ s/::/\//g;
+
+    unless ($INC{$module_file}) {
+	eval "require $module";
+	import $module;
+    }
+}
+
 
 1;
 __END__
