@@ -22,9 +22,9 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '1.22';
+$VERSION = '1.23';
 
-($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT) = (0) x 6;
+($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 $CACHE_TIME = 60;
 
 my $last_cache_clear_time;
@@ -332,6 +332,9 @@ sub whois_query {
     }
     if ($srv eq 'whois.denic.de') {
         $whoisquery = "-T dn,ace -C ISO-8859-1 $whoisquery";
+    }
+    if ($srv eq 'whois.nic.name') {
+        $whoisquery = "domain=$whoisquery";
     }
 
     # Prepare for query

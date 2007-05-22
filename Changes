@@ -195,9 +195,13 @@ Revision history for Perl extension Net::Whois::Raw.
 1.21	Apr 13 2007	Danil Krivopustov
 	- fixes for Net::Whois::Raw::Data
 
-1.22	Mar 16 2007	Walery Studennikov
+1.22	May 16 2007	Walery Studennikov
 	- Removed legacy RACE encoding support
 	- Default cache time set to 60 minutes
 	- Fixed timeout behaviour. Now timeouts are more robust
 	  (Ticket http://rt.cpan.org/Ticket/Display.html?id=27097)
 	- Small refactoring
+
+1.23	May 22 2007	
+	- Added $DEBUG initialization (Walery Studennikov)
+	- Path for obtaining complete WHOIS info for .name domains (Yulia Shtyrjakova)
