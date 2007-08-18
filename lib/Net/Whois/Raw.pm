@@ -22,7 +22,7 @@ require Exporter;
     @SRC_IPS whois_config
 );
 
-$VERSION = '1.23';
+$VERSION = '1.24';
 
 ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 $CACHE_TIME = 60;
@@ -360,7 +360,7 @@ sub whois_query {
     eval {
         local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
         $prev_alarm = alarm $TIMEOUT if $TIMEOUT;
-        my $sock = new IO::Socket::INET(@sockparams) || die "$srv: $!";
+	my $sock = new IO::Socket::INET(@sockparams) || die "$srv: $!: ".join(', ', @sockparams);
 
 	if ($DEBUG >= 2) {
 	    _require_once('Data::Dumper');
