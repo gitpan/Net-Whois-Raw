@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-use Net::Whois::Raw qw( whois $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED $TIMEOUT $CACHE_DIR @SRC_IPS );
+use Net::Whois::Raw;
 use Getopt::Std;
 use strict;
 use vars qw(
@@ -31,24 +31,25 @@ EOM
 	exit; 
 }
 
-$OMIT_MSG = $CHECK_FAIL = 0;
+$Net::Whois::Raw::OMIT_MSG = 0;
+$Net::Whois::Raw::CHECK_FAIL = 0;
 
-$OMIT_MSG = 1 if $opt_s;
-$OMIT_MSG = 2 if $opt_S;
-$CHECK_FAIL = 1 if $opt_c;
-$CHECK_FAIL = 2 if $opt_C;
-$CHECK_EXCEED = 1 if $opt_e;
-$TIMEOUT = $opt_T;
-$CACHE_DIR = undef;
-@SRC_IPS = ($opt_a) if $opt_a;
+$Net::Whois::Raw::OMIT_MSG = 1 if $opt_s;
+$Net::Whois::Raw::OMIT_MSG = 2 if $opt_S;
+$Net::Whois::Raw::CHECK_FAIL = 1 if $opt_c;
+$Net::Whois::Raw::CHECK_FAIL = 2 if $opt_C;
+$Net::Whois::Raw::CHECK_EXCEED = 1 if $opt_e;
+$Net::Whois::Raw::TIMEOUT = $opt_T;
+$Net::Whois::Raw::CACHE_DIR = undef;
+@Net::Whois::Raw::SRC_IPS = ($opt_a) if $opt_a;
 
 $Net::Whois::Raw::DEBUG = 1 if $opt_d;
 
 if ($opt_t) {
     if ($^O =~ /Win/) {
-        $CACHE_DIR = $ENV{'TEMP'} || "C:\\temp";
+        $Net::Whois::Raw::CACHE_DIR = $ENV{'TEMP'} || "C:\\temp";
     } else {
-        $CACHE_DIR = $ENV{'TEMP'} || "/tmp";
+        $Net::Whois::Raw::CACHE_DIR = $ENV{'TEMP'} || "/tmp";
         my @ent = getpwuid($>);
 	# clear cache
         if (@ent) {
@@ -57,7 +58,7 @@ if ($opt_t) {
                 if (open(O, ">$_/__$$-$$.tmp")) {
                     close(O);
                     unlink "$_/__$$-$$.tmp";
-                    $CACHE_DIR = $_;
+                    $Net::Whois::Raw::CACHE_DIR = $_;
                     last;
                  }
             }

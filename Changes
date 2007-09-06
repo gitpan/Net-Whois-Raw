@@ -212,3 +212,6 @@ Revision history for Perl extension Net::Whois::Raw.
 1.30	Sep 06 2007	Walery Studennikov
 	- Carp::confess instead of die when can't connect
 	- Don't use Exporter anymore; revised export list (can cause some incompatibilities, so version number bumped)
+
+1.31	Sep 06 2007	Walery Studennikov
+	- fexes in pwhois caused by today's module changes
