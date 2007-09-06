@@ -206,5 +206,9 @@ Revision history for Perl extension Net::Whois::Raw.
 	- Added $DEBUG initialization (Walery Studennikov)
 	- Path for obtaining complete WHOIS info for .name domains (Yulia Shtyrjakova)
 
-1.24	Aug 15 2007	
+1.24	Aug 15 2007	Walery Studennikov
 	- More descriptive error message when can't create socket
+
+1.30	Sep 06 2007	Walery Studennikov
+	- Carp::confess instead of die when can't connect
+	- Don't use Exporter anymore; revised export list (can cause some incompatibilities, so version number bumped)

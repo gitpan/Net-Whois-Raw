@@ -3,29 +3,17 @@ package Net::Whois::Raw;
 require Net::Whois::Raw::Data;
 
 use strict;
-use vars qw(
-    $VERSION $DEBUG @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS
-    $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED
-    %notfound %strip $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT
-    @SRC_IPS
-);
 
+use Carp;
 use IO::Socket;
 
-require Exporter;
+our @EXPORT    = qw( whois get_whois );
 
-@ISA = qw(Exporter);
+our $VERSION = '1.30';
 
-@EXPORT    = qw( whois get_whois );
-@EXPORT_OK = qw(
-    $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT
-    @SRC_IPS whois_config
-);
-
-$VERSION = '1.24';
-
-($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
-$CACHE_TIME = 60;
+our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
+our $CACHE_TIME = 60;
+our (%notfound, %strip, @SRC_IPS);
 
 my $last_cache_clear_time;
 
@@ -360,7 +348,7 @@ sub whois_query {
     eval {
         local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
         $prev_alarm = alarm $TIMEOUT if $TIMEOUT;
-	my $sock = new IO::Socket::INET(@sockparams) || die "$srv: $!: ".join(', ', @sockparams);
+	my $sock = new IO::Socket::INET(@sockparams) || Carp::confess "$srv: $!: ".join(', ', @sockparams);
 
 	if ($DEBUG >= 2) {
 	    _require_once('Data::Dumper');
@@ -656,6 +644,15 @@ sub _require_once ($) {
     }
 }
 
+sub import {
+    my $mypkg = shift;
+    my $callpkg = caller;
+
+    no strict 'refs';
+
+    # export subs
+    *{"$callpkg\::$_"} = \&{"$mypkg\::$_"} foreach ((@EXPORT, @_));
+}
 
 1;
 __END__
