@@ -4,8 +4,9 @@ NAME
 SYNOPSIS
       use Net::Whois::Raw;
   
-      $s = whois('perl.com');
-      $s = whois('funet.fi');
+      $dominfo = whois('perl.com');
+      $dominfo = whois('funet.fi');
+      $reginfo = whois('REGRU-REG-RIPN', 'whois.ripn.net');
 
       $arrayref = get_whois('yahoo.co.uk', undef, 'QRY_ALL');
       $text = get_whois('yahoo.co.uk', undef, 'QRY_LAST');

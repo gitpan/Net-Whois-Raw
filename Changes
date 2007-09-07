@@ -215,3 +215,7 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.31	Sep 06 2007	Walery Studennikov
 	- fexes in pwhois caused by today's module changes
+
+1.32	Sep 07 2007	Walery Srudennikov
+	- added support for WHOIS requests for any object (not only for domain),
+	  for example, WHOIS requests for registrars now supported

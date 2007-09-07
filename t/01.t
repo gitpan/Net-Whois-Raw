@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 BEGIN {
     use_ok('Net::Whois::Raw',qw( whois ));
@@ -10,7 +10,6 @@ BEGIN {
     $Net::Whois::Raw::CHECK_FAIL = 1;
     $Net::Whois::Raw::OMIT_MSG = 1;
     $Net::Whois::Raw::CHECK_EXCEED = 1;
-    $Net::Whois::Raw::DEBUG = 1;
 };
 
 my @domains = qw( 
@@ -22,6 +21,12 @@ my @domains = qw(
 );
 
 print "The following tests requires internet connection...\n";
+
+# registrars
+
+like( whois( 'REGRU-REG-RIPN', 'whois.ripn.net' ), qr/www.reg.ru/ );
+
+# domains
 
 foreach my $domain ( @domains ) {
     my $txt = whois( $domain );

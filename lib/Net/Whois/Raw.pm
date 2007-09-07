@@ -9,7 +9,7 @@ use IO::Socket;
 
 our @EXPORT    = qw( whois get_whois );
 
-our $VERSION = '1.31';
+our $VERSION = '1.32';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -145,11 +145,13 @@ sub get_dom_tld {
     my ($dom) = @_;
 
     my $tld;
-    if (is_ipaddr($dom)) {
+    if (_is_ipaddr($dom)) {
         $tld = "IP";
+    } elsif (_domain_level($dom) == 1) {
+        $tld = "NOTLD";
     } else { 
         my @alltlds = keys %Net::Whois::Raw::Data::servers;
-        @alltlds = sort { dlen($b) <=> dlen($a) } @alltlds;
+        @alltlds = sort { _dlen($b) <=> _dlen($a) } @alltlds;
         foreach my $awailtld (@alltlds) {
             $awailtld = lc $awailtld;
             if ($dom =~ /(.+?)\.($awailtld)$/) {
@@ -172,7 +174,7 @@ sub split_domname {
     my $tld = get_dom_tld( $dom );
 
     my $name;
-    if (uc$tld eq 'IP') {
+    if (uc $tld eq 'IP' || $tld eq 'NOTLD') {
 	$name = $dom;
     } else {
 	$dom =~ /(.+?)\.$tld$/ or die "Can't match $tld in $dom";
@@ -182,7 +184,7 @@ sub split_domname {
     return ($name, $tld);
 }
 
-sub is_ipaddr {
+sub _is_ipaddr {
     $_[0] =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
 }
 
@@ -282,13 +284,13 @@ sub recursive_whois {
 	    last;
 	} elsif (/Contact information can be found in the (\S+)\s+database/) {
 	    $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $1 };
-    	} elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && is_ipaddr($dom)) {
+    	} elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && _is_ipaddr($dom)) {
 	    my $val = $1;	
 	    if($val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/) {
 		$newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $val };
 		last;
 	    }
-    	} elsif (/^\s+Maintainer:\s+RIPE\b/ && is_ipaddr($dom)) {
+    	} elsif (/^\s+Maintainer:\s+RIPE\b/ && _is_ipaddr($dom)) {
             $newsrv = $Net::Whois::Raw::Data::servers{RIPE};
 	}
     }
@@ -557,11 +559,15 @@ sub www_whois_query {
     return wantarray ? ($resp, $ishtml) : $resp;
 }
 
-
-sub dlen {
+sub _domain_level {
     my ($str) = @_;
     my $dotcount = $str =~ tr/././;
-    return length($str) * (1 + $dotcount);
+    return $dotcount + 1;
+}
+
+sub _dlen {
+    my ($str) = @_;
+    return length($str) * _domain_level($str);
 }
 
 
@@ -665,8 +671,9 @@ Net::Whois::Raw - Get Whois information for domains
 
   use Net::Whois::Raw;
   
-  $s = whois('perl.com');
-  $s = whois('funet.fi');
+  $dominfo = whois('perl.com');
+  $dominfo = whois('funet.fi');
+  $reginfo = whois('REGRU-REG-RIPN', 'whois.ripn.net');
 
   $arrayref = get_whois('yahoo.co.uk', undef, 'QRY_ALL');
   $text = get_whois('yahoo.co.uk', undef, 'QRY_LAST');
