@@ -145,11 +145,29 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     RU.NET	whois.relcom.ru
     YES.RU	whois.regtime.net
 
-    UK.COM      whois.centralnic.com
-    UK.NET      whois.centralnic.com
-    GB.COM      whois.centralnic.com
-    GB.NET      whois.centralnic.com
     EU.COM      whois.centralnic.com
+    GB.COM      whois.centralnic.com
+    KR.COM	whois.centralnic.com
+    US.COM	whois.centralnic.com
+    QC.COM	whois.centralnic.com
+    DE.COM	whois.centralnic.com
+    NO.COM	whois.centralnic.com
+    HU.COM	whois.centralnic.com
+    JPN.COM	whois.centralnic.com
+    UY.COM	whois.centralnic.com
+    ZA.COM	whois.centralnic.com
+    BR.COM	whois.centralnic.com
+    CN.COM	whois.centralnic.com
+    SA.COM	whois.centralnic.com
+    SE.COM	whois.centralnic.com
+    UK.COM      whois.centralnic.com
+    RU.COM	whois.centralnic.com
+
+    GB.NET      whois.centralnic.com
+    UK.NET      whois.centralnic.com
+    SE.NET	whois.centralnic.com
+
+    AE.ORG	whois.centralnic.com
 );
 
 # These serve only several subdomains

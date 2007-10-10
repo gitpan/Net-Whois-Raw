@@ -219,3 +219,6 @@ Revision history for Perl extension Net::Whois::Raw.
 1.32	Sep 07 2007	Walery Srudennikov
 	- added support for WHOIS requests for any object (not only for domain),
 	  for example, WHOIS requests for registrars now supported
+
+1.33	Oct 10 2007	Walery Srudennikov
+	- added whois servers for many CentralNIC TLDs in New::Whois::Raw::Data
