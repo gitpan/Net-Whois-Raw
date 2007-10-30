@@ -9,7 +9,7 @@ use IO::Socket;
 
 our @EXPORT    = qw( whois get_whois );
 
-our $VERSION = '1.33';
+our $VERSION = '1.34';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -79,9 +79,9 @@ sub get_from_cache {
     if ($CACHE_TIME && (!$last_cache_clear_time || $last_cache_clear_time < $now - 60)) {
         # clear the cache
         foreach (glob("$CACHE_DIR/*.*")) {
-            my $mtime = (stat($_))[8];
+            my $mtime = (stat($_))[8] or next;
             my $elapsed = $now - $mtime;
-            unlink $_ if ($elapsed / 60 > $CACHE_TIME); 
+            unlink $_ if ($elapsed / 60 > $CACHE_TIME);
         }
 	$last_cache_clear_time = time;
     }
