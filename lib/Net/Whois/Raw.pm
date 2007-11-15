@@ -9,7 +9,7 @@ use IO::Socket;
 
 our @EXPORT    = qw( whois get_whois );
 
-our $VERSION = '1.34';
+our $VERSION = '1.36';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -679,49 +679,53 @@ Net::Whois::Raw - Get Whois information for domains
   $text = get_whois('yahoo.co.uk', undef, 'QRY_LAST');
   ($text, $srv) = get_whois('yahoo.co.uk', undef, 'QRY_FIRST');
 
-  ### if you do "use Net::Whois::Raw qw(
-  #     $OMIT_MSG $CHECK_FAIL $CHECK_EXCEED
-  #     $CACHE_DIR $CACHE_TIME $USE_CNAMES $TIMEOUT @SRC_IPS );
-  ### you can use these:
+  $Net::Whois::Raw::OMIT_MSG = 1;
+	# This will attempt to strip several known copyright
+        # messages and disclaimers sorted by servers.
+        # Default is to give the whole response.
 
-  $OMIT_MSG = 1; # This will attempt to strip several known copyright
-                messages and disclaimers sorted by servers.
-                Default is to give the whole response.
+  $Net::Whois::Raw::OMIT_MSG = 2;
+	# This will try some additional stripping rules
+        # if none are known for the spcific server.
 
-  $OMIT_MSG = 2; # This will try some additional stripping rules
-                if none are known for the spcific server.
+  $Net::Whois::Raw::CHECK_FAIL = 1;
+	# This will return undef if the response matches
+        # one of the known patterns for a failed search,
+        # sorted by servers.
+        # Default is to give the textual response.
 
-  $CHECK_FAIL = 1; # This will return undef if the response matches
-                one of the known patterns for a failed search,
-                sorted by servers.
-                Default is to give the textual response.
+  $Net::Whois::Raw::CHECK_FAIL = 2;
+	# This will match against several more rules
+        # if none are known for the specific server.
 
-  $CHECK_FAIL = 2; # This will match against several more rules
-                if none are known for the specific server.
+  $Net::Whois::Raw::CHECK_EXCEED = 1;
+	# When this option is set, "die" will be called
+        # if connection rate to specific whois server have been
+        # exceeded
 
-  $CHECK_EXCEED = 1; # When this option is set, "die" will be called
-                if connection rate to specific whois server have been
-                exceeded
+  $Net::Whois::Raw::CACHE_DIR = "/var/spool/pwhois/";
+	# Whois information will be
+        # cached in this directory. Default is no cache.
 
-  $CACHE_DIR = "/var/spool/pwhois/"; # Whois information will be
-                cached in this directory. Default is no cache.
+  $Net::Whois::Raw::CACHE_TIME = 60;
+	# Cache files will be cleared after not accessed
+        # for a specific number of minutes. Documents will not be
+        # cleared if they keep get requested for, independent
+        # of disk space. Default is not to clear the cache.
 
-  $CACHE_TIME = 60; # Cache files will be cleared after not accessed
-                for a specific number of minutes. Documents will not be
-                cleared if they keep get requested for, independent
-                of disk space. Default is not to clear the cache.
+  $Net::Whois::Raw::USE_CNAMES = 1;
+	# Use whois-servers.net to get the whois server
+        # name when possible. Default is to use the 
+        # hardcoded defaults.
 
-  $USE_CNAMES = 1; # Use whois-servers.net to get the whois server
-                name when possible. Default is to use the 
-                hardcoded defaults.
+  $Net::Whois::Raw::TIMEOUT = 10;
+	# Cancel the request if connection is not made within
+        # a specific number of seconds.
 
-
-  $TIMEOUT = 10; # Cancel the request if connection is not made within
-                a specific number of seconds.
-
-  @SRC_IPS = (11.22.33.44); # List of local IP addresses to
-		use for WHOIS queries. Addresses will be used used
-		successively in the successive queries
+  @Net::Whois::Raw::SRC_IPS = (11.22.33.44);
+	# List of local IP addresses to
+	# use for WHOIS queries. Addresses will be used used
+	# successively in the successive queries
 
 =head1 DESCRIPTION
 
@@ -810,10 +814,10 @@ B<die> on L<perlfunc> about exception handling in Perl.
 
 =head1 COPYRIGHT
 
-Copyright 2000-2002 Ariel Brosh.
-Copyright 2003-2003 Gabor Szabo.
-Copyright 2003-2003 Corris Randall.
-Copyright 2003-2006 Walery Studennikov.
+Copyright 2000--2002 Ariel Brosh.
+Copyright 2003--2003 Gabor Szabo.
+Copyright 2003--2003 Corris Randall.
+Copyright 2003--now() Walery Studennikov.
 
 This package is free software. You may redistribute it or modify it under
 the same terms as Perl itself.

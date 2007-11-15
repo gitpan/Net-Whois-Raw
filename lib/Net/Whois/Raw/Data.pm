@@ -1,15 +1,14 @@
 package Net::Whois::Raw::Data;
 
 use strict;
-use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 
-@www_whois = qw(
+our @www_whois = qw(
     IN
     SPB.RU
     MSK.RU
 );
 
-%servers = qw(
+our %servers = qw(
     NS     whois.nsiregistry.net
     RIPE   whois.ripe.net
     IP     whois.arin.net
@@ -173,7 +172,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 # These serve only several subdomains
 #         ZA  apies.frd.ac.za
 
-%ip_whois_servers = qw(
+our %ip_whois_servers = qw(
     AFRINIC	whois.afrinic.net
     APNIC	whois.apnic.net
     ARIN	whois.arin.net
@@ -185,7 +184,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 );
 
 
-%notfound = (
+our %notfound = (
     'whois.arin.net' => '^No match for',
     'whois.ripe.net' => 'No entries found',
 
@@ -257,7 +256,7 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
     'whois.thnic.net' => 'No entries found',
 );
 
-%strip = (
+our %strip = (
     'whois.crsnic.net' => [
 	'^TERMS OF USE:',
 	'^database through',
@@ -604,15 +603,45 @@ use vars qw(%notfound %strip %servers %exceed @www_whois %ip_whois_servers);
 	'^----------------------------------',
 	'^Database last updated',
     ],
+    'whois.dotmobiregistry.net' => [
+	'^mTLD WHOIS LEGAL STATEMENT',
+	'^by mTLD and the access to',
+	'^for information purposes only.',
+	'^domain name is still available',
+	'^the registration records of',
+	'^circumstances, be held liable',
+	'^be wrong, incomplete, or not',
+	'^you agree not to use the information',
+	'^otherwise support the transmission',
+	'^other solicitations whether via',
+	'^possible way; or to cause',
+	'^sending \(whether by automated,',
+	'^volumes or other possible means\)',
+	'^above, it is explicitly forbidden',
+	'^in any form and by any means',
+	'^quantitatively or qualitatively',
+	'^database without prior and explicit',
+	'^hereof, or to apply automated,',
+	'^You agree that any reproduction',
+	'^purposes will always be considered',
+	'^the content of the WHOIS database.',
+	'^by this policy and accept that mTLD',
+	'^WHOIS services in order to protect',
+	'^integrity of the database.',
+    ],
 );
 
-%exceed = (
+our %exceed = (
     'whois.eu' => 'Excessive querying, grace period of',
     'whois.dns.lu' => 'Excessive querying, grace period of',
     'whois.mynic.net.my' => 'Query limitation is',
     'whois.ripn.net' => 'excessive querying of the WHOIS database',
     'whois.domain-registry.nl' => 'too many requests',
     'whois.nic.uk' => 'and will be replenished',
+);
+
+our %postprocess = (
+    'whois.net.ua' => sub {  },
 );
 
 1;
