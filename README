@@ -129,8 +129,8 @@ NOTE
     perlfunc about exception handling in Perl.
 
 COPYRIGHT
-    Copyright 2000-2002 Ariel Brosh. Copyright 2003-2003 Gabor Szabo.
-    Copyright 2003-2003 Corris Randall. Copyright 2003-2006 Walery
+    Copyright 2000--2002 Ariel Brosh. Copyright 2003--2003 Gabor Szabo.
+    Copyright 2003--2003 Corris Randall. Copyright 2003--now() Walery
     Studennikov.
 
     This package is free software. You may redistribute it or modify it
