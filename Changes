@@ -238,3 +238,9 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.38	Nov 21 2007	Walery Studennikov
 	- added strip patterns for whois.dotster.com
+
+1.39	Nov 22 2007	Walery Studennikov
+	- added strip patterns for whois.nordnet.net
+
+1.40	Feb 04 2008	Sergey Kotenko
+	- fixed parsing of excessive querying for whois.ripn.net
