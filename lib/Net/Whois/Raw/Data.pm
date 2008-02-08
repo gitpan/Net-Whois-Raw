@@ -743,8 +743,4 @@ our %exceed = (
     'whois.nic.uk' => 'and will be replenished',
 );
 
-our %postprocess = (
-    'whois.net.ua' => sub {  },
-);
-
 1;

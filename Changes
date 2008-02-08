@@ -244,3 +244,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.40	Feb 04 2008	Sergey Kotenko
 	- fixed parsing of excessive querying for whois.ripn.net
+
+1.41	Feb 08 2008	Sergey Kotenko
+	- added %Net::Whois::Raw::POSTPROCESS

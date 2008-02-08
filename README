@@ -60,6 +60,13 @@ SYNOPSIS
             # use for WHOIS queries. Addresses will be used used
             # successively in the successive queries
 
+      $Net::Whois::Raw::POSTPROCESS{whois.crsnic.net} = \&my_func;
+            # Call to a user-defined subroutine on whois result,
+            # depending on whois-server.
+            # Above is equil to:
+            # ($text, $srv) = whois('example.com');
+            # $text = my_func($text) if $srv eq 'whois.crsnic.net';
+
 DESCRIPTION
     Net::Whois::Raw queries WHOIS servers about domains. The module supports
     recursive WHOIS queries. Also queries via HTTP is supported for some

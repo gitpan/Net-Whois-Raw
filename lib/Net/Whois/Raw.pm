@@ -9,11 +9,11 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.40';
+our $VERSION = '1.41';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
-our (%notfound, %strip, @SRC_IPS);
+our (%notfound, %strip, @SRC_IPS, %POSTPROCESS);
 
 my $last_cache_clear_time;
 
@@ -222,6 +222,9 @@ sub process_whois {
 	}
     }
 
+    $text = $POSTPROCESS{$srv}->($text)
+        if defined $POSTPROCESS{$srv};
+    
     return $text unless $CHECK_FAIL || $OMIT_MSG || $CHECK_EXCEED;
     
     my $exceed = $Net::Whois::Raw::Data::exceed{$srv};
@@ -726,6 +729,13 @@ Net::Whois::Raw - Get Whois information for domains
 	# List of local IP addresses to
 	# use for WHOIS queries. Addresses will be used used
 	# successively in the successive queries
+
+  $Net::Whois::Raw::POSTPROCESS{whois.crsnic.net} = \&my_func;
+        # Call to a user-defined subroutine on whois result,
+        # depending on whois-server.
+        # Above is equil to:
+        # ($text, $srv) = whois('example.com');
+        # $text = my_func($text) if $srv eq 'whois.crsnic.net';
 
 =head1 DESCRIPTION
 
