@@ -9,7 +9,7 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.41';
+our $VERSION = '1.42';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -379,7 +379,7 @@ sub www_whois_query {
 
     my ($name, $tld) = split_domname( $dom );
 
-    my ($url, $curl, %form);
+    my ($url, $curl, %form, $referer);
 
     if ($tld eq 'tv') {
         $url = "http://www.tv/cgi-bin/whois.cgi?domain=$name&tld=tv";
@@ -400,6 +400,9 @@ sub www_whois_query {
 	$url = "http://worldsite.ws/utilities/lookup.dhtml?domain=$name&tld=$tld";
     } elsif ($tld eq 'kz') {
 	$url = "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0";
+    } elsif ($tld eq 'vn') {
+	$url = "http://www.tenmien.vn/jsp/jsp/tracuudomainchitiet.jsp?type=$name.$tld";
+	$referer = 'http://www.tenmien.vn/jsp/jsp/tracuudomain1.jsp';
     } else {
         return 0;
     }
@@ -408,16 +411,20 @@ sub www_whois_query {
     unless ($INC{'LWP/UserAgent.pm'}) {
 	require LWP::UserAgent;
 	require HTTP::Request;
+	require HTTP::Headers;
 	require URI::URL;
 	import LWP::UserAgent;
 	import HTTP::Request;
+	import HTTP::Headers;
 	import URI::URL;
     }
 
     my $method = scalar(keys %form) ? 'POST' : 'GET';
 
     my $ua = new LWP::UserAgent( parse_head => 0 );
-    my $req = new HTTP::Request $method, $url;
+    my $header = HTTP::Headers->new;
+    $header->header('Referer' => $referer) if $referer;
+    my $req = new HTTP::Request $method, $url, $header;
 
     if ($method eq 'POST') {
         $curl = url("http:");
@@ -555,6 +562,17 @@ sub www_whois_query {
 	    return 0;
 	}
 
+    } elsif ($tld eq 'vn') {
+	if ($resp =~/#ENGLISH.*?<\/tr>(.+?)<\/table>/si) {
+	    $resp = $1;
+	    $resp =~ s|</?font.*?>||ig;
+	    $resp =~ s|&nbsp;||ig;
+	    $resp =~ s|<br>|\n|ig;
+	    $resp =~ s|<tr>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
+	    $resp =~ s|^\s*||mg;
+	} else {
+	    return 0;
+	};
     } else {
         return 'ERROR';
     }

@@ -247,3 +247,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.41	Feb 08 2008	Sergey Kotenko
 	- added %Net::Whois::Raw::POSTPROCESS
+
+1.42    Feb 25 2008	Sergey Kotenko
+	- added whois server (http) for .VN

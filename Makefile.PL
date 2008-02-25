@@ -23,6 +23,7 @@ WriteMakefile(
 	'URI::URL' => 0,
 	'LWP::UserAgent' => 0,
 	'HTTP::Request' => 0,
+	'HTTP::Headers' => 0,
     },
     'EXE_FILES' => ['pwhois'],
     'dist' => {'COMPRESS' => 'gzip --best --force'},

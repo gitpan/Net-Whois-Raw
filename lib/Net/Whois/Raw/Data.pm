@@ -6,6 +6,7 @@ our @www_whois = qw(
     IN
     SPB.RU
     MSK.RU
+    VN
 );
 
 our %servers = qw(
