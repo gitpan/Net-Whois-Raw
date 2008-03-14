@@ -3,13 +3,27 @@ package Net::Whois::Raw::Data;
 use strict;
 
 our @www_whois = qw(
-    IN
     SPB.RU
     MSK.RU
     VN
 );
 
 our %servers = qw(
+    RU          whois.ripn.net
+    SU          whois.ripn.net
+    
+    COM.RU	whois.ripn.net
+    NET.RU	whois.ripn.net
+    ORG.RU	whois.ripn.net
+    PP.RU	whois.ripn.net
+    SPB.RU	whois.relcom.ru
+    MSK.RU	whois.relcom.ru
+    RU.NET	whois.relcom.ru
+    YES.RU	whois.regtime.net
+    MSK.SU      whois.relcom.ru
+    INT.RU      whois.int.ru    
+    NNOV.RU     whois.nnov.ru
+
     NS     whois.nsiregistry.net
     RIPE   whois.ripe.net
     IP     whois.arin.net
@@ -90,7 +104,7 @@ our %servers = qw(
     PR  whois.uprr.pr
     RE  whois.nic.re
     RO  whois.rotld.ro
-    RU  whois.ripn.net
+
     SB  whois.nic.net.sb
     SC  whois2.afilias-grs.net
     SE  whois.iis.se
@@ -98,7 +112,6 @@ our %servers = qw(
     SH  whois.nic.sh
     SI  whois.arnes.si
     ST  whois.nic.st
-    SU  whois.ripn.net
     TC  whois.adamsnames.tc
     TF  whois.nic.tf
     TK  whois.dot.tk
@@ -135,15 +148,6 @@ our %servers = qw(
     XN---J1AEF	whois.i-dns.net
     XN---E1APQ	whois.i-dns.net
     XN---C1AVG	whois.i-dns.net
-
-    COM.RU	whois.ripn.net
-    NET.RU	whois.ripn.net
-    ORG.RU	whois.ripn.net
-    PP.RU	whois.ripn.net
-    SPB.RU	whois.relcom.ru
-    MSK.RU	whois.relcom.ru
-    RU.NET	whois.relcom.ru
-    YES.RU	whois.regtime.net
 
     EU.COM      whois.centralnic.com
     GB.COM      whois.centralnic.com
@@ -186,75 +190,79 @@ our %ip_whois_servers = qw(
 
 
 our %notfound = (
-    'whois.arin.net' => '^No match for',
-    'whois.ripe.net' => 'No entries found',
+    'whois.arin.net'    => '^No match for',
+    'whois.ripe.net'    => 'No entries found',
 
-    'whois.biz' => '^Not found:',
-    'whois.nic.coop' => 'No Objects Found',
+    'whois.ripn.net'    => 'No entries found',
+    'whois.relcom.ru'   => 'No entries found',
+    'whois.nnov.ru'     => 'No entries found',
+    'whois.int.ru'      => 'No entries found',
+    
+    'whois.biz'         => '^Not found:',
+    'whois.nic.coop'    => 'No Objects Found',
     'whois.afilias.net' => '^NOT FOUND',
-    'whois.nic.mil' => '^No match for',
-    'whois.museum' => '^No information for',
-    'whois.nic.kz' => 'Nothing found for this query',
-    'whois.nic.at' => 'nothing found',
-    'whois.aunic.net' => 'No Data Found',
-    'whois.dns.be' => '^Status:      FREE',
+    'whois.nic.mil'     => '^No match for',
+    'whois.museum'      => '^No information for',
+    'whois.nic.kz'      => 'Nothing found for this query',
+    'whois.nic.at'      => 'nothing found',
+    'whois.aunic.net'   => 'No Data Found',
+    'whois.dns.be'      => '^Status:      FREE',
     'whois.registro.br' => 'No match for',
-    'whois.cira.ca' => 'Status:\\s*UNAV',
-    'whois.nic.ch' => '^We do not have an entry in our database matching your',
-    'whois.nic.cl' => 'Invalid domain name',
-    'whois.nic.cx' => 'Status: Not Registered',
-    'whois.nic.cz' => 'No data found',
-    'whois.denic.de' => 'No entries found',
-    'whois.eu' => '^Status:      FREE',
-    'whois.nic.fr' => 'No entries found',
-    'whois.nic.gs' => 'Status: Not Registered',
-    'whois.hkirc.hk' => '^No Match for',
-    'whois.nic.hu' => 'No match',
-    'whois.domainregistry.ie' => 'There was no match',
+    'whois.cira.ca'     => 'Status:\\s*UNAV',
+    'whois.nic.ch'      => '^We do not have an entry in our database matching your',
+    'whois.nic.cl'      => 'Invalid domain name',
+    'whois.nic.cx'      => 'Status: Not Registered',
+    'whois.nic.cz'      => 'No data found',
+    'whois.denic.de'    => 'No entries found',
+    'whois.eu'          => '^Status:      FREE',
+    'whois.nic.fr'      => 'No entries found',
+    'whois.nic.gs'      => 'Status: Not Registered',
+    'whois.hkirc.hk'    => '^No Match for',
+    'whois.nic.hu'      => 'No match',
     'whois.isoc.org.il' => 'No data was found',
-    'whois.inregistry.net' => '^No matches',
-    'whois.isnic.is' => 'No entries found',
-    'whois.nic.it' => 'Status:             AVAILABLE',
-    'whois.jprs.jp' => 'No match',
-    'whois.nic.or.kr' => 'Above domain name is not registered',
-    'whois2.afilias-grs.net' => '^NO MATCH for',
-    'whois.domreg.lt' => 'No matches found',
-    'whois.dns.lu' => 'No such domain',
-    'whois.nic.mx' => '^Nombre del Dominio:',
-    'whois.mynic.net.my' => 'does not Exist in database',
-    'whois.na-nic.com.na' => 'No records matching',
-    'whois.domain-registry.nl' => 'is free',
-    'whois.norid.no' => 'no matches',
-    'whois.srs.net.nz' => 'query_status: 220 Available',
-    'whois.dns.pl' => 'No information about domain',
-    'whois.uprr.pr' => 'No records matching',
-    'whois.dns.pt' => 'no match',
-    'whois.rotld.ro' => 'No entries found',
-    'whois.ripn.net' => 'No entries found',
-    'whois.iis.se' => 'No data found',
-    'whois.nic.net.sg' => 'NO entry found',
-    'whois.nic.sh' => 'Not available',
-    'whois.arnes.si' => 'No entries found',
-    'whois.nic.st' => '^No entries found',
-    'whois.adamsnames.tc' => 'is not a domain controlled by',
-    'whois.nic.tl' => 'Status: Not Registered',
-    'whois.twnic.net.tw' => '^No Found',
-    'whois.net.ua' => 'No entries found for domain',
-    'whois.nic.uk' => '^\\s*No match for',
-    'whois.nic.ve' => 'No match for',
-
-    'whois.nic.cc' => '^No match for',
-    'whois.tonic.to' => 'No match for',
-    'whois.worldsite.ws' => 'No match for',
-
-    'whois.networksolutions.com' => '(?i)no match',
-    'whois.melbourneit.com' => '^Invalid/Unsupported whois name check',
-
-    'apies.frd.ac.za' => 'No information is available',
-    'whois.worldnames.net' => 'NO MATCH for domain',
-    'whois.nic.tj' => '^No match for',
-    'whois.gdns.net' => '^Domain Not Found',
-    'whois.thnic.net' => 'No entries found',
+    'whois.isnic.is'    => 'No entries found',
+    'whois.nic.it'      => 'Status:             AVAILABLE',
+    'whois.jprs.jp'     => 'No match',
+    'whois.nic.or.kr'   => 'Above domain name is not registered',
+    'whois.domreg.lt'   => 'No matches found',
+    'whois.dns.lu'      => 'No such domain',
+    'whois.nic.mx'      => '^Nombre del Dominio:',
+    'whois.norid.no'    => 'no matches',
+    'whois.srs.net.nz'  => 'query_status: 220 Available',
+    'whois.dns.pl'      => 'No information about domain',
+    'whois.uprr.pr'     => 'No records matching',
+    'whois.dns.pt'      => 'no match',
+    'whois.rotld.ro'    => 'No entries found',
+    'whois.iis.se'      => 'No data found',
+    'whois.nic.net.sg'  => 'NO entry found',
+    'whois.nic.sh'      => 'Not available',
+    'whois.arnes.si'    => 'No entries found',
+    'whois.nic.st'      => '^No entries found',
+    'whois.nic.tl'      => 'Status: Not Registered',
+    'whois.net.ua'      => 'No entries found for domain',
+    'whois.nic.uk'      => '^\\s*No match for',
+    'whois.nic.ve'      => 'No match for',
+    'whois.nic.cc'      => '^No match for',
+    'whois.tonic.to'    => 'No match for',
+    'apies.frd.ac.za'   => 'No information is available',
+    'whois.nic.tj'      => '^No match for',
+    'whois.gdns.net'    => '^Domain Not Found',
+    'whois.thnic.net'   => 'No entries found',
+    'whois.crsnic.net'  => 'No match',
+    'whois.pir.net'     => 'NOT FOUND',
+    
+    'whois.worldsite.ws'        => 'No match for',
+    'whois.twnic.net.tw'        => '^No Found',    
+    'whois.domainregistry.ie'   => 'There was no match',    
+    'whois.inregistry.net'      => 'NOT FOUND',
+    'whois2.afilias-grs.net'    => '^NO MATCH for',
+    'whois.mynic.net.my'        => 'does not Exist in database',
+    'whois.na-nic.com.na'       => 'No records matching',
+    'whois.domain-registry.nl'  => 'is free',
+    'whois.adamsnames.tc'       => 'is not a domain controlled by',
+    'whois.networksolutions.com'=> '(?i)no match',
+    'whois.melbourneit.com'     => '^Invalid/Unsupported whois name check',
+    'whois.worldnames.net'      => 'NO MATCH for domain',
 );
 
 our %strip = (
@@ -742,6 +750,11 @@ our %exceed = (
     'whois.ripn.net' => 'exceeded allowed connection rate',
     'whois.domain-registry.nl' => 'too many requests',
     'whois.nic.uk' => 'and will be replenished',
+);
+
+our $default_ban_time = 60;
+our %ban_time = (
+    'whois.ripn.net'  => 60,
 );
 
 1;

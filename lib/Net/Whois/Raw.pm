@@ -1,5 +1,6 @@
 package Net::Whois::Raw;
 
+require Net::Whois::Raw::Common;
 require Net::Whois::Raw::Data;
 
 use strict;
@@ -9,7 +10,7 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.42';
+our $VERSION = '1.50';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -30,22 +31,22 @@ sub whois_config {
 
 # get cached whois
 sub whois {
-    my ($dom) = @_;
+    my ($dom, $server, $which_whois) = @_;
 
-    my $got_from_cache;
-
-    my $res = get_from_cache( $dom );
+    my $res = Net::Whois::Raw::Common::get_from_cache(
+        $dom, $CACHE_DIR, $CACHE_TIME
+    );
 
     if ($res) {
-        $got_from_cache = 1;
+        if ($which_whois eq 'QRY_FIRST') {
+            $res = $res->[0]->{text};
+        } elsif ($which_whois eq 'QRY_LAST' || !defined($which_whois)) {
+            $res = $res->[-1]->{text};
+        }
     } else {
-        $res = get_whois(@_);
+        $res = get_whois($dom, $server, $which_whois);
     }
     
-    unless ($got_from_cache) {
-        write_to_cache( $dom, $res );
-    }
-
     return $res;
 }
 
@@ -57,6 +58,8 @@ sub get_whois {
     my $whois = get_all_whois($dom, $srv, $which_whois eq 'QRY_FIRST')
         or return undef;
 
+    Net::Whois::Raw::Common::write_to_cache($dom, $whois, $CACHE_DIR);
+    
     if ($which_whois eq 'QRY_LAST') {
 	my $thewhois = $whois->[-1];
         return wantarray ? ($thewhois->{text}, $thewhois->{srv}) : $thewhois->{text};
@@ -68,48 +71,10 @@ sub get_whois {
     }
 }
 
-sub get_from_cache {
-    my ($dom) = @_;
-
-    return undef unless $CACHE_DIR;
-
-    mkdir $CACHE_DIR, 0755 unless -d $CACHE_DIR;
-
-    my $now = time;
-    if ($CACHE_TIME && (!$last_cache_clear_time || $last_cache_clear_time < $now - 60)) {
-        # clear the cache
-        foreach (glob("$CACHE_DIR/*.*")) {
-            my $mtime = (stat($_))[8] or next;
-            my $elapsed = $now - $mtime;
-            unlink $_ if ($elapsed / 60 > $CACHE_TIME);
-        }
-	$last_cache_clear_time = time;
-    }
-        
-    if (-f "$CACHE_DIR/$dom") {
-        if (open(I, "$CACHE_DIR/$dom")) {
-            my $res = join("", <I>);
-            close(I);
-            return $res;
-        }
-    }
-}
-
-sub write_to_cache {
-    my ($dom, $whois) = @_;
-
-    return unless $CACHE_DIR && $dom && $whois;
-
-    if (open(O, ">$CACHE_DIR/$dom")) {
-        print O $whois;
-        close(O);
-    }
-}
-
 sub get_all_whois {
     my ($dom, $srv, $norecurse) = @_;
 
-    $srv ||= get_srv( $dom );
+    $srv ||= Net::Whois::Raw::Common::get_server( $dom, $USE_CNAMES );
 
     if ($srv eq 'www_whois') {
 	my ($responce, $ishtml) = www_whois_query( $dom );
@@ -123,71 +88,6 @@ sub get_all_whois {
     return process_whois_answers( \@whois, $dom );
 }
 
-sub get_srv {
-    my ($dom) = @_;
-
-    my $tld = uc get_dom_tld( $dom );
-    $tld =~ s/^XN--(\w)/XN---$1/;
-
-    if (grep { $_ eq $tld } @Net::Whois::Raw::Data::www_whois) {
-	return 'www_whois';
-    }
-
-    my $cname = "$tld.whois-servers.net";
-
-    my $srv = $Net::Whois::Raw::Data::servers{$tld} || $cname;
-    $srv = $cname if $USE_CNAMES && gethostbyname($cname);
-
-    return $srv;
-}
-
-sub get_dom_tld {
-    my ($dom) = @_;
-
-    my $tld;
-    if (_is_ipaddr($dom)) {
-        $tld = "IP";
-    } elsif (_domain_level($dom) == 1) {
-        $tld = "NOTLD";
-    } else { 
-        my @alltlds = keys %Net::Whois::Raw::Data::servers;
-        @alltlds = sort { _dlen($b) <=> _dlen($a) } @alltlds;
-        foreach my $awailtld (@alltlds) {
-            $awailtld = lc $awailtld;
-            if ($dom =~ /(.+?)\.($awailtld)$/) {
-                $tld = $2;
-                last;
-            }
-        }
-        unless ($tld) {
-            my @tokens = split(/\./, $dom);
-            $tld = $tokens[-1]; 
-        }
-    }
-
-    return $tld;
-}
-
-sub split_domname {
-    my ($dom) = @_;
-
-    my $tld = get_dom_tld( $dom );
-
-    my $name;
-    if (uc $tld eq 'IP' || $tld eq 'NOTLD') {
-	$name = $dom;
-    } else {
-	$dom =~ /(.+?)\.$tld$/ or die "Can't match $tld in $dom";
-	$name = $1;
-    }
-
-    return ($name, $tld);
-}
-
-sub _is_ipaddr {
-    $_[0] =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
-}
-
 sub process_whois_answers {
     my ($raw_whois, $dom) = @_;
 
@@ -195,77 +95,23 @@ sub process_whois_answers {
 
     my $level = 0;
     foreach my $whois_rec (@{$raw_whois}) {
-       $whois_rec->{level} = $level;
-       my $text = process_whois( $whois_rec, $dom );
-       if ($text) {
-           $whois_rec->{text} = $text;
-           push @processed_whois, $whois_rec;
-       }
-       $level++;
+        $whois_rec->{level} = $level;
+        my ($text, $error) = Net::Whois::Raw::Common::process_whois(
+            $dom,
+            $whois_rec->{srv},
+            $whois_rec->{text},
+            $CHECK_FAIL, $OMIT_MSG, $CHECK_EXCEED,
+        );
+        die $error if $level == 0 && $error && $error eq "Connection rate exceeded";
+        if ($text || $level == 0) {
+            $whois_rec->{text} = $text;
+            push @processed_whois, $whois_rec;
+        }
+        $level++;
     }
     
     return \@processed_whois;
 }
-
-sub process_whois {
-    my ($whois_rec, $dom) = @_;
-
-    my $text = $whois_rec->{text};
-    my $srv = lc $whois_rec->{srv};
-    my $level = $whois_rec->{level} || 0;
-
-    my ($name, $tld) = split_domname( $dom );
-
-    if ($tld eq 'mu') {
-	if ($text =~ /.MU Domain Information\n(.+?\n)\n/s) {
-	    $text = $1;
-	}
-    }
-
-    $text = $POSTPROCESS{$srv}->($text)
-        if defined $POSTPROCESS{$srv};
-    
-    return $text unless $CHECK_FAIL || $OMIT_MSG || $CHECK_EXCEED;
-    
-    my $exceed = $Net::Whois::Raw::Data::exceed{$srv};
-    if ($CHECK_EXCEED && $exceed && $text =~ /$exceed/s) {
-	if ($level == 0) {
-            die "Connection rate exceeded";
-	} else {
-	    return undef;
-	}
-    }
-
-    *notfound = \%Net::Whois::Raw::Data::notfound;
-    *strip = \%Net::Whois::Raw::Data::strip;
-
-    my $notfound = $notfound{$srv};
-    my @strip = $strip{$srv} ? @{$strip{$srv}} : ();
-    my @lines;
-    MAIN: foreach (split(/\n/, $text)) {
-        if ($CHECK_FAIL && $notfound && /$notfound/) {
-            return undef;
-        };
-        if ($OMIT_MSG) {
-            foreach my $re (@strip) {
-                next MAIN if (/$re/);
-            }
-        }
-        push(@lines, $_);
-    }
-
-    local ($_) = join("\n", @lines, "");
-
-    if ($CHECK_FAIL > 1) {
-        return undef unless check_existance($_);
-    }
-
-    if ($OMIT_MSG > 1) {
-    	$_ = strip_whois( $_ );        
-    }
-    $_;
-}
-
 
 sub recursive_whois {
     my ($dom, $srv, $was_srv, $norecurse) = @_;
@@ -287,13 +133,13 @@ sub recursive_whois {
 	    last;
 	} elsif (/Contact information can be found in the (\S+)\s+database/) {
 	    $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $1 };
-    	} elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && _is_ipaddr($dom)) {
+    	} elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && Net::Whois::Raw::Common::is_ipaddr($dom)) {
 	    my $val = $1;	
 	    if($val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/) {
 		$newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $val };
 		last;
 	    }
-    	} elsif (/^\s+Maintainer:\s+RIPE\b/ && _is_ipaddr($dom)) {
+    	} elsif (/^\s+Maintainer:\s+RIPE\b/ && Net::Whois::Raw::Common::is_ipaddr($dom)) {
             $newsrv = $Net::Whois::Raw::Data::servers{RIPE};
 	}
     }
@@ -305,7 +151,7 @@ sub recursive_whois {
         return () if grep {$_ eq $newsrv} @$was_srv;
         my @new_whois_recs = eval { recursive_whois( $dom, $newsrv, [@$was_srv, $srv]) };
 	my $new_whois = scalar(@new_whois_recs) ? $new_whois_recs[0]->{text} : '';
-        if ($new_whois && !$@ && check_existance($new_whois)) {
+        if ($new_whois && !$@ && Net::Whois::Raw::Common::check_existance($new_whois)) {
             push @whois_recs, @new_whois_recs;
         } else {
     	    warn "recursive query failed\n" if $DEBUG;
@@ -319,16 +165,7 @@ sub whois_query {
     my ($dom, $srv) = @_;
 
     # Prepare query
-    my $whoisquery = $dom;
-    if ($srv eq 'whois.crsnic.net') {
-        $whoisquery = "domain $whoisquery";
-    }
-    if ($srv eq 'whois.denic.de') {
-        $whoisquery = "-T dn,ace -C ISO-8859-1 $whoisquery";
-    }
-    if ($srv eq 'whois.nic.name') {
-        $whoisquery = "domain=$whoisquery";
-    }
+    my $whoisquery = Net::Whois::Raw::Common::get_real_whois_query($dom, $srv);
 
     # Prepare for query
 
@@ -377,36 +214,9 @@ sub whois_query {
 sub www_whois_query {
     my ($dom) = (lc shift);
 
-    my ($name, $tld) = split_domname( $dom );
-
-    my ($url, $curl, %form, $referer);
-
-    if ($tld eq 'tv') {
-        $url = "http://www.tv/cgi-bin/whois.cgi?domain=$name&tld=tv";
-    } elsif ($tld eq 'mu') {
-        $url = 'http://www.mu/cgi-bin/mu_whois.cgi';
-        $form{whois} = $name;
-    } elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
-        $url = "http://www.relcom.ru/Services/Whois/?fullName=$name.$tld";
-    } elsif ($tld eq 'ru' || $tld eq 'su') {
-        $url = "http://www.nic.ru/whois/?domain=$name.$tld";
-    } elsif ($tld eq 'ip') {
-        $url = "http://www.nic.ru/whois/?ip=$name";
-    } elsif ($tld eq 'in') {
-        $url = "http://www.registry.in/cgi-bin/whois.cgi?whois_query_field=$name";
-    } elsif ($tld eq 'cn') {
-        $url = "http://ewhois.cnnic.net.cn/whois?value=$name.$tld&entity=domain";
-    } elsif ($tld eq 'ws') {
-	$url = "http://worldsite.ws/utilities/lookup.dhtml?domain=$name&tld=$tld";
-    } elsif ($tld eq 'kz') {
-	$url = "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0";
-    } elsif ($tld eq 'vn') {
-	$url = "http://www.tenmien.vn/jsp/jsp/tracuudomainchitiet.jsp?type=$name.$tld";
-	$referer = 'http://www.tenmien.vn/jsp/jsp/tracuudomain1.jsp';
-    } else {
-        return 0;
-    }
-
+    my ($name, $tld) = Net::Whois::Raw::Common::split_domain( $dom );
+    my ($url, %form) = Net::Whois::Raw::Common::get_http_query_url($dom);
+    
     # load-on-demand
     unless ($INC{'LWP/UserAgent.pm'}) {
 	require LWP::UserAgent;
@@ -418,7 +228,8 @@ sub www_whois_query {
 	import HTTP::Headers;
 	import URI::URL;
     }
-
+    
+    my $referer = delete $form{referer} if %form && $form{referer};
     my $method = scalar(keys %form) ? 'POST' : 'GET';
 
     my $ua = new LWP::UserAgent( parse_head => 0 );
@@ -427,7 +238,7 @@ sub www_whois_query {
     my $req = new HTTP::Request $method, $url, $header;
 
     if ($method eq 'POST') {
-        $curl = url("http:");
+        my $curl = url("http:");
         $req->content_type('application/x-www-form-urlencoded');
         $curl->query_form( %form );
         $req->content( $curl->equery );
@@ -446,217 +257,9 @@ sub www_whois_query {
 
     my $ishtml;
 
-    if ($tld eq 'tv') {
-
-        return 0 unless
-        $resp =~ /(<TABLE BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="95%">.+?<\/TABLE>)/is;
-        $resp = $1;
-        $resp =~ s/<BR><BR>.+?The data in The.+?any time.+?<BR><BR>//is;
-        return 0 if $resp =~ /Whois information is not available for domain/s;
-        $ishtml = 1;
-
-    } elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
-
-        $resp = _koi2win( $resp );
-        return undef unless $resp =~ m|<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2"><TR><TD BGCOLOR="#990000"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="20"><TR><TD BGCOLOR="white">(.+?)</TD></TR></TABLE></TD></TR></TABLE>|s;
-        $resp = $1;
-
-        return 0 if $resp =~ m/СВОБОДНО/;
-
-        if ($resp =~ m|<PRE>(.+?)</PRE>|s) {
-            $resp = $1;
-        } elsif ($resp =~ m|DNS \(name-серверах\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE><H3>Дополнительную информацию можно получить по адресу:</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
-            my $nameservers = $1;
-            my $emails = $2;
-            my (@nameservers, @emails);
-            while ($nameservers =~ m|<CODE CLASS="h2black">(.+?)</CODE>|g) {
-                push @nameservers, $1;
-            }
-            while ($emails =~ m|<CODE CLASS="h2black"><A HREF=".+?">(.+?)</A></CODE>|g) {
-                push @emails, $1;
-            }
-            if (scalar @nameservers && scalar @emails) {
-                $resp = '';
-                foreach my $ns (@nameservers) {
-                    $resp .= "nserver:      $ns\n";
-                }
-                foreach my $email (@emails) {
-                    $resp .= "e-mail:       $email\n";
-                }
-            }
-        }
-
-    } elsif ($tld eq 'mu') {
-
-        return 0 unless
-        $resp =~ /(<p><b>Domain Name:<\/b><br>.+?)<hr width="75%">/s;
-        $resp = $1;
-        $ishtml = 1;
-
-    } elsif ($tld eq 'ru' || $tld eq 'su') {
-
-        $resp = _koi2win($resp);
-        (undef, $resp) = split('<script>.*?</script>',$resp);
-        ($resp) = split('</td></tr></table>', $resp);
-        $resp =~ s/&nbsp;/ /gi;
-        $resp =~ s/<([^>]|\n)*>//gi;
-
-        return 0 if ($resp=~ m/Доменное имя .*? не зарегистрировано/i);
-        $resp = 'ERROR' if $resp =~ m/Error:/i || $resp !~ m/Информация о домене .+? \(по данным WHOIS.RIPN.NET\):/;;
-
-    } elsif ($tld eq 'ip') {
-
-        unless ($resp =~ m|<p ID="whois">(.+?)</p>|s) {
-            return 0;
-        }
-
-        $resp = $1;
-        
-        $resp =~ s|<a.+?>||g;
-        $resp =~ s|</a>||g;
-        $resp =~ s|<br>||g;
-        $resp =~ s|&nbsp;| |g;
-
-    } elsif ($tld eq 'in') {
-
-        if ($resp =~ /Domain ID:\w{3,10}-\w{4}\n(.+?)\n\n/s) {
-            $resp = $1;
-            $resp =~ s/<br>//g;
-        } else {
-            return 0;
-        }
-
-    } elsif ($tld eq 'cn') {
-
-        if ($resp =~ m|<table border=1 cellspacing=0 cellpadding=2>\n\n(.+?)\n</table>|s) {
-            $resp = $1;
-            $resp =~ s|<a.+?>||isg;
-            $resp =~ s|</a>||isg;
-            $resp =~ s|<font.+?>||isg;
-            $resp =~ s|</font>||isg;
-            $resp =~ s|<tr><td class="t_blue">.+?</td><td class="t_blue">||isg;
-            $resp =~ s|</td></tr>||isg;
-            $resp =~ s|\n\s+|\n|sg;
-            $resp =~ s|\n\n|\n|sg;
-        } else {
-            return 0;
-        }
-
-    } elsif ($tld eq 'ws') {
-
-	if ($resp =~ /Whois information for .+?:(.+?)<table>/s) {
-	    $resp = $1;
-            $resp =~ s|<font.+?>||isg;
-            $resp =~ s|</font>||isg;
-
-            $ishtml = 1;
-	} else {
-	    return 0;
-	}
-
-    } elsif ($tld eq 'kz') {
-    
-	if ($resp =~ /Domain Name\.{10}/s && $resp =~ /<pre>(.+?)<\/pre>/s) {
-	    $resp = $1;
-	} else {
-	    return 0;
-	}
-
-    } elsif ($tld eq 'vn') {
-	if ($resp =~/#ENGLISH.*?<\/tr>(.+?)<\/table>/si) {
-	    $resp = $1;
-	    $resp =~ s|</?font.*?>||ig;
-	    $resp =~ s|&nbsp;||ig;
-	    $resp =~ s|<br>|\n|ig;
-	    $resp =~ s|<tr>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
-	    $resp =~ s|^\s*||mg;
-	} else {
-	    return 0;
-	};
-    } else {
-        return 'ERROR';
-    }
+    $resp = Net::Whois::Raw::Common::parse_www_content($resp, $tld);
 
     return wantarray ? ($resp, $ishtml) : $resp;
-}
-
-sub _domain_level {
-    my ($str) = @_;
-    my $dotcount = $str =~ tr/././;
-    return $dotcount + 1;
-}
-
-sub _dlen {
-    my ($str) = @_;
-    return length($str) * _domain_level($str);
-}
-
-
-sub check_existance {
-    $_ = $_[0];
-
-    return undef if
-        /is unavailable/is ||
-        /No entries found for the selected source/is ||
-        /Not found:/s ||
-        /No match\./s ||
-        /is available for/is ||
-        /Not found/is &&
-            !/ your query returns "NOT FOUND"/ &&
-            !/Domain not found locally/ ||
-        /No match for/is ||
-        /No Objects Found/s ||
-        /No domain records were found/s ||
-        /No such domain/s ||
-        /No entries found in the /s ||
-        /Could not find a match for/s ||
-        /Unable to find any information for your query/s ||
-        /is not registered/s ||
-        /no matching record/s ||
-	/No match found\n/ ||
-        /NOMATCH/s;
-
-    return 1;
-}
-
-sub strip_whois {
-    $_ = $_[0];
-
-    s/The Data.+(policy|connection)\.\n//is;
-    s/% NOTE:.+prohibited\.//is;
-    s/Disclaimer:.+\*\*\*\n?//is;
-    s/NeuLevel,.+A DOMAIN NAME\.//is;
-    s/For information about.+page=spec//is;
-    s/NOTICE: Access to.+this policy.//is;
-    s/The previous information.+completeness\.//s;
-    s/NOTICE AND TERMS OF USE:.*modify these terms at any time\.//s;
-    s/TERMS OF USE:.*?modify these terms at any time\.//s;
-    s/NOTICE:.*for this registration\.//s;
-
-    s/By submitting a WHOIS query.+?DOMAIN AVAILABILITY.\n?//s;
-    s/Registration and WHOIS.+?its accuracy.\n?//s;
-    s/Disclaimer:.+?\*\*\*\n?//s;
-    s/The .COOP Registration .+ Information\.//s;
-    s/Whois Server Version \d+\.\d+.//is;
-    s/NeuStar,.+www.whois.us\.//is;
-    s/\n?Domain names in the \.com, .+ detailed information.\n?//s;
-    s/\n?The Registry database .+?Registrars\.\n//s;
-    s/\n?>>> Last update of .+? <<<\n?//;
-    s/% .+?\n//gs;
-    s/Domain names can now be registered.+?for detailed information.//s;
-
-    s/^\n+//s;
-    s/(?:\s*\n)+$/\n/s;
-
-    $_;
-}
-
-# charset / conversion functions
-
-sub _koi2win($) {
-    my $val = $_[0];
-    $val =~ tr/бвчздецъйклмнопртуфхжигюыэшщяьасБВЧЗДЕЦЪЙКЛМНОПРТУФХЖИГЮЫЭЯЩШЬАСіЈ/А-яЁё/;
-    return $val;
 }
 
 sub _require_once ($) {
