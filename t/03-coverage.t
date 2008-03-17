@@ -55,7 +55,6 @@ foreach my $tld (sort keys %Net::Whois::Raw::Data::servers) {
 
 sub get_domain {
     my $tld = shift;
-    return "whois.$tld";
     
     my $content = get_google($tld);
     my ($domain) = $content =~ /<a href=".+?:\/\/.*?(\w+\.$tld)\//i;

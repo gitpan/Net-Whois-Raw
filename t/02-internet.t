@@ -49,7 +49,12 @@ SKIP: {
     
     # Net::Whois::Raw::Common::write_to_cache
     my $test_domain = 'google.com';
-    my $tmp_dir     = '/tmp/net-whois-raw-common-test-'.time;
+    my $tmp_dir;
+    if ($^O =~ /mswin/i) {
+        $tmp_dir = $ENV{TEMP}.'\net-whois-raw-common-test-'.time;
+    } else {
+        $tmp_dir = '/tmp/net-whois-raw-common-test-'.time;
+    }
     my $cache_file  = "$tmp_dir/$test_domain.00";
     
     $Net::Whois::Raw::CACHE_DIR = $tmp_dir;

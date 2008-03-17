@@ -258,3 +258,6 @@ Revision history for Perl extension Net::Whois::Raw.
 	- new caching mechanism
 	- tests writen for Net::Whois::Raw::Common
         - tests writen for checking the correctness of whois-servers
+        
+1.51    Mar 12 2008     Sergey Kotenko
+        - test 02-internet.t fixed to work correctly on MS Windows.
