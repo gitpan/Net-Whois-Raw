@@ -1,33 +1,15 @@
----
-name: Net-Whois-Raw
-version: 1.51
-author:
-  - |-
-    Original author Ariel Brosh B<schop@cpan.org>, 
-    Inspired by jwhois.pl available on the net.
-  - |-
-    Past maintainers Gabor Szabo B<gabor@perl.org.il>,
-    Corris Randall B<corris@cpan.org>
-  - 'Current Maintainer: Walery Studennikov B<despair@cpan.org>'
-abstract: Get Whois information for domains
-license: perl
-resources:
-  license: http://dev.perl.org/licenses/
+# http://module-build.sourceforge.net/META-spec.html
+#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
+name:         Net-Whois-Raw
+version:      1.52
+version_from: lib/Net/Whois/Raw.pm
+installdirs:  site
 requires:
-  HTTP::Headers: 0
-  HTTP::Request: 0
-  IO::Socket: 1
-  LWP::UserAgent: 0
-  URI::URL: 0
-provides:
-  Net::Whois::Raw:
-    file: lib/Net/Whois/Raw.pm
-    version: 1.51
-  Net::Whois::Raw::Common:
-    file: lib/Net/Whois/Raw/Common.pm
-  Net::Whois::Raw::Data:
-    file: lib/Net/Whois/Raw/Data.pm
-generated_by: Module::Build version 0.2808
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.2.html
-  version: 1.2
+    HTTP::Headers:                 0
+    HTTP::Request:                 0
+    IO::Socket:                    1
+    LWP::UserAgent:                0
+    URI::URL:                      0
+
+distribution_type: module
+generated_by: ExtUtils::MakeMaker version 6.30

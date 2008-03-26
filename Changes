@@ -261,3 +261,6 @@ Revision history for Perl extension Net::Whois::Raw.
         
 1.51    Mar 12 2008     Sergey Kotenko
         - test 02-internet.t fixed to work correctly on MS Windows.
+
+1.52    Mar 26 2008     Walery Studennikov
+        - .asia support added

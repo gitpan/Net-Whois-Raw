@@ -30,6 +30,7 @@ our %servers = qw(
 
     AERO   whois.aero
     ARPA   whois.arin.net
+    ASIA   whois.nic.asia
     BIZ    whois.biz
     CAT    whois.cat
     COM    whois.crsnic.net
