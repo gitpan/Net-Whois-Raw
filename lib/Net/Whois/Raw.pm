@@ -10,7 +10,7 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.52';
+our $VERSION = '1.54';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -32,6 +32,8 @@ sub whois_config {
 # get cached whois
 sub whois {
     my ($dom, $server, $which_whois) = @_;
+
+    $which_whois ||= 'QRY_LAST';
 
     my $res = Net::Whois::Raw::Common::get_from_cache(
         $dom, $CACHE_DIR, $CACHE_TIME
@@ -257,7 +259,7 @@ sub www_whois_query {
 
     my $ishtml;
 
-    $resp = Net::Whois::Raw::Common::parse_www_content($resp, $tld);
+    $resp = Net::Whois::Raw::Common::parse_www_content($resp, $tld, $CHECK_EXCEED);
 
     return wantarray ? ($resp, $ishtml) : $resp;
 }

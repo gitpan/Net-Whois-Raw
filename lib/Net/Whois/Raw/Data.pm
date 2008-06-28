@@ -6,6 +6,7 @@ our @www_whois = qw(
     SPB.RU
     MSK.RU
     VN
+    AC
 );
 
 our %servers = qw(
@@ -19,7 +20,6 @@ our %servers = qw(
     SPB.RU	whois.relcom.ru
     MSK.RU	whois.relcom.ru
     RU.NET	whois.relcom.ru
-    YES.RU	whois.regtime.net
     MSK.SU      whois.relcom.ru
     INT.RU      whois.int.ru    
     NNOV.RU     whois.nnov.ru

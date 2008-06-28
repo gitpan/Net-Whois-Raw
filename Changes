@@ -264,3 +264,9 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.52    Mar 26 2008     Walery Studennikov
         - .asia support added
+
+1.53	Mar 31 2008	Sergey Kotenko
+	- fixed warnings on cache writing
+
+1.54	Jun 28 2008	Matsui Shinsuke
+	- .ac support added

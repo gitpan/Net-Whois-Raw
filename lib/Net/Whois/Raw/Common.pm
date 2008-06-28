@@ -44,9 +44,14 @@ sub write_to_cache {
     foreach my $res ( @{$result} ) {
         my $postfix = sprintf("%02d", $level);
         if ( open( CACHE, ">$cache_dir/$query.$postfix" ) ) {
-            print CACHE $res->{srv} ? $res->{srv} : $res->{server}, "\n";
-            print CACHE $res->{text} ? $res->{text} : $res->{whois};
-            close(CACHE);
+            print CACHE $res->{srv} ? $res->{srv} :
+                ( $res->{server} ? $res->{server} : '')
+                , "\n";
+                
+            print CACHE $res->{text} ? $res->{text} :
+                ( $res->{whois} ? $res->{whois} : '' );
+            
+            close(CACHE);            
             chmod 0666, "$cache_dir/$query.$postfix";
         }
         $level++;
@@ -254,6 +259,8 @@ sub get_http_query_url {
     } elsif ($tld eq 'vn') {
 	$url = "http://www.tenmien.vn/jsp/jsp/tracuudomainchitiet.jsp?type=$name.$tld";
 	$form{referer} = 'http://www.tenmien.vn/jsp/jsp/tracuudomain1.jsp';
+    } elsif ($tld eq 'ac') {
+        $url = "http://nic.ac/cgi-bin/whois?query=$name.$tld";
     }
         
     return $url, %form;
@@ -262,7 +269,7 @@ sub get_http_query_url {
 # Parse content received from HTTP server
 # %param: resp*, tld*
 sub parse_www_content {
-    my ($resp, $tld) = @_;
+    my ($resp, $tld, $CHECK_EXCEED) = @_;
     
     chomp $resp;
     $resp =~ s/\r//g;
@@ -393,11 +400,28 @@ sub parse_www_content {
 	} else {
 	    return 0;
 	};
+    } elsif ($tld eq 'ac') {
+
+        if ($CHECK_EXCEED && $resp =~ /too many requests/is) {
+            die "Connection rate exceeded";
+        } elsif ($resp =~ /<!--- Start \/ Domain Info --->(.+?)<!--- End \/ Domain Info --->/is) {
+            $resp = $1;
+            $resp =~ s|</?table.*?>||ig;
+            $resp =~ s|</?b>||ig;
+            $resp =~ s|</?font.*?>||ig;
+            $resp =~ s|<tr.*?>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
+            $resp =~ s|</?tr>||ig;
+            $resp =~ s|</?td>||ig;
+            $resp =~ s|^\s*||mg;
+        } else {
+            return 0;
+        }
+
     } else {
         return 0;
     }
     
-    return $resp;    
+    return $resp;
 }
 
 # check, if it's IP-address?

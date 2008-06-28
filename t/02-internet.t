@@ -2,7 +2,7 @@
 
 use strict;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 BEGIN {
     use_ok('Net::Whois::Raw',qw( whois ));
@@ -36,6 +36,9 @@ SKIP: {
     
     # get_server
     ok( Net::Whois::Raw::Common::get_server( 'test.test', 1 ) eq 'TEST.whois-servers.net', 'get_server' );
+
+    # Net::Whois::Raw::www_whois_query for AC domain
+    ok( Net::Whois::Raw::www_whois_query( 'nic.ac' ) =~ /Organization Name.*Network Information Center/i, "www_whois_query");
     
     # Net::Whois::Raw::Common::process_whois
     no warnings;
