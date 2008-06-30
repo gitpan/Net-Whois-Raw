@@ -1,7 +1,6 @@
 package Net::Whois::Raw::Common;
 
 use strict;
-use Storable;
 require Net::Whois::Raw::Data;
 
 # get whois from cache 
