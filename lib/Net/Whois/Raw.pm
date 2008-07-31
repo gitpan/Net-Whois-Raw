@@ -10,7 +10,7 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.55';
+our $VERSION = '1.56';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -240,6 +240,9 @@ sub www_whois_query {
     my $req = new HTTP::Request $method, $url, $header;
 
     if ($method eq 'POST') {
+        require URI::URL;
+        import URI::URL;
+
         my $curl = url("http:");
         $req->content_type('application/x-www-form-urlencoded');
         $curl->query_form( %form );

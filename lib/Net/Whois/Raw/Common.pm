@@ -256,8 +256,11 @@ sub get_http_query_url {
     } elsif ($tld eq 'kz') {
         $url = "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0";
     } elsif ($tld eq 'vn') {
-	$url = "http://www.tenmien.vn/jsp/jsp/tracuudomainchitiet.jsp?type=$name.$tld";
-	$form{referer} = 'http://www.tenmien.vn/jsp/jsp/tracuudomain1.jsp';
+	$url = "http://www.vnnic.vn/jsp/jsp/tracuudomain1.jsp";
+
+        $form{cap2} = ".$tld"; 
+        $form{referer} = 'http://www.vnnic.vn/english/';
+        $form{domainname1} = $name;
     } elsif ($tld eq 'ac') {
         $url = "http://nic.ac/cgi-bin/whois?query=$name.$tld";
     }
@@ -269,7 +272,7 @@ sub get_http_query_url {
 # %param: resp*, tld*
 sub parse_www_content {
     my ($resp, $tld, $CHECK_EXCEED) = @_;
-    
+     
     chomp $resp;
     $resp =~ s/\r//g;
 
@@ -389,16 +392,22 @@ sub parse_www_content {
 	    return 0;
 	}
     } elsif ($tld eq 'vn') {
-	if ($resp =~/#ENGLISH.*?<\/tr>(.+?)<\/table>/si) {
-	    $resp = $1;
-	    $resp =~ s|</?font.*?>||ig;
-	    $resp =~ s|&nbsp;||ig;
-	    $resp =~ s|<br>|\n|ig;
-	    $resp =~ s|<tr>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
-	    $resp =~ s|^\s*||mg;
-	} else {
-	    return 0;
-	};
+
+        if ($resp =~ /\(\s*?(Domain.*?:\s*(?:Available|registered))\s*?\)/i )  {
+            $resp = $1;
+        } else {
+            return 0;
+        }
+
+        #
+	# if ($resp =~/#ENGLISH.*?<\/tr>(.+?)<\/table>/si) {
+	#    $resp = $1;
+	#    $resp =~ s|</?font.*?>||ig;
+	#    $resp =~ s|&nbsp;||ig;
+	#    $resp =~ s|<br>|\n|ig;
+	#    $resp =~ s|<tr>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
+	#    $resp =~ s|^\s*||mg;
+	# 
     } elsif ($tld eq 'ac') {
 
         if ($CHECK_EXCEED && $resp =~ /too many requests/is) {

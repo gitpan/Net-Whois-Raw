@@ -264,6 +264,7 @@ our %notfound = (
     'whois.networksolutions.com'=> '(?i)no match',
     'whois.melbourneit.com'     => '^Invalid/Unsupported whois name check',
     'whois.worldnames.net'      => 'NO MATCH for domain',
+    'www_whois'                 => 'Available', # for VN zone
 );
 
 our %strip = (

@@ -1,17 +1,33 @@
---- #YAML:1.0
-name:                Net-Whois-Raw
-version:             1.55
-abstract:            ~
-license:             ~
-author:              ~
-generated_by:        ExtUtils::MakeMaker version 6.42
-distribution_type:   module
-requires:     
-    HTTP::Headers:                 0
-    HTTP::Request:                 0
-    IO::Socket:                    1
-    LWP::UserAgent:                0
-    URI::URL:                      0
+---
+name: Net-Whois-Raw
+version: 1.56
+author:
+  - |-
+    Original author Ariel Brosh B<schop@cpan.org>, 
+    Inspired by jwhois.pl available on the net.
+  - |-
+    Past maintainers Gabor Szabo B<gabor@perl.org.il>,
+    Corris Randall B<corris@cpan.org>
+  - 'Current Maintainer: Walery Studennikov B<despair@cpan.org>'
+abstract: Get Whois information for domains
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  HTTP::Headers: 0
+  HTTP::Request: 0
+  IO::Socket: 1
+  LWP::UserAgent: 0
+  URI::URL: 0
+provides:
+  Net::Whois::Raw:
+    file: lib/Net/Whois/Raw.pm
+    version: 1.56
+  Net::Whois::Raw::Common:
+    file: lib/Net/Whois/Raw/Common.pm
+  Net::Whois::Raw::Data:
+    file: lib/Net/Whois/Raw/Data.pm
+generated_by: Module::Build version 0.280801
 meta-spec:
-    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
-    version: 1.3
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
