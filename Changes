@@ -270,7 +270,10 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.54	Jun 28 2008	Matsui Shinsuke
 	- .ac support added
-1.56
-        Jul 31 2008     Pavel Odintsov
+
+1.56    Jul 31 2008     Pavel Odintsov
         - .vn support fixed
         - HTTP POST requests fixed
+
+1.57    Aug 11 2008     Walery Studennikov
+	- Removed annoying warning from Net/Whois/Raw.pm

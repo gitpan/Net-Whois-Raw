@@ -10,7 +10,7 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.56';
+our $VERSION = '1.57';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -130,7 +130,6 @@ sub recursive_whois {
     	} elsif ($whois =~ /To single out one record, look it up with \"xxx\",/s) {
             return recursive_whois( "=$dom", $srv, $was_srv );
 	} elsif (/ReferralServer: whois:\/\/([-.\w]+)/) {
-	    warn "SEX!!!!\n";
 	    $newsrv = $1;
 	    last;
 	} elsif (/Contact information can be found in the (\S+)\s+database/) {
