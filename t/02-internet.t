@@ -12,12 +12,12 @@ BEGIN {
     $Net::Whois::Raw::CHECK_EXCEED = 1;
 };
 
-my @domains = qw( 
+my @domains = qw(
     yahoo.com
-    freshmeat.net
     freebsd.org
     reg.ru
     ns1.nameself.com.NS
+    belizenic.bz
 );
 
 SKIP: {

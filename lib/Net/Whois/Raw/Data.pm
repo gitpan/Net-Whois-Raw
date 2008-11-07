@@ -7,6 +7,7 @@ our @www_whois = qw(
     MSK.RU
     VN
     AC
+    BZ
 );
 
 our %servers = qw(

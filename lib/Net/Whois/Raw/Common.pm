@@ -238,31 +238,45 @@ sub get_http_query_url {
 
     if ($tld eq 'tv') {
         $url = "http://www.tv/cgi-bin/whois.cgi?domain=$name&tld=tv";
-    } elsif ($tld eq 'mu') {
+    }
+    elsif ($tld eq 'mu') {
         $url = 'http://www.mu/cgi-bin/mu_whois.cgi';
         $form{whois} = $name;
-    } elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
+    }
+    elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
         $url = "http://www.relcom.ru/Services/Whois/?fullName=$name.$tld";
-    } elsif ($tld eq 'ru' || $tld eq 'su') {
+    }
+    elsif ($tld eq 'ru' || $tld eq 'su') {
         $url = "http://www.nic.ru/whois/?domain=$name.$tld";
-    } elsif ($tld eq 'ip') {
+    }
+    elsif ($tld eq 'ip') {
         $url = "http://www.nic.ru/whois/?ip=$name";
-    } elsif ($tld eq 'in') {
+    }
+    elsif ($tld eq 'in') {
         $url = "http://www.registry.in/cgi-bin/whois.cgi?whois_query_field=$name";
-    } elsif ($tld eq 'cn') {
+    }
+    elsif ($tld eq 'cn') {
         $url = "http://ewhois.cnnic.net.cn/whois?value=$name.$tld&entity=domain";
-    } elsif ($tld eq 'ws') {
+    }
+    elsif ($tld eq 'ws') {
         $url = "http://worldsite.ws/utilities/lookup.dhtml?domain=$name&tld=$tld";
-    } elsif ($tld eq 'kz') {
+    }
+    elsif ($tld eq 'kz') {
         $url = "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0";
-    } elsif ($tld eq 'vn') {
+    }
+    elsif ($tld eq 'vn') {
 	$url = "http://www.vnnic.vn/jsp/jsp/tracuudomain1.jsp";
 
         $form{cap2} = ".$tld"; 
         $form{referer} = 'http://www.vnnic.vn/english/';
         $form{domainname1} = $name;
-    } elsif ($tld eq 'ac') {
+    }
+    elsif ($tld eq 'ac') {
         $url = "http://nic.ac/cgi-bin/whois?query=$name.$tld";
+    }
+    elsif ($tld eq 'bz') {
+	my $domcode = unpack( 'H*', "$name.$tld" );
+        $url = 'http://www.belizenic.bz/cgi-bin/Registrar_YTest?action=whois&action2=whois&domain='.$domcode;
     }
         
     return $url, %form;
@@ -425,6 +439,12 @@ sub parse_www_content {
             return 0;
         }
 
+    } elsif ($tld eq 'bz') {
+
+	if ($resp =~ m|<pre>(.+?)</pre>|xms) {
+	    $resp = $1;
+	}
+
     } else {
         return 0;
     }
@@ -485,7 +505,7 @@ sub koi2win($) {
     # ukr chars
     $val =~ tr/¤¦§´¶·½/º³¿ª²¯¥/;
     $val =~ s/\xAD/´/g;
-    
+
     return $val;
 }
 

@@ -277,3 +277,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.57    Aug 11 2008     Walery Studennikov
 	- Removed annoying warning from Net/Whois/Raw.pm
+
+1.58    Nov 07 2008     Walery Studennikov
+	- Added .BZ support (www_whois)
