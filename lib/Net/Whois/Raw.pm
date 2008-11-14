@@ -10,11 +10,13 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.58';
+our $VERSION = '1.59';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
 our (%notfound, %strip, @SRC_IPS, %POSTPROCESS);
+
+our $class = __PACKAGE__;
 
 my $last_cache_clear_time;
 
@@ -171,12 +173,14 @@ sub whois_query {
     # Prepare for query
 
     my @sockparams;
-    if (scalar(@SRC_IPS)) {
+    if ($class->can ('whois_query_sockparams')) {
+        @sockparams = $class->whois_query_sockparams ($dom, $srv);
+    } elsif (scalar(@SRC_IPS)) {
         my $src_ip = $SRC_IPS[0];
         push @SRC_IPS, shift @SRC_IPS; # rotate ips
-	@sockparams = (PeerAddr => "$srv:43", LocalAddr => $src_ip);
+        @sockparams = (PeerAddr => "$srv:43", LocalAddr => $src_ip);
     } else {
-	@sockparams = "$srv:43";
+        @sockparams = "$srv:43";
     }
 
     print "QUERY: $whoisquery; SRV: $srv, ".
@@ -191,15 +195,24 @@ sub whois_query {
     eval {
         local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
         $prev_alarm = alarm $TIMEOUT if $TIMEOUT;
-	my $sock = new IO::Socket::INET(@sockparams) || Carp::confess "$srv: $!: ".join(', ', @sockparams);
+        my $sock = IO::Socket::INET->new(@sockparams) || Carp::confess "$srv: $!: ".join(', ', @sockparams);
+        
+        if ($class->can ('whois_socket_fixup')) {
+            my $new_sock = $class->whois_socket_fixup ($sock);
+        	$sock = $new_sock if $new_sock;
+        }
 
 	if ($DEBUG >= 2) {
 	    _require_once('Data::Dumper');
 	    print "Socket: ".Dumper($sock);
 	}
-	print $sock "$whoisquery\r\n";
-	@lines = <$sock>;
-	close $sock;
+
+        $sock->print ($whoisquery, "\r\n");
+        # TODO: $soc->read, parameters for read chunk size, max content length
+        while (my $str = <$sock>) {
+            push @lines, $str;
+        }
+        $sock->close;
     };
 
     alarm $prev_alarm;

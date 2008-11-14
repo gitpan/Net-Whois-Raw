@@ -373,7 +373,7 @@ our %strip = (
     ],
     'whois.nic.cl' => [
 	'^cl.cl:',
-	'^Más información: http://www.nic.cl/',
+	'^Mï¿½s informaciï¿½n: http://www.nic.cl/',
     ],
     'whois.nic.cx' => [
 	'^ Registrar: Christmas Island',
@@ -420,7 +420,7 @@ our %strip = (
     ],
     'whois.nic.or.kr' => [
 	'^Korea Internet Information Service',
-	'^20\\d\\d³â 7¿ù 2ÀÏºÎÅÍ´Â °³¼±µÈ Whois',
+	'^20\\d\\dï¿½ï¿½ 7ï¿½ï¿½ 2ï¿½Ïºï¿½ï¿½Í´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Whois',
 	'^.com, .net, .org',
     ],
     'whois2.afilias-grs.net' => [
@@ -448,13 +448,13 @@ our %strip = (
     ],
     'whois.nic.mx' => [
 	'^------------------',
-	'^La información que ha',
+	'^La informaciï¿½n que ha',
 	'^relacionados con la',
-	'^DNS administrado por el NIC-México.',
+	'^DNS administrado por el NIC-Mï¿½xico.',
 	'^Queda absolutamente prohibido',
-	'^envío de e-mail no solicitado',
+	'^envï¿½o de e-mail no solicitado',
 	'^productos y servicios',
-	'^del NIC-México.',
+	'^del NIC-Mï¿½xico.',
 	'^La base de datos generada',
 	'^protegida por las leyes de',
 	'^internacionales sobre la materia.',
@@ -753,6 +753,7 @@ our %exceed = (
     'whois.ripn.net' => 'exceeded allowed connection rate',
     'whois.domain-registry.nl' => 'too many requests',
     'whois.nic.uk' => 'and will be replenished',
+    'whois.networksolutions.com' => 'contained within a list of IP addresses that may have failed',
 );
 
 our $default_ban_time = 60;

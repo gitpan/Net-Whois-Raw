@@ -280,3 +280,8 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.58    Nov 07 2008     Walery Studennikov
 	- Added .BZ support (www_whois)
+
+1.59    Nov 14 2008 ivan baktsheev
+	- now client can offer his own dns resolver and smart local socket selection
+	- added option to change default socket
+	- added "banned" message from internic
