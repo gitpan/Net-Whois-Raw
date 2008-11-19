@@ -3,9 +3,6 @@ Revision history for Perl extension Net::Whois::Raw.
 0.01  Jul 05 2000
 	- original version; created by h2xs 1.19
 
-0.02 - 0.22  ???
-	-  ???
-
 0.23  Mar 25 2003
 	- only exports &whois by default, the other variables are exportable still.
 	- incorporated new whois servers ( thanks Toni Mueller <support@oeko.net> )
@@ -281,7 +278,11 @@ Revision history for Perl extension Net::Whois::Raw.
 1.58    Nov 07 2008     Walery Studennikov
 	- Added .BZ support (www_whois)
 
-1.59    Nov 14 2008 ivan baktsheev
+1.59    Nov 14 2008	ivan baktsheev
 	- now client can offer his own dns resolver and smart local socket selection
 	- added option to change default socket
 	- added "banned" message from internic
+
+1.60    Nov 14 2008	Walery Studennikov
+	- pwhois script rewritten (use Getopt::Long)
+	- small bugfixes + code layout foxes

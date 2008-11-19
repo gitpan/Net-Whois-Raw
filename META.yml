@@ -1,6 +1,6 @@
 ---
 name: Net-Whois-Raw
-version: 1.59
+version: 1.60
 author:
   - |-
     Original author Ariel Brosh B<schop@cpan.org>, 
@@ -14,15 +14,15 @@ license: perl
 resources:
   license: http://dev.perl.org/licenses/
 requires:
+  Getopt::Long: 2
   HTTP::Headers: 0
   HTTP::Request: 0
-  IO::Socket: 1
   LWP::UserAgent: 0
   URI::URL: 0
 provides:
   Net::Whois::Raw:
     file: lib/Net/Whois/Raw.pm
-    version: 1.59
+    version: 1.60
   Net::Whois::Raw::Common:
     file: lib/Net/Whois/Raw/Common.pm
   Net::Whois::Raw::Data:

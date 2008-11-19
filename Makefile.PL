@@ -5,9 +5,9 @@ WriteMakefile
           'NAME' => 'Net::Whois::Raw',
           'VERSION_FROM' => 'lib/Net/Whois/Raw.pm',
           'PREREQ_PM' => {
+                           'Getopt::Long' => '2',
                            'HTTP::Headers' => 0,
                            'HTTP::Request' => 0,
-                           'IO::Socket' => '1',
                            'LWP::UserAgent' => 0,
                            'URI::URL' => 0
                          },

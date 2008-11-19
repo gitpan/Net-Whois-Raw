@@ -1,17 +1,42 @@
 #!/usr/bin/perl -w
 
-use Net::Whois::Raw;
-use Getopt::Std;
 use strict;
-use vars qw(
-    $opt_s $opt_c $opt_S $opt_C $opt_d $opt_e $opt_t $opt_T $opt_a $opt_h $opt_F $opt_L $opt_A
-);
+use warnings;
+use Net::Whois::Raw;
+use Getopt::Long;
 
-getopts("scSCetdFLAT:a:h");
+my $help;
+my $do_strip;
+my $do_strip_more;
+my $do_checkfail;
+my $do_checkfail_more;
+my $debug = 0;
+my $timeout = 10;
+my $enable_caching;
+my @source_addresses;
+my $return_first;
+my $return_last;
+my $return_all;
 
-if ($opt_h) {
-USAGE:
-	print <<EOM;
+Getopt::Long::Configure( 'bundling', 'no_ignore_case' );
+
+GetOptions(
+    'h|help'		=> \$help,
+    'strip|s'		=> \$do_strip,
+    'strip_more|S'	=> \$do_strip_more,
+    'checkfail|c'	=> \$do_checkfail,
+    'checkfail_more|C'	=> \$do_checkfail_more,
+    'debug|d+'		=> \$debug,
+    'timeout|T=i'	=> \$timeout,
+    'enable_caching|t'	=> \$enable_caching,
+    'src_addr|a=s@'	=> \@source_addresses,
+    'return_first|F'	=> \$return_first,
+    'return_last|L'	=> \$return_last,
+    'return_all|A'	=> \$return_all,
+) or die;
+
+if ($help || !@ARGV) {
+    print <<EOM;
 Usage:	$0 [ -s | -S ] [ -c | -C ] [ -d ] [ -T <timeout> ] [ -a <src_ip> ] [ -t ] [ -F | -L | -A ] <domain> [ <server> ]
 
 Switches:
@@ -19,7 +44,6 @@ Switches:
 -S	some exra rules for above
 -c	attempts to return an empty answer for failed searches.
 -C	some exra rules for above
--e	forces die if connection rate to server have been exceeded.
 -T	set timeout for connection attempts
 -t	enables caching.
 -a	specify an ip address that should be used as source address
@@ -28,68 +52,47 @@ Switches:
 -L	returns results of the last query of recursive whois requests (the default)
 -A	returns results of the last query of recursive whois requests
 EOM
-	exit; 
+    exit; 
 }
 
-$Net::Whois::Raw::OMIT_MSG = 0;
-$Net::Whois::Raw::CHECK_FAIL = 0;
+$Net::Whois::Raw::DEBUG = $debug;
+$Net::Whois::Raw::OMIT_MSG = $do_strip_more ? 2 : $do_strip ? 1 : 0;
+$Net::Whois::Raw::CHECK_FAIL = $do_checkfail_more ? 2 : $do_checkfail ? 1 : 0;
+$Net::Whois::Raw::TIMEOUT = $timeout;
+@Net::Whois::Raw::SRC_IPS = @source_addresses if @source_addresses;
 
-$Net::Whois::Raw::OMIT_MSG = 1 if $opt_s;
-$Net::Whois::Raw::OMIT_MSG = 2 if $opt_S;
-$Net::Whois::Raw::CHECK_FAIL = 1 if $opt_c;
-$Net::Whois::Raw::CHECK_FAIL = 2 if $opt_C;
-$Net::Whois::Raw::CHECK_EXCEED = 1 if $opt_e;
-$Net::Whois::Raw::TIMEOUT = $opt_T;
-$Net::Whois::Raw::CACHE_DIR = undef;
-@Net::Whois::Raw::SRC_IPS = ($opt_a) if $opt_a;
-
-$Net::Whois::Raw::DEBUG = 1 if $opt_d;
-
-if ($opt_t) {
-    if ($^O =~ /Win/) {
-        $Net::Whois::Raw::CACHE_DIR = $ENV{'TEMP'} || "C:\\temp";
-    } else {
-        $Net::Whois::Raw::CACHE_DIR = $ENV{'TEMP'} || "/tmp";
-        my @ent = getpwuid($>);
-	# clear cache
-        if (@ent) {
-            foreach ("/tmp/$ent[0]", "$ent[7]/.pwhois") {
-                mkdir $_, 0644;
-                if (open(O, ">$_/__$$-$$.tmp")) {
-                    close(O);
-                    unlink "$_/__$$-$$.tmp";
-                    $Net::Whois::Raw::CACHE_DIR = $_;
-                    last;
-                 }
-            }
-        }
-    }
+if ($enable_caching) {
+    $Net::Whois::Raw::CACHE_DIR = $ENV{TEMP} || ($^O =~ /Win/ ? "C:\\temp" : '/tmp' );
+}
+else {
+    $Net::Whois::Raw::CACHE_DIR = undef;
 }
 
-my $dom = $ARGV[0] || goto USAGE;
-
+my $dom = $ARGV[0];
 my $server = $ARGV[1];
 
 eval {
-	my $result;
-	if ($opt_F || $opt_L || $opt_A) {
-	    my $which_whois = $opt_F ? 'QRY_FIRST' : $opt_L ? 'QRY_LAST' : 'QRY_ALL';
-	    $result = Net::Whois::Raw::get_whois($dom, $server, $which_whois);
-	} else {
-	    $result = Net::Whois::Raw::whois($dom, $server);
-	}
-	
-	if ($result) {
-		print $result;
-	} else {
-		print STDERR "Failed.\n";
-	}
+    my $result;
+    my $which_whois =
+	$return_first ? 'QRY_FIRST' :
+	$return_all   ? 'QRY_ALL' :
+			'QRY_LAST';
+    $result = Net::Whois::Raw::get_whois( $dom, $server, $which_whois );
+    
+    if ($result) {
+	print $result, "\n";
+    }
+    else {
+	print STDERR "Failed.\n";
+    }
 };
+
 if ($@) {
-	my $err = $@;
-	$err =~ s/\s+at \S+ line \d+\.$//;
-	print "\nWhois information could not be fetched:\n$err\n";
-	exit -1;
+    my $err = $@;
+
+    $err =~ s/\s+at \S+ line \d+\.$//;
+    print "\nWhois information could not be fetched:\n$err\n";
+    exit -1;
 }	
 
 __END__

@@ -189,11 +189,13 @@ sub get_real_whois_query{
     my ($whoisquery, $srv) = @_;
     
     $whoisquery =~ s/.NS$//i;
-    if ($srv eq 'whois.crsnic.net') {
+    if ($srv eq 'whois.crsnic.net' && domain_level($whoisquery) == 2) {
         $whoisquery = "domain $whoisquery";
-    } elsif ($srv eq 'whois.denic.de') {
+    }
+    elsif ($srv eq 'whois.denic.de') {
         $whoisquery = "-T dn,ace -C ISO-8859-1 $whoisquery";
-    } elsif ($srv eq 'whois.nic.name') {
+    }
+    elsif ($srv eq 'whois.nic.name') {
         $whoisquery = "domain=$whoisquery";
     }
     
@@ -207,9 +209,11 @@ sub get_dom_tld {
     my $tld;
     if ( is_ipaddr($dom) ) {
         $tld = "IP";
-    } elsif ( domain_level($dom) == 1 ) {
+    }
+    elsif ( domain_level($dom) == 1 ) {
         $tld = "NOTLD";
-    } else { 
+    }
+    else { 
         my @alltlds = keys %Net::Whois::Raw::Data::servers;
         @alltlds = sort { dlen($b) <=> dlen($a) } @alltlds;
         foreach my $awailtld (@alltlds) {
@@ -301,7 +305,8 @@ sub parse_www_content {
         return 0 if $resp =~ /Whois information is not available for domain/s;
         $ishtml = 1;
 
-    } elsif ( $tld eq 'spb.ru' || $tld eq 'msk.ru' ) {
+    }
+    elsif ( $tld eq 'spb.ru' || $tld eq 'msk.ru' ) {
 
         $resp = koi2win( $resp );
         return undef unless $resp =~ m|<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2"><TR><TD BGCOLOR="#990000"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="20"><TR><TD BGCOLOR="white">(.+?)</TD></TR></TABLE></TD></TR></TABLE>|s;
@@ -311,7 +316,8 @@ sub parse_www_content {
 
         if ($resp =~ m|<PRE>(.+?)</PRE>|s) {
             $resp = $1;
-        } elsif ($resp =~ m|DNS \(name-серверах\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE><H3>Дополнительную информацию можно получить по адресу:</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
+        }
+	elsif ($resp =~ m|DNS \(name-серверах\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE><H3>Дополнительную информацию можно получить по адресу:</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
             my $nameservers = $1;
             my $emails = $2;
             my (@nameservers, @emails);
@@ -332,14 +338,16 @@ sub parse_www_content {
             }
         }
 
-    } elsif ($tld eq 'mu') {
+    }
+    elsif ($tld eq 'mu') {
 
         return 0 unless
         $resp =~ /(<p><b>Domain Name:<\/b><br>.+?)<hr width="75%">/s;
         $resp = $1;
         $ishtml = 1;
 
-    } elsif ( $tld eq 'ru' || $tld eq 'su' ) {
+    }
+    elsif ( $tld eq 'ru' || $tld eq 'su' ) {
 
         $resp = koi2win($resp);
         (undef, $resp) = split('<script>.*?</script>',$resp);
@@ -350,7 +358,8 @@ sub parse_www_content {
         return 0 if $resp=~ m/Доменное имя .*? не зарегистрировано/i;
         $resp = 'ERROR' if $resp =~ m/Error:/i || $resp !~ m/Информация о домене .+? \(по данным WHOIS.RIPN.NET\):/;;
         #TODO: errors
-    } elsif ($tld eq 'ip') {
+    }
+    elsif ($tld eq 'ip') {
 
         return 0 unless $resp =~ m|<p ID="whois">(.+?)</p>|s;
 
@@ -361,7 +370,8 @@ sub parse_www_content {
         $resp =~ s|<br>||g;
         $resp =~ s|&nbsp;| |g;
 
-    } elsif ($tld eq 'in') {
+    }
+    elsif ($tld eq 'in') {
 
         if ( $resp =~ /Domain ID:\w{3,10}-\w{4}\n(.+?)\n\n/s ) {
             $resp = $1;
@@ -370,7 +380,8 @@ sub parse_www_content {
             return 0;
         }
 
-    } elsif ($tld eq 'cn') {
+    }
+    elsif ($tld eq 'cn') {
 
         if ($resp =~ m|<table border=1 cellspacing=0 cellpadding=2>\n\n(.+?)\n</table>|s) {
             $resp = $1;
@@ -386,7 +397,8 @@ sub parse_www_content {
             return 0;
         }
 
-    } elsif ($tld eq 'ws') {
+    }
+    elsif ($tld eq 'ws') {
 
 	if ($resp =~ /Whois information for .+?:(.+?)<table>/s) {
 	    $resp = $1;
@@ -398,14 +410,16 @@ sub parse_www_content {
 	    return 0;
 	}
 
-    } elsif ($tld eq 'kz') {
+    }
+    elsif ($tld eq 'kz') {
     
 	if ($resp =~ /Domain Name\.{10}/s && $resp =~ /<pre>(.+?)<\/pre>/s) {
 	    $resp = $1;
 	} else {
 	    return 0;
 	}
-    } elsif ($tld eq 'vn') {
+    }
+    elsif ($tld eq 'vn') {
 
         if ($resp =~ /\(\s*?(Domain.*?:\s*(?:Available|registered))\s*?\)/i )  {
             $resp = $1;
@@ -422,7 +436,8 @@ sub parse_www_content {
 	#    $resp =~ s|<tr>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
 	#    $resp =~ s|^\s*||mg;
 	# 
-    } elsif ($tld eq 'ac') {
+    }
+    elsif ($tld eq 'ac') {
 
         if ($CHECK_EXCEED && $resp =~ /too many requests/is) {
             die "Connection rate exceeded";
@@ -439,13 +454,15 @@ sub parse_www_content {
             return 0;
         }
 
-    } elsif ($tld eq 'bz') {
+    }
+    elsif ($tld eq 'bz') {
 
 	if ($resp =~ m|<pre>(.+?)</pre>|xms) {
 	    $resp = $1;
 	}
 
-    } else {
+    }
+    else {
         return 0;
     }
     
@@ -481,7 +498,8 @@ sub split_domain {
     my $name;
     if (uc $tld eq 'IP' || $tld eq 'NOTLD') {
 	$name = $dom;
-    } else {
+    }
+    else {
 	$dom =~ /(.+?)\.$tld$/; # or die "Can't match $tld in $dom";
 	$name = $1;
     }

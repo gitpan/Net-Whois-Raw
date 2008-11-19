@@ -10,7 +10,7 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.59';
+our $VERSION = '1.60';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -47,7 +47,8 @@ sub whois {
         } elsif ($which_whois eq 'QRY_LAST' || !defined($which_whois)) {
             $res = $res->[-1]->{text};
         }
-    } else {
+    }
+    else {
         $res = get_whois($dom, $server, $which_whois);
     }
     
@@ -67,10 +68,12 @@ sub get_whois {
     if ($which_whois eq 'QRY_LAST') {
 	my $thewhois = $whois->[-1];
         return wantarray ? ($thewhois->{text}, $thewhois->{srv}) : $thewhois->{text};
-    } elsif ($which_whois eq 'QRY_FIRST') {
+    }
+    elsif ($which_whois eq 'QRY_FIRST') {
 	my $thewhois = $whois->[0];
         return wantarray ? ($thewhois->{text}, $thewhois->{srv}) : $thewhois->{text};
-    } else {
+    }
+    else {
         return $whois;
     }
 }
@@ -87,7 +90,7 @@ sub get_all_whois {
 
     $dom =~ s/.NS$//i;
 
-    my @whois = recursive_whois($dom, $srv, [], $norecurse);
+    my @whois = recursive_whois( $dom, $srv, [], $norecurse );
 
     return process_whois_answers( \@whois, $dom );
 }
@@ -129,20 +132,25 @@ sub recursive_whois {
 
     	if ( $registrar && !$norecurse && /Whois Server:\s*([A-Za-z0-9\-_\.]+)/ ) {
             $newsrv = lc $1;
-    	} elsif ($whois =~ /To single out one record, look it up with \"xxx\",/s) {
+    	}
+	elsif ($whois =~ /To single out one record, look it up with \"xxx\",/s) {
             return recursive_whois( "=$dom", $srv, $was_srv );
-	} elsif (/ReferralServer: whois:\/\/([-.\w]+)/) {
+	}
+	elsif (/ReferralServer: whois:\/\/([-.\w]+)/) {
 	    $newsrv = $1;
 	    last;
-	} elsif (/Contact information can be found in the (\S+)\s+database/) {
+	}
+	elsif (/Contact information can be found in the (\S+)\s+database/) {
 	    $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $1 };
-    	} elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && Net::Whois::Raw::Common::is_ipaddr($dom)) {
+    	}
+	elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && Net::Whois::Raw::Common::is_ipaddr($dom)) {
 	    my $val = $1;	
 	    if($val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/) {
 		$newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $val };
 		last;
 	    }
-    	} elsif (/^\s+Maintainer:\s+RIPE\b/ && Net::Whois::Raw::Common::is_ipaddr($dom)) {
+    	}
+	elsif (/^\s+Maintainer:\s+RIPE\b/ && Net::Whois::Raw::Common::is_ipaddr($dom)) {
             $newsrv = $Net::Whois::Raw::Data::servers{RIPE};
 	}
     }
@@ -151,12 +159,14 @@ sub recursive_whois {
 
     if ($newsrv && $newsrv ne $srv) {
         warn "recurse to $newsrv\n" if $DEBUG;
+
         return () if grep {$_ eq $newsrv} @$was_srv;
         my @new_whois_recs = eval { recursive_whois( $dom, $newsrv, [@$was_srv, $srv]) };
 	my $new_whois = scalar(@new_whois_recs) ? $new_whois_recs[0]->{text} : '';
         if ($new_whois && !$@ && Net::Whois::Raw::Common::check_existance($new_whois)) {
             push @whois_recs, @new_whois_recs;
-        } else {
+        }
+	else {
     	    warn "recursive query failed\n" if $DEBUG;
 	}
     }
@@ -175,11 +185,13 @@ sub whois_query {
     my @sockparams;
     if ($class->can ('whois_query_sockparams')) {
         @sockparams = $class->whois_query_sockparams ($dom, $srv);
-    } elsif (scalar(@SRC_IPS)) {
+    }
+    elsif (scalar(@SRC_IPS)) {
         my $src_ip = $SRC_IPS[0];
         push @SRC_IPS, shift @SRC_IPS; # rotate ips
         @sockparams = (PeerAddr => "$srv:43", LocalAddr => $src_ip);
-    } else {
+    }
+    else {
         @sockparams = "$srv:43";
     }
 
@@ -199,15 +211,15 @@ sub whois_query {
         
         if ($class->can ('whois_socket_fixup')) {
             my $new_sock = $class->whois_socket_fixup ($sock);
-        	$sock = $new_sock if $new_sock;
+	    $sock = $new_sock if $new_sock;
         }
 
-	if ($DEBUG >= 2) {
+	if ($DEBUG > 2) {
 	    _require_once('Data::Dumper');
 	    print "Socket: ".Dumper($sock);
 	}
 
-        $sock->print ($whoisquery, "\r\n");
+        $sock->print( $whoisquery, "\r\n" );
         # TODO: $soc->read, parameters for read chunk size, max content length
         while (my $str = <$sock>) {
             push @lines, $str;
