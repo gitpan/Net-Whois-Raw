@@ -10,7 +10,7 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.60';
+our $VERSION = '1.61';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -88,9 +88,10 @@ sub get_all_whois {
 	return $responce ? [ { text => $responce, srv => $srv } ] : $responce;
     }
 
-    $dom =~ s/.NS$//i;
+    my $is_ns = 0;
+    $is_ns = 1 if $dom =~ s/.NS$//i;
 
-    my @whois = recursive_whois( $dom, $srv, [], $norecurse );
+    my @whois = recursive_whois( $dom, $srv, [], $norecurse, $is_ns );
 
     return process_whois_answers( \@whois, $dom );
 }
@@ -121,9 +122,9 @@ sub process_whois_answers {
 }
 
 sub recursive_whois {
-    my ($dom, $srv, $was_srv, $norecurse) = @_;
+    my ($dom, $srv, $was_srv, $norecurse, $is_ns) = @_;
 
-    my $lines = whois_query( $dom, $srv );
+    my $lines = whois_query( $dom, $srv, $is_ns );
     my $whois = join("", @{$lines});
 
     my ($newsrv, $registrar);
@@ -153,6 +154,9 @@ sub recursive_whois {
 	elsif (/^\s+Maintainer:\s+RIPE\b/ && Net::Whois::Raw::Common::is_ipaddr($dom)) {
             $newsrv = $Net::Whois::Raw::Data::servers{RIPE};
 	}
+	elsif ( $is_ns && $srv eq $Net::Whois::Raw::Data::servers{NS} && /No match for nameserver/ && $dom =~ /.name$/i ) {
+	    $newsrv = $Net::Whois::Raw::Data::servers{NAME};
+	}
     }
 
     my @whois_recs = ( { text => $whois, srv => $srv } );
@@ -161,10 +165,15 @@ sub recursive_whois {
         warn "recurse to $newsrv\n" if $DEBUG;
 
         return () if grep {$_ eq $newsrv} @$was_srv;
-        my @new_whois_recs = eval { recursive_whois( $dom, $newsrv, [@$was_srv, $srv]) };
+        my @new_whois_recs = eval { recursive_whois( $dom, $newsrv, [@$was_srv, $srv], 0, $is_ns) };
 	my $new_whois = scalar(@new_whois_recs) ? $new_whois_recs[0]->{text} : '';
         if ($new_whois && !$@ && Net::Whois::Raw::Common::check_existance($new_whois)) {
-            push @whois_recs, @new_whois_recs;
+            if ( $is_ns ) {
+                unshift @whois_recs, @new_whois_recs;
+            }
+            else {
+                push @whois_recs, @new_whois_recs;
+            }
         }
 	else {
     	    warn "recursive query failed\n" if $DEBUG;
@@ -175,10 +184,10 @@ sub recursive_whois {
 }
 
 sub whois_query {
-    my ($dom, $srv) = @_;
+    my ($dom, $srv, $is_ns) = @_;
 
     # Prepare query
-    my $whoisquery = Net::Whois::Raw::Common::get_real_whois_query($dom, $srv);
+    my $whoisquery = Net::Whois::Raw::Common::get_real_whois_query($dom, $srv, $is_ns);
 
     # Prepare for query
 
@@ -259,6 +268,7 @@ sub www_whois_query {
     my $method = scalar(keys %form) ? 'POST' : 'GET';
 
     my $ua = new LWP::UserAgent( parse_head => 0 );
+    $ua->agent('Mozilla/5.0 (X11; U; Linux i686; ru; rv:1.9.0.5) Gecko/2008121622 Fedora/3.0.5-1.fc10 Firefox/3.0.5');
     my $header = HTTP::Headers->new;
     $header->header('Referer' => $referer) if $referer;
     my $req = new HTTP::Request $method, $url, $header;

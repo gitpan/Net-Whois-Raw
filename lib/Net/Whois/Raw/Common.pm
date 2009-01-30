@@ -96,12 +96,14 @@ sub process_whois {
                 next MAIN if (/$re/);
             }
         }
+        s/^\s+//;
+        
         push(@lines, $_);
     }
     
     $whois = join("\n", @lines, "");
     $whois = strip_whois($whois) if $OMIT_MSG > 1;
-    
+
     return undef, "Not found" if $CHECK_FAIL > 1 && !check_existance($whois);
     
     return $whois, undef;
@@ -134,7 +136,7 @@ sub check_existance {
     return 1;
 }
 
-# strip copyrights
+# strip copyrights, deprecated, use Data::strip
 sub strip_whois {
     $_ = $_[0];
 
@@ -146,8 +148,6 @@ sub strip_whois {
     s/NOTICE: Access to.+this policy.//is;
     s/The previous information.+completeness\.//s;
     s/NOTICE AND TERMS OF USE:.*modify these terms at any time\.//s;
-    s/TERMS OF USE:.*?modify these terms at any time\.//s;
-    s/NOTICE:.*for this registration\.//s;
 
     s/By submitting a WHOIS query.+?DOMAIN AVAILABILITY.\n?//s;
     s/Registration and WHOIS.+?its accuracy.\n?//s;
@@ -155,9 +155,6 @@ sub strip_whois {
     s/The .COOP Registration .+ Information\.//s;
     s/Whois Server Version \d+\.\d+.//is;
     s/NeuStar,.+www.whois.us\.//is;
-    s/\n?Domain names in the \.com, .+ detailed information.\n?//s;
-    s/\n?The Registry database .+?Registrars\.\n//s;
-    s/\n?>>> Last update of .+? <<<\n?//;
     s/% .+?\n//gs;
     s/Domain names can now be registered.+?for detailed information.//s;
 
@@ -186,9 +183,10 @@ sub get_server {
 }
 
 sub get_real_whois_query{
-    my ($whoisquery, $srv) = @_;
+    my ($whoisquery, $srv, $is_ns) = @_;
     
-    $whoisquery =~ s/.NS$//i;
+    $is_ns = 1 if $whoisquery =~ s/.NS$//i;
+
     if ($srv eq 'whois.crsnic.net' && domain_level($whoisquery) == 2) {
         $whoisquery = "domain $whoisquery";
     }
@@ -196,7 +194,15 @@ sub get_real_whois_query{
         $whoisquery = "-T dn,ace -C ISO-8859-1 $whoisquery";
     }
     elsif ($srv eq 'whois.nic.name') {
-        $whoisquery = "domain=$whoisquery";
+        if ( $is_ns ) {
+            $whoisquery = "nameserver=$whoisquery";
+	}
+	else {
+	    $whoisquery = "domain=$whoisquery";
+	}
+    }
+    elsif ( $is_ns && $srv eq 'whois.nsiregistry.net' ) {
+        $whoisquery = "nameserver = $whoisquery";
     }
     
     return $whoisquery;
@@ -376,7 +382,8 @@ sub parse_www_content {
         if ( $resp =~ /Domain ID:\w{3,10}-\w{4}\n(.+?)\n\n/s ) {
             $resp = $1;
             $resp =~ s/<br>//g;
-        } else {
+        } 
+	else {
             return 0;
         }
 
@@ -393,7 +400,8 @@ sub parse_www_content {
             $resp =~ s|</td></tr>||isg;
             $resp =~ s|\n\s+|\n|sg;
             $resp =~ s|\n\n|\n|sg;
-        } else {
+        }
+	else {
             return 0;
         }
 
@@ -406,7 +414,8 @@ sub parse_www_content {
             $resp =~ s|</font>||isg;
 
             $ishtml = 1;
-	} else {
+	}
+	else {
 	    return 0;
 	}
 
@@ -415,7 +424,8 @@ sub parse_www_content {
     
 	if ($resp =~ /Domain Name\.{10}/s && $resp =~ /<pre>(.+?)<\/pre>/s) {
 	    $resp = $1;
-	} else {
+	}
+	else {
 	    return 0;
 	}
     }
@@ -423,7 +433,8 @@ sub parse_www_content {
 
         if ($resp =~ /\(\s*?(Domain.*?:\s*(?:Available|registered))\s*?\)/i )  {
             $resp = $1;
-        } else {
+        }
+	else {
             return 0;
         }
 
@@ -441,7 +452,8 @@ sub parse_www_content {
 
         if ($CHECK_EXCEED && $resp =~ /too many requests/is) {
             die "Connection rate exceeded";
-        } elsif ($resp =~ /<!--- Start \/ Domain Info --->(.+?)<!--- End \/ Domain Info --->/is) {
+        }
+	elsif ($resp =~ /<!--- Start \/ Domain Info --->(.+?)<!--- End \/ Domain Info --->/is) {
             $resp = $1;
             $resp =~ s|</?table.*?>||ig;
             $resp =~ s|</?b>||ig;
@@ -450,7 +462,8 @@ sub parse_www_content {
             $resp =~ s|</?tr>||ig;
             $resp =~ s|</?td>||ig;
             $resp =~ s|^\s*||mg;
-        } else {
+        }
+	else {
             return 0;
         }
 

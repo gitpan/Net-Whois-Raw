@@ -286,3 +286,8 @@ Revision history for Perl extension Net::Whois::Raw.
 1.60    Nov 14 2008	Walery Studennikov
 	- pwhois script rewritten (use Getopt::Long)
 	- small bugfixes + code layout foxes
+
+1.61    Jan 27 2009     Vadim Likhota, Walery Studennikov
+        - add whois.nic.name for .NS query for .name domains in addition for whois.nsiregistry.net 
+	- add Test::More to module requirements
+	- add colourable user agent to satisfy http://nic.ac/

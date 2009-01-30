@@ -9,6 +9,7 @@ WriteMakefile
                            'HTTP::Headers' => 0,
                            'HTTP::Request' => 0,
                            'LWP::UserAgent' => 0,
+                           'Test::More' => 0,
                            'URI::URL' => 0
                          },
           'INSTALLDIRS' => 'site',

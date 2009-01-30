@@ -11,6 +11,7 @@ my $build = Module::Build->new(
 	'LWP::UserAgent' => 0,
 	'HTTP::Request' => 0,
 	'HTTP::Headers' => 0,
+	'Test::More' => 0,
     },
     create_makefile_pl => 'traditional',
     script_files => 'pwhois',
