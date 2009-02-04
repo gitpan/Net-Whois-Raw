@@ -282,7 +282,7 @@ sub get_http_query_url {
         $form{domainname1} = $name;
     }
     elsif ($tld eq 'ac') {
-        $url = "http://nic.ac/cgi-bin/whois?query=$name.$tld";
+        $url = "http://nic.ac/cgi-bin/whois?textfield=$name.$tld";
     }
     elsif ($tld eq 'bz') {
 	my $domcode = unpack( 'H*', "$name.$tld" );

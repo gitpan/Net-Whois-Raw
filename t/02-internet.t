@@ -55,7 +55,8 @@ SKIP: {
     my $tmp_dir;
     if ($^O =~ /mswin/i) {
         $tmp_dir = $ENV{TEMP}.'\net-whois-raw-common-test-'.time;
-    } else {
+    }
+    else {
         $tmp_dir = '/tmp/net-whois-raw-common-test-'.time;
     }
     my $cache_file  = "$tmp_dir/$test_domain.00";

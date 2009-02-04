@@ -291,3 +291,6 @@ Revision history for Perl extension Net::Whois::Raw.
         - add whois.nic.name for .NS query for .name domains in addition for whois.nsiregistry.net 
 	- add Test::More to module requirements
 	- add colourable user agent to satisfy http://nic.ac/
+
+1.62	Feb 04 2009	Walery Studennikov
+	- fixed getting whois info via HTTP from nic.ac
