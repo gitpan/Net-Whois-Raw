@@ -294,3 +294,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.62	Feb 04 2009	Walery Studennikov
 	- fixed getting whois info via HTTP from nic.ac
+
+1.63	Feb 09 2009	Walery Studennikov
+	- turn off test for www_whois_query for 'nic.ac'. It fails too often
