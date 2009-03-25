@@ -241,61 +241,135 @@ sub get_dom_tld {
 # get URL for query via HTTP
 # %param: domain*
 sub get_http_query_url {
-    my ($domain) = @_;    
+    my ($domain) = @_;
     
     my ($name, $tld) = split_domain($domain);
-    my ($url, %form);
+    my @http_query_data;
+    # my ($url, %form);
 
     if ($tld eq 'tv') {
-        $url = "http://www.tv/cgi-bin/whois.cgi?domain=$name&tld=tv";
+        my $data = {
+            url  => "http://www.tv/cgi-bin/whois.cgi?domain=$name&tld=tv",
+            form => '',
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'mu') {
-        $url = 'http://www.mu/cgi-bin/mu_whois.cgi';
-        $form{whois} = $name;
+        my $data = {
+            url  => 'http://www.mu/cgi-bin/mu_whois.cgi',
+            form => {
+                whois => $name,
+            },
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
-        $url = "http://www.relcom.ru/Services/Whois/?fullName=$name.$tld";
+        my $data = {
+	    url  => "http://www.relcom.ru/Services/Whois/?fullName=$name.$tld",
+	    form => '',
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'ru' || $tld eq 'su') {
-        $url = "http://www.nic.ru/whois/?domain=$name.$tld";
+	my $data = {
+	    url  => "http://www.nic.ru/whois/?domain=$name.$tld",
+	    form => '',
+	};
+	push @http_query_data, $data;
     }
     elsif ($tld eq 'ip') {
-        $url = "http://www.nic.ru/whois/?ip=$name";
+	my $data = {
+	    url  => "http://www.nic.ru/whois/?ip=$name",
+	    form => '',
+	};
+	push @http_query_data, $data;
     }
     elsif ($tld eq 'in') {
-        $url = "http://www.registry.in/cgi-bin/whois.cgi?whois_query_field=$name";
+	my $data = {
+	    url  => "http://www.registry.in/cgi-bin/whois.cgi?whois_query_field=$name",
+	    form => '',
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'cn') {
-        $url = "http://ewhois.cnnic.net.cn/whois?value=$name.$tld&entity=domain";
+        my $data = {
+	    url  => "http://ewhois.cnnic.net.cn/whois?value=$name.$tld&entity=domain",
+	    form => '',
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'ws') {
-        $url = "http://worldsite.ws/utilities/lookup.dhtml?domain=$name&tld=$tld";
+	my $data = {
+	    url  => "http://worldsite.ws/utilities/lookup.dhtml?domain=$name&tld=$tld",
+	    form => '',
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'kz') {
-        $url = "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0";
+	my $data = {
+	    url  => "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0",
+	    form => '',
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'vn') {
-	$url = "http://www.vnnic.vn/jsp/jsp/tracuudomain1.jsp";
-
-        $form{cap2} = ".$tld"; 
-        $form{referer} = 'http://www.vnnic.vn/english/';
-        $form{domainname1} = $name;
+	my $data = {
+	    url  => "http://www.vnnic.vn/jsp/jsp/tracuudomain1.jsp",
+	    form => {
+		cap2        => ".$tld",
+		referer     => 'http://www.vnnic.vn/english/',
+		domainname1 => $name,
+	    },
+    	};
+    	push @http_query_data, $data;
     }
     elsif ($tld eq 'ac') {
-        $url = "http://nic.ac/cgi-bin/whois?textfield=$name.$tld";
+	my $data = {
+	    url  => "http://nic.ac/cgi-bin/whois?query=$name.$tld",
+	    form => '',
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'bz') {
 	my $domcode = unpack( 'H*', "$name.$tld" );
-        $url = 'http://www.belizenic.bz/cgi-bin/Registrar_YTest?action=whois&action2=whois&domain='.$domcode;
+	my $data = {
+	    url  => 'http://www.belizenic.bz/cgi-bin/Registrar_YTest?action=whois&action2=whois&domain='.$domcode,
+	    form => '',
+        };
+        push @http_query_data, $data;
+    }
+    elsif ($tld eq 'tj') {
+	my $data = {
+	    url  => "http://www.nic.tj/cgi/whois?domain=$name",
+	    from => '',
+	};
+	push @http_query_data, $data;
+	
+	$data = {
+	    url  => "http://get.tj/whois/?lang=en&domain=$domain",
+	    from => '',
+	};
+	push @http_query_data, $data;
     }
         
-    return $url, %form;
+    # return $url, %form;
+    return \@http_query_data;
+}
+
+sub have_reserve_url {
+    my ( $tld ) = @_;
+    
+    my %tld_list = (
+        'tj' => 1,
+    );
+    
+    return defined $tld_list{$tld};
 }
 
 # Parse content received from HTTP server
 # %param: resp*, tld*
 sub parse_www_content {
-    my ($resp, $tld, $CHECK_EXCEED) = @_;
+    my ($resp, $tld, $url, $CHECK_EXCEED) = @_;
      
     chomp $resp;
     $resp =~ s/\r//g;
@@ -475,6 +549,51 @@ sub parse_www_content {
 	}
 
     }
+    elsif ( $tld eq 'tj' && $url =~ m|^http\://www\.nic\.tj| ) {
+    
+        $resp = utf2win( $resp );
+        
+        if ($resp =~ m|<table[0-9a-z=\" ]*>\n(.+?)\n</table>|s) {
+            $resp = $1;
+            $resp =~ s|</?tr>||ig;
+            $resp =~ s|<td>| |ig;
+            $resp =~ s|</?td[0-9a-z=\" ]*>||ig;
+            $resp =~ s|</?col[0-9a-z=\" ]*>||ig;
+            $resp =~ s|&laquo;|"|ig;
+            $resp =~ s|&raquo;|"|ig;
+            $resp =~ s|&nbsp;| |ig;
+            $resp =~ s|\s+\n|\n|sg;
+            $resp =~ s|\n\n|\n|sg;
+        }
+	else {
+            return 0;
+        }
+        
+    }
+    elsif ( $tld eq 'tj' && $url =~ m|^http\://get\.tj| ) {
+    
+        $resp = utf2win( $resp );
+        
+        if ($resp =~ m|<!-- Content //-->\n(.+?)<!-- End Content //-->|s ) {
+            $resp = $1;
+            $resp =~ s|<[^<>]+>||ig;
+            $resp =~ s|Whois\n|\n|s;
+
+            return 0 if $resp =~ m|Domain \S+ is free|s;
+
+            $resp =~ s|Domain \S+ is already taken\.\n|\n|s;
+            $resp =~ s|&nbsp;| |ig;
+            $resp =~ s|&laquo;|"|ig;
+            $resp =~ s|&raquo;|"|ig;
+            $resp =~ s|\n\s+|\n|sg;
+            $resp =~ s|\s+\n|\n|sg;
+            $resp =~ s|\n\n|\n|sg;
+        }
+        else {
+            return 0;
+        }
+
+    }
     else {
         return 0;
     }
@@ -538,6 +657,17 @@ sub koi2win($) {
     $val =~ s/\xAD/´/g;
 
     return $val;
+}
+
+# utf8 in bytes to win-1251 encoding
+sub utf2win($) {
+    my $val = $_[0] or return;
+
+    eval {
+        use Encode;
+        
+        encode('cp1251', decode_utf8( $val ));
+    };    
 }
 
 1;

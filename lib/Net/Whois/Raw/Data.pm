@@ -3,11 +3,10 @@ package Net::Whois::Raw::Data;
 use strict;
 
 our @www_whois = qw(
-    SPB.RU
-    MSK.RU
     VN
     AC
     BZ
+    TJ
 );
 
 our %servers = qw(
@@ -47,6 +46,7 @@ our %servers = qw(
     NET    whois.crsnic.net
     ORG    whois.pir.org
     PRO    whois.registrypro.pro
+    TEL    whois-tel.neustar.biz
 
     AC  whois.nic.ac
     AG  whois.nic.ag
@@ -265,7 +265,7 @@ our %notfound = (
     'whois.networksolutions.com'=> '(?i)no match',
     'whois.melbourneit.com'     => '^Invalid/Unsupported whois name check',
     'whois.worldnames.net'      => 'NO MATCH for domain',
-    'www_whois'                 => 'Available', # for VN zone
+    'www_whois'                 => '(Available|no records found|is free)', # for VN | TJ zone
 );
 
 our %strip = (
@@ -808,6 +808,54 @@ our %strip = (
 	'^A full list of \.name',
 	'^\s+--------',
     ],
+    'whois-tel.neustar.biz' => [
+	'Telnic, Ltd., the Registry Operator',
+	'for the WHOIS database through an',
+	'is provided to you for informational',
+	'persons in determining contents of a',
+	'Telnic registry database. Telnic makes',
+	'"as is" and does not guarantee its',
+	'agree that you will use this data',
+	'circumstances will you use this data',
+	'support the transmission of mass',
+	'solicitations via direct mail,',
+	'contravention of any applicable',
+	'enable high volume, automated,',
+	'\(or its systems\). Compilation,',
+	'WHOIS database in its entirety,',
+	'allowed without Telnic\'s prior',
+	'right to modify or change these',
+	'subsequent notification of any',
+	'whatsoever, you agree to abide',
+	'Contact information: Disclosure',
+	'of UK and EU Data Protection',
+	'contact ID may be available by',
+	'system. The information can also',
+	'Special Access Service. Visit',
+	'.TEL WHOIS DISCLAIMER AND TERMS',
+	'By submitting a query and/or',
+	'agree to these terms and',
+	'This whois information is',
+	'Telnic operates the Registry',
+	'is provided for information',
+	'and shall have no liability',
+	'inaccurate.',
+	'Telnic is the owner of all',
+	'that is made available via this',
+	'the information you obtain from',
+	'than to obtain information about',
+	'for registration or to obtain the',
+	'of a domain name that is already',
+	'utilise, combine or compile any',
+	'to produce a list or database',
+	'a license from Telnic to do so.',
+	'reason, you will destroy all',
+	'using this whois service.',
+	'You must not use the information',
+	'to: \(a\) allow, enable or otherwise',
+	'unsolicited commercial advertising',
+	'\(b\) harass any person; or',
+    ]
 );
 
 our %exceed = (

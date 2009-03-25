@@ -10,7 +10,7 @@ use IO::Socket;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.63';
+our $VERSION = '1.65';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -249,54 +249,68 @@ sub whois_query {
 sub www_whois_query {
     my ($dom) = (lc shift);
 
+    my ($resp, $url);
     my ($name, $tld) = Net::Whois::Raw::Common::split_domain( $dom );
-    my ($url, %form) = Net::Whois::Raw::Common::get_http_query_url($dom);
+	# my ($url, %form) = Net::Whois::Raw::Common::get_http_query_url($dom, $reserve);
+    my $http_query_urls = Net::Whois::Raw::Common::get_http_query_url($dom);
     
-    # load-on-demand
-    unless ($INC{'LWP/UserAgent.pm'}) {
-	require LWP::UserAgent;
-	require HTTP::Request;
-	require HTTP::Headers;
-	require URI::URL;
-	import LWP::UserAgent;
-	import HTTP::Request;
-	import HTTP::Headers;
-	import URI::URL;
+    foreach my $qurl ( @{$http_query_urls} ) {
+    
+	# load-on-demand
+	unless ($INC{'LWP/UserAgent.pm'}) {
+	    require LWP::UserAgent;
+	    require HTTP::Request;
+	    require HTTP::Headers;
+	    require URI::URL;
+	    import LWP::UserAgent;
+	    import HTTP::Request;
+	    import HTTP::Headers;
+	    import URI::URL;
+	}
+    
+	my $referer = delete $qurl->{form}{referer} if $qurl->{form} && defined $qurl->{form}{referer};
+	my $method = ( $qurl->{form} && scalar(keys %{$qurl->{form}}) ) ? 'POST' : 'GET';
+
+	my $ua = new LWP::UserAgent( parse_head => 0 );
+	$ua->agent('Mozilla/5.0 (X11; U; Linux i686; ru; rv:1.9.0.5) Gecko/2008121622 Fedora/3.0.5-1.fc10 Firefox/3.0.5');
+	my $header = HTTP::Headers->new;
+	$header->header('Referer' => $referer) if $referer;
+	my $req = new HTTP::Request $method, $qurl->{url}, $header;
+
+	if ($method eq 'POST') {
+	    require URI::URL;
+	    import URI::URL;
+
+	    my $curl = url("http:");
+	    $req->content_type('application/x-www-form-urlencoded');
+	    $curl->query_form( %{$qurl->{form}} );
+	    $req->content( $curl->equery );
+	}
+
+	$resp = eval {
+	    local $SIG{ALRM} = sub { die "www_whois connection timeout" };
+	    alarm 10;
+	    $ua->request($req)->content;
+	};
+	alarm 0;
+
+	if ( !$resp || $@ || $resp =~ /www_whois connection timeout/ || $resp =~ /^500 Can\'t connect/ ) {
+	    undef $resp;
+	}
+	else {
+	    $url = $qurl->{url};
+	    last;
+	}
     }
     
-    my $referer = delete $form{referer} if %form && $form{referer};
-    my $method = scalar(keys %form) ? 'POST' : 'GET';
-
-    my $ua = new LWP::UserAgent( parse_head => 0 );
-    $ua->agent('Mozilla/5.0 (X11; U; Linux i686; ru; rv:1.9.0.5) Gecko/2008121622 Fedora/3.0.5-1.fc10 Firefox/3.0.5');
-    my $header = HTTP::Headers->new;
-    $header->header('Referer' => $referer) if $referer;
-    my $req = new HTTP::Request $method, $url, $header;
-
-    if ($method eq 'POST') {
-        require URI::URL;
-        import URI::URL;
-
-        my $curl = url("http:");
-        $req->content_type('application/x-www-form-urlencoded');
-        $curl->query_form( %form );
-        $req->content( $curl->equery );
-    }
-
-    my $resp = eval {
-        local $SIG{ALRM} = sub { die "www_whois connection timeout" };
-        alarm 10;
-        $ua->request($req)->content;
-    };
-    alarm 0;
-    return undef if !$resp || $@ || $resp =~ /www_whois connection timeout/;
+    return undef unless $resp;
 
     chomp $resp;
     $resp =~ s/\r//g;
 
     my $ishtml;
 
-    $resp = Net::Whois::Raw::Common::parse_www_content($resp, $tld, $CHECK_EXCEED);
+    $resp = Net::Whois::Raw::Common::parse_www_content($resp, $tld, $url, $CHECK_EXCEED);
 
     return wantarray ? ($resp, $ishtml) : $resp;
 }

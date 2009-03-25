@@ -297,3 +297,10 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.63	Feb 09 2009	Walery Studennikov
 	- turn off test for www_whois_query for 'nic.ac'. It fails too often
+
+1.64    Feb 25 2009     Vadim Likhota, Walery Studennikov
+        - add www.nic.tj whois via www_whois_query (now whois.nic.tj not work)
+
+1.65    Mar 25 2009     Walery Studennikov
+        - add whois server for .TEL domains
+	- SPB.RU and MSK.RU zones are removed from www_whois
