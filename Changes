@@ -304,3 +304,6 @@ Revision history for Perl extension Net::Whois::Raw.
 1.65    Mar 25 2009     Walery Studennikov
         - add whois server for .TEL domains
 	- SPB.RU and MSK.RU zones are removed from www_whois
+
+1.66    Mar 26 2009     Walery Studennikov
+	- fixed tests

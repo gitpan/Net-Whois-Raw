@@ -40,8 +40,5 @@ ok( Net::Whois::Raw::Common::get_real_whois_query( 'reg.ru',    'whois.ripn.net'
     eq 'reg.ru', 'get_real_whois_query'
 );
 
-ok( Net::Whois::Raw::Common::get_server( 'reg.ru' )       eq 'whois.ripn.net', 'get_server' );
-ok( Net::Whois::Raw::Common::get_server( 'auto.spb.ru' )  eq 'www_whois',      'get_server' );
-
-
-
+is( Net::Whois::Raw::Common::get_server( 'reg.ru' ), 'whois.ripn.net', 'get_server' );
+is( Net::Whois::Raw::Common::get_server( 'nic.vn' ), 'www_whois',      'get_server' );
