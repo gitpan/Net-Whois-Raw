@@ -25,6 +25,7 @@ sub get_from_cache {
             $result->[$level]->{srv} = <CACHE>;
             chomp $result->[$level]->{srv};
             $result->[$level]->{text} = join "", <CACHE>;
+            $result->[$level]->{text} = undef if !$result->[$level]->{text} and $Net::Whois::Raw::CHECK_FAIL;
             $level++;
         }
     }
@@ -41,6 +42,7 @@ sub write_to_cache {
     
     my $level = 0;
     foreach my $res ( @{$result} ) {
+        next if defined $res->{text} and !$res->{text};
         my $postfix = sprintf("%02d", $level);
         if ( open( CACHE, ">$cache_dir/$query.$postfix" ) ) {
             print CACHE $res->{srv} ? $res->{srv} :

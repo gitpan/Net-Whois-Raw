@@ -307,3 +307,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.66    Mar 26 2009     Walery Studennikov
 	- fixed tests
+
+1.67	Mar 30 2009	Alexey Sharipov
+	- fixed caching issues
