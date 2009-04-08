@@ -1,7 +1,10 @@
 package Net::Whois::Raw::Common;
 
+use Encode;
 use strict;
 require Net::Whois::Raw::Data;
+
+use utf8;
 
 # get whois from cache 
 sub get_from_cache {
@@ -25,7 +28,12 @@ sub get_from_cache {
             $result->[$level]->{srv} = <CACHE>;
             chomp $result->[$level]->{srv};
             $result->[$level]->{text} = join "", <CACHE>;
-            $result->[$level]->{text} = undef if !$result->[$level]->{text} and $Net::Whois::Raw::CHECK_FAIL;
+            if ( !$result->[$level]->{text} and $Net::Whois::Raw::CHECK_FAIL ) {
+                $result->[$level]->{text} = undef ;
+            }
+            else {
+        	$result->[$level]->{text} = decode_utf8( $result->[$level]->{text} );
+            }
             $level++;
         }
     }
@@ -42,7 +50,8 @@ sub write_to_cache {
     
     my $level = 0;
     foreach my $res ( @{$result} ) {
-        next if defined $res->{text} and !$res->{text};
+	next if defined $res->{text} && !$res->{text} || !defined $res->{text};
+	utf8::encode( $res->{text} );
         my $postfix = sprintf("%02d", $level);
         if ( open( CACHE, ">$cache_dir/$query.$postfix" ) ) {
             print CACHE $res->{srv} ? $res->{srv} :
@@ -60,111 +69,71 @@ sub write_to_cache {
     
 }
 
+
 # remove copyright messages, check for existance
 sub process_whois {
     my ($query, $server, $whois, $CHECK_FAIL, $OMIT_MSG, $CHECK_EXCEED) = @_;
 
     $server = lc $server;
     my ($name, $tld) = split_domain($query);
-    
-    if ($tld eq 'mu') {
-        if ($whois =~ /.MU Domain Information\n(.+?\n)\n/s) {
-            $whois = $1;
-        }
-    }
-    
-    $whois = $Net::Whois::Raw::POSTPROCESS{$server}->($whois)
-        if defined $Net::Whois::Raw::POSTPROCESS{$server};
 
-    return $whois unless $CHECK_FAIL || $OMIT_MSG || $CHECK_EXCEED;
+    # use string as is
+    no utf8;
 
-    my $exceed = $Net::Whois::Raw::Data::exceed{$server};
-    if ($CHECK_EXCEED && $exceed && $whois =~ /$exceed/s) {
-        return $whois, "Connection rate exceeded";
-    }
-    
-    my %notfound = %Net::Whois::Raw::Data::notfound;
-    my %strip = %Net::Whois::Raw::Data::strip;
-    
-    my $notfound = $notfound{$server};
-    my @strip = $strip{$server} ? @{$strip{$server}} : ();
-    my @lines;
-    MAIN: foreach (split(/\n/, $whois)) {
-        if ( $CHECK_FAIL && $notfound && /$notfound/ ) {
-            return undef, "Not found";
-        };
-        if ($OMIT_MSG) {
-            foreach my $re (@strip) {
-                next MAIN if (/$re/);
-            }
-        }
-        s/^\s+//;
+    if ( $CHECK_EXCEED ) {
+        my $exceed = $Net::Whois::Raw::Data::exceed{$server};
         
-        push(@lines, $_);
+        if ( $exceed && $whois =~ /$exceed/s) {
+            return $whois, "Connection rate exceeded";
+        }
     }
     
-    $whois = join("\n", @lines, "");
-    $whois = strip_whois($whois) if $OMIT_MSG > 1;
-
-    return undef, "Not found" if $CHECK_FAIL > 1 && !check_existance($whois);
+    if ( $CHECK_FAIL || $OMIT_MSG ) {
     
+	my %notfound = %Net::Whois::Raw::Data::notfound;
+	my %strip = %Net::Whois::Raw::Data::strip;
+    
+	my $notfound = $notfound{$server};
+    
+	my @strip = $strip{$server} ? @{$strip{$server}} : ();
+	my @lines;
+MAIN:
+	foreach (split(/\n/, $whois)) {
+	    if ( $CHECK_FAIL && $notfound && /$notfound/ ) {
+        	return undef, "Not found";
+	    };
+	    if ($OMIT_MSG) {
+        	foreach my $re (@strip) {
+		    next MAIN if (/$re/);
+        	}
+	    }
+	    s/^\s+//;
+        
+	    push(@lines, $_);
+	}
+    
+	$whois = join "\n", @lines, '';
+
+	if ( $OMIT_MSG ) {
+	    $whois =~ s/(?:\s*\n)+$/\n/s;
+	    $whois =~ s/^\n+//s;
+	    $whois =~ s|\n{3,}|\n\n|sg;
+	}
+    }
+    
+    if ( defined $Net::Whois::Raw::POSTPROCESS{$server} ) {
+        $whois = $Net::Whois::Raw::POSTPROCESS{$server}->($whois);
+    }
+    elsif ( defined $Net::Whois::Raw::Data::codepages{$server} ) {
+        $whois = decode( $Net::Whois::Raw::Data::codepages{$server}, $whois );
+    }
+    else {
+        utf8::decode( $whois );
+    }
+
     return $whois, undef;
 }
 
-#  check if whois info found
-sub check_existance {
-    $_ = $_[0];
-
-    return undef if
-        /is unavailable/is ||
-        /No entries found for the selected source/is ||
-        /Not found:/s ||
-        /No match\./s ||
-        /Not found/is &&
-            !/ your query returns "NOT FOUND"/ &&
-            !/Domain not found locally/ ||
-        /No match for/is ||
-        /No Objects Found/s ||
-        /No domain records were found/s ||
-        /No such domain/s ||
-        /No entries found in the /s ||
-        /Could not find a match for/s ||
-        /Unable to find any information for your query/s ||
-        /is not registered/s ||
-        /no matching record/s ||
-	/No match found\n/ ||
-        /NOMATCH/s;
-
-    return 1;
-}
-
-# strip copyrights, deprecated, use Data::strip
-sub strip_whois {
-    $_ = $_[0];
-
-    s/The Data.+(policy|connection)\.\n//is;
-    s/% NOTE:.+prohibited\.//is;
-    s/Disclaimer:.+\*\*\*\n?//is;
-    s/NeuLevel,.+A DOMAIN NAME\.//is;
-    s/For information about.+page=spec//is;
-    s/NOTICE: Access to.+this policy.//is;
-    s/The previous information.+completeness\.//s;
-    s/NOTICE AND TERMS OF USE:.*modify these terms at any time\.//s;
-
-    s/By submitting a WHOIS query.+?DOMAIN AVAILABILITY.\n?//s;
-    s/Registration and WHOIS.+?its accuracy.\n?//s;
-    s/Disclaimer:.+?\*\*\*\n?//s;
-    s/The .COOP Registration .+ Information\.//s;
-    s/Whois Server Version \d+\.\d+.//is;
-    s/NeuStar,.+www.whois.us\.//is;
-    s/% .+?\n//gs;
-    s/Domain names can now be registered.+?for detailed information.//s;
-
-    s/^\n+//s;
-    s/(?:\s*\n)+$/\n/s;
-
-    return $_;
-}
 
 # get whois-server for domain
 sub get_server {
@@ -380,8 +349,10 @@ sub parse_www_content {
 
     if ($tld eq 'tv') {
 
+        $resp = decode_utf8( $resp );
+        
         return 0 unless
-        $resp =~ /(<TABLE BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="95%">.+?<\/TABLE>)/is;
+            $resp =~ /(<TABLE BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="95%">.+?<\/TABLE>)/is;
         $resp = $1;
         $resp =~ s/<BR><BR>.+?The data in The.+?any time.+?<BR><BR>//is;
         return 0 if $resp =~ /Whois information is not available for domain/s;
@@ -389,17 +360,18 @@ sub parse_www_content {
 
     }
     elsif ( $tld eq 'spb.ru' || $tld eq 'msk.ru' ) {
+    
+        $resp = decode( 'koi8-r', $resp  );
 
-        $resp = koi2win( $resp );
         return undef unless $resp =~ m|<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2"><TR><TD BGCOLOR="#990000"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="20"><TR><TD BGCOLOR="white">(.+?)</TD></TR></TABLE></TD></TR></TABLE>|s;
         $resp = $1;
 
-        return 0 if $resp =~ m/ÑÂÎÁÎÄÍÎ/;
+        return 0 if $resp =~ m/Ğ¡Ğ’ĞĞ‘ĞĞ”ĞĞ/;
 
         if ($resp =~ m|<PRE>(.+?)</PRE>|s) {
             $resp = $1;
         }
-	elsif ($resp =~ m|DNS \(name-ñåğâåğàõ\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE><H3>Äîïîëíèòåëüíóş èíôîğìàöèş ìîæíî ïîëó÷èòü ïî àäğåñó:</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
+        elsif ($resp =~ m|DNS \(name-ÑĞµÑ€Ğ²ĞµÑ€Ğ°Ñ…\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE><H3>Ğ”Ğ¾Ğ¿Ğ¾Ğ»Ğ½Ğ¸Ñ‚ĞµĞ»ÑŒĞ½ÑƒÑ Ğ¸Ğ½Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ†Ğ¸Ñ Ğ¼Ğ¾Ğ¶Ğ½Ğ¾ Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ¸Ñ‚ÑŒ Ğ¿Ğ¾ Ğ°Ğ´Ñ€ĞµÑÑƒ:</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
             my $nameservers = $1;
             my $emails = $2;
             my (@nameservers, @emails);
@@ -419,30 +391,37 @@ sub parse_www_content {
                 }
             }
         }
-
+        
     }
     elsif ($tld eq 'mu') {
 
+        $resp = decode_utf8( $resp );
+
         return 0 unless
-        $resp =~ /(<p><b>Domain Name:<\/b><br>.+?)<hr width="75%">/s;
+            $resp =~ /(<p><b>Domain Name:<\/b><br>.+?)<hr width="75%">/s;
         $resp = $1;
         $ishtml = 1;
 
     }
     elsif ( $tld eq 'ru' || $tld eq 'su' ) {
 
-        $resp = koi2win($resp);
+        $resp = decode( 'koi8-r', $resp );
+
         (undef, $resp) = split('<script>.*?</script>',$resp);
         ($resp) = split('</td></tr></table>', $resp);
         $resp =~ s/&nbsp;/ /gi;
         $resp =~ s/<([^>]|\n)*>//gi;
 
-        return 0 if $resp=~ m/Äîìåííîå èìÿ .*? íå çàğåãèñòğèğîâàíî/i;
-        $resp = 'ERROR' if $resp =~ m/Error:/i || $resp !~ m/Èíôîğìàöèÿ î äîìåíå .+? \(ïî äàííûì WHOIS.RIPN.NET\):/;;
+        return 0 if $resp=~ m/Ğ”Ğ¾Ğ¼ĞµĞ½Ğ½Ğ¾Ğµ Ğ¸Ğ¼Ñ .*? Ğ½Ğµ Ğ·Ğ°Ñ€ĞµĞ³Ğ¸ÑÑ‚Ñ€Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¾/i;
+
+        $resp = 'ERROR' if $resp =~ m/Error:/i || $resp !~ m/Ğ˜Ğ½Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ†Ğ¸Ñ Ğ¾ Ğ´Ğ¾Ğ¼ĞµĞ½Ğµ .+? \(Ğ¿Ğ¾ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğ¼ WHOIS.RIPN.NET\):/;
         #TODO: errors
+        
     }
     elsif ($tld eq 'ip') {
 
+        $resp = decode_utf8( $resp );
+        
         return 0 unless $resp =~ m|<p ID="whois">(.+?)</p>|s;
 
         $resp = $1;
@@ -455,6 +434,8 @@ sub parse_www_content {
     }
     elsif ($tld eq 'in') {
 
+        $resp = decode_utf8( $resp );
+
         if ( $resp =~ /Domain ID:\w{3,10}-\w{4}\n(.+?)\n\n/s ) {
             $resp = $1;
             $resp =~ s/<br>//g;
@@ -465,6 +446,8 @@ sub parse_www_content {
 
     }
     elsif ($tld eq 'cn') {
+
+        $resp = decode_utf8( $resp );
 
         if ($resp =~ m|<table border=1 cellspacing=0 cellpadding=2>\n\n(.+?)\n</table>|s) {
             $resp = $1;
@@ -484,6 +467,8 @@ sub parse_www_content {
     }
     elsif ($tld eq 'ws') {
 
+        $resp = decode_utf8( $resp );
+
 	if ($resp =~ /Whois information for .+?:(.+?)<table>/s) {
 	    $resp = $1;
             $resp =~ s|<font.+?>||isg;
@@ -498,6 +483,8 @@ sub parse_www_content {
     }
     elsif ($tld eq 'kz') {
     
+        $resp = decode_utf8( $resp );
+
 	if ($resp =~ /Domain Name\.{10}/s && $resp =~ /<pre>(.+?)<\/pre>/s) {
 	    $resp = $1;
 	}
@@ -507,7 +494,9 @@ sub parse_www_content {
     }
     elsif ($tld eq 'vn') {
 
-        if ($resp =~ /\(\s*?(Domain.*?:\s*(?:Available|registered))\s*?\)/i )  {
+        $resp = decode_utf8( $resp );
+
+        if ($resp =~ /\(\s*?(Domain .+?:\s*registered)\s*?\)/i )  {
             $resp = $1;
         }
 	else {
@@ -525,6 +514,8 @@ sub parse_www_content {
 	# 
     }
     elsif ($tld eq 'ac') {
+
+        $resp = decode_utf8( $resp );
 
         if ($CHECK_EXCEED && $resp =~ /too many requests/is) {
             die "Connection rate exceeded";
@@ -546,14 +537,16 @@ sub parse_www_content {
     }
     elsif ($tld eq 'bz') {
 
+        $resp = decode_utf8( $resp );
+
 	if ($resp =~ m|<pre>(.+?)</pre>|xms) {
 	    $resp = $1;
 	}
 
     }
     elsif ( $tld eq 'tj' && $url =~ m|^http\://www\.nic\.tj| ) {
-    
-        $resp = utf2win( $resp );
+
+        $resp = decode_utf8( $resp );
         
         if ($resp =~ m|<table[0-9a-z=\" ]*>\n(.+?)\n</table>|s) {
             $resp = $1;
@@ -564,6 +557,7 @@ sub parse_www_content {
             $resp =~ s|&laquo;|"|ig;
             $resp =~ s|&raquo;|"|ig;
             $resp =~ s|&nbsp;| |ig;
+            $resp =~ s|\n\s+|\n|sg;
             $resp =~ s|\s+\n|\n|sg;
             $resp =~ s|\n\n|\n|sg;
         }
@@ -574,7 +568,7 @@ sub parse_www_content {
     }
     elsif ( $tld eq 'tj' && $url =~ m|^http\://get\.tj| ) {
     
-        $resp = utf2win( $resp );
+        $resp = decode_utf8( $resp );
         
         if ($resp =~ m|<!-- Content //-->\n(.+?)<!-- End Content //-->|s ) {
             $resp = $1;
@@ -646,30 +640,6 @@ sub dlen {
     my ($str) = @_;
 
     return length($str) * domain_level($str);
-}
-
-# koi-8 to win-1251 encoding
-sub koi2win($) {
-    my $val = $_[0] or return;
-
-    $val =~ tr/áâ÷çäåöúéêëìíîïğòóôõæèãşûıøùÿüàñÁÂ×ÇÄÅÖÚÉÊËÌÍÎÏĞÒÓÔÕÆÈÃŞÛİßÙØÜÀÑ³£/À-ÿ¨¸/;
-
-    # ukr chars
-    $val =~ tr/¤¦§´¶·½/º³¿ª²¯¥/;
-    $val =~ s/\xAD/´/g;
-
-    return $val;
-}
-
-# utf8 in bytes to win-1251 encoding
-sub utf2win($) {
-    my $val = $_[0] or return;
-
-    eval {
-        use Encode;
-        
-        encode('cp1251', decode_utf8( $val ));
-    };    
 }
 
 1;

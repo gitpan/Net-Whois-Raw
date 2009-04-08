@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Net::Whois::Raw;
 use Getopt::Long;
+use Encode;
 
 my $help;
 my $do_strip;
@@ -23,9 +24,7 @@ Getopt::Long::Configure( 'bundling', 'no_ignore_case' );
 GetOptions(
     'h|help'		=> \$help,
     'strip|s'		=> \$do_strip,
-    'strip_more|S'	=> \$do_strip_more,
     'checkfail|c'	=> \$do_checkfail,
-    'checkfail_more|C'	=> \$do_checkfail_more,
     'debug|d+'		=> \$debug,
     'timeout|T=i'	=> \$timeout,
     'enable_caching|t'	=> \$enable_caching,
@@ -37,13 +36,11 @@ GetOptions(
 
 if ($help || !@ARGV) {
     print <<EOM;
-Usage:	$0 [ -s | -S ] [ -c | -C ] [ -d ] [ -T <timeout> ] [ -a <src_ip> ] [ -t ] [ -F | -L | -A ] <domain> [ <server> ]
+Usage:	$0 [ -s ] [ -c ] [ -d ] [ -T <timeout> ] [ -a <src_ip> ] [ -t ] [ -F | -L | -A ] <domain> [ <server> ]
 
 Switches:
 -s	attempt to strip the copyright message or disclaimer.
--S	some exra rules for above
 -c	attempts to return an empty answer for failed searches.
--C	some exra rules for above
 -T	set timeout for connection attempts
 -t	enables caching.
 -a	specify an ip address that should be used as source address
@@ -56,8 +53,8 @@ EOM
 }
 
 $Net::Whois::Raw::DEBUG = $debug;
-$Net::Whois::Raw::OMIT_MSG = $do_strip_more ? 2 : $do_strip ? 1 : 0;
-$Net::Whois::Raw::CHECK_FAIL = $do_checkfail_more ? 2 : $do_checkfail ? 1 : 0;
+$Net::Whois::Raw::OMIT_MSG = $do_strip ? 1 : 0;
+$Net::Whois::Raw::CHECK_FAIL = $do_checkfail ? 1 : 0;
 $Net::Whois::Raw::TIMEOUT = $timeout;
 @Net::Whois::Raw::SRC_IPS = @source_addresses if @source_addresses;
 
@@ -72,15 +69,28 @@ my $dom = $ARGV[0];
 my $server = $ARGV[1];
 
 eval {
-    my $result;
+    my ($result, $server);
     my $which_whois =
 	$return_first ? 'QRY_FIRST' :
 	$return_all   ? 'QRY_ALL' :
 			'QRY_LAST';
-    $result = Net::Whois::Raw::get_whois( $dom, $server, $which_whois );
+    ($result, $server) = Net::Whois::Raw::get_whois( $dom, $server, $which_whois );
     
     if ($result) {
+        my $cp;
+        ($cp = $ENV{LANG}) =~ s/^[a-z]{2}_[A-Z]{2}\.//;
+        $cp = lc $cp;
+
+        if ( $cp =~ /utf\-?8/ ) {
+	    $result = encode_utf8( $result );
+	}
+	else {
+	    $result = encode( $cp, $result );
+	}
+
+	print "[$server]\n";
 	print $result, "\n";
+	    
     }
     else {
 	print STDERR "Failed.\n";
@@ -117,9 +127,7 @@ etc etc.....
 Just invoke with a domain name, optionally with a whois server name.
 Switches:
     B<-s> attempt to strip the copyright message or disclaimer.
-    B<-S> some exra rules for above
     B<-c> attempts to return an empty answer for failed searches.
-    B<-C> some exra rules for above
     B<-e> forces die if connection rate to server have been exceeded.
     B<-T> set timeout for connection attempts
     B<-t> enables caching.

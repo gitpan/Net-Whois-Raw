@@ -5,7 +5,7 @@ SYNOPSIS
       use Net::Whois::Raw;
   
       $dominfo = whois('perl.com');
-      $dominfo = whois('funet.fi');
+      ($dominfo, $whois_server) = whois('funet.fi');
       $reginfo = whois('REGRU-REG-RIPN', 'whois.ripn.net');
 
       $arrayref = get_whois('yahoo.co.uk', undef, 'QRY_ALL');
@@ -17,19 +17,11 @@ SYNOPSIS
             # messages and disclaimers sorted by servers.
             # Default is to give the whole response.
 
-      $Net::Whois::Raw::OMIT_MSG = 2;
-            # This will try some additional stripping rules
-            # if none are known for the spcific server.
-
       $Net::Whois::Raw::CHECK_FAIL = 1;
             # This will return undef if the response matches
             # one of the known patterns for a failed search,
             # sorted by servers.
             # Default is to give the textual response.
-
-      $Net::Whois::Raw::CHECK_FAIL = 2;
-            # This will match against several more rules
-            # if none are known for the specific server.
 
       $Net::Whois::Raw::CHECK_EXCEED = 1;
             # When this option is set, "die" will be called

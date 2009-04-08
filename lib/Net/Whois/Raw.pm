@@ -7,13 +7,16 @@ use strict;
 
 use Carp;
 use IO::Socket;
+use Encode;
+use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '1.67';
+our $VERSION = '2.00';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
+our $SET_CODEPAGE = '';
 our (%notfound, %strip, @SRC_IPS, %POSTPROCESS);
 
 our $class = __PACKAGE__;
@@ -40,19 +43,29 @@ sub whois {
     my $res = Net::Whois::Raw::Common::get_from_cache(
         $dom, $CACHE_DIR, $CACHE_TIME
     );
+    
+    my ($res_text, $res_srv, $res_text2);
 
     if ($res) {
         if ($which_whois eq 'QRY_FIRST') {
-            $res = $res->[0]->{text};
+            $res_text = $res->[0]->{text};
+            $res_srv  = $res->[0]->{srv};
         } elsif ($which_whois eq 'QRY_LAST' || !defined($which_whois)) {
-            $res = $res->[-1]->{text};
+            $res_text = $res->[-1]->{text};
+            $res_srv  = $res->[-1]->{srv};
         }
     }
     else {
-        $res = get_whois($dom, $server, $which_whois);
+        ($res_text, $res_srv) = get_whois($dom, $server, $which_whois);
     }
     
-    return $res;
+    $res_srv = '' if $res_srv eq 'www_whois';
+    
+    utf8::decode( $res_text ); # Perl whyly loss utf8 flag
+    
+    $res_text = encode( $SET_CODEPAGE, $res_text ) if $SET_CODEPAGE;
+    
+    return wantarray ? ($res_text, $res_srv) : $res_text;
 }
 
 # obtain whois
@@ -165,9 +178,12 @@ sub recursive_whois {
         warn "recurse to $newsrv\n" if $DEBUG;
 
         return () if grep {$_ eq $newsrv} @$was_srv;
+
         my @new_whois_recs = eval { recursive_whois( $dom, $newsrv, [@$was_srv, $srv], 0, $is_ns) };
 	my $new_whois = scalar(@new_whois_recs) ? $new_whois_recs[0]->{text} : '';
-        if ($new_whois && !$@ && Net::Whois::Raw::Common::check_existance($new_whois)) {
+	my $notfound = $Net::Whois::Raw::Data::notfound{$newsrv};
+
+        if ( $new_whois && !$@ && not ( $notfound && $new_whois =~ /$notfound/m ) ) {
             if ( $is_ns ) {
                 unshift @whois_recs, @new_whois_recs;
             }
@@ -349,7 +365,7 @@ Net::Whois::Raw - Get Whois information for domains
   use Net::Whois::Raw;
   
   $dominfo = whois('perl.com');
-  $dominfo = whois('funet.fi');
+  ($dominfo, $whois_server) = whois('funet.fi');
   $reginfo = whois('REGRU-REG-RIPN', 'whois.ripn.net');
 
   $arrayref = get_whois('yahoo.co.uk', undef, 'QRY_ALL');
@@ -361,19 +377,11 @@ Net::Whois::Raw - Get Whois information for domains
         # messages and disclaimers sorted by servers.
         # Default is to give the whole response.
 
-  $Net::Whois::Raw::OMIT_MSG = 2;
-	# This will try some additional stripping rules
-        # if none are known for the spcific server.
-
   $Net::Whois::Raw::CHECK_FAIL = 1;
 	# This will return undef if the response matches
         # one of the known patterns for a failed search,
         # sorted by servers.
         # Default is to give the textual response.
-
-  $Net::Whois::Raw::CHECK_FAIL = 2;
-	# This will match against several more rules
-        # if none are known for the specific server.
 
   $Net::Whois::Raw::CHECK_EXCEED = 1;
 	# When this option is set, "die" will be called

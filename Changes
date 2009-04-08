@@ -310,3 +310,12 @@ Revision history for Perl extension Net::Whois::Raw.
 
 1.67	Mar 30 2009	Alexey Sharipov
 	- fixed caching issues
+
+2.00    Mar 31 2009     Walery Studennikov, Vadim Likhota
+        - core now uses unicode (MAJOR CHANGE!!!!)
+        - all the data in Net::Whois::Raw::Data are counterchecked
+        - duplicating 'strip_whois' and 'check_existance' functions are deleated from Net::Whois::Raw::Common,
+          now only the data from Net::Whois::Raw::Data are used instead of them
+        - now flags OMIT_MSG and CHECK_FAIL supports only true and false values.
+          Support for OMIT_MSG == 2 and CHECK_FAIL == 2 was dropped.
+	- fixes for .CN and .VN domains
