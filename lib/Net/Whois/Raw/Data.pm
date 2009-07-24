@@ -378,6 +378,7 @@ our %notfound = (
     'whois.worldnames.net'      => 'NO MATCH for domain',
      # 'whois.yournamemonkey.com' -- need try again
     'whois.cnnic.net.cn'	=> 'no matching record',
+    'me.whois-servers.net'	=> 'NOT FOUND',
     
     'www_whois'                 => '(Available|no records found|is free)', # for VN | TJ | TJ zone
 );
@@ -1676,6 +1677,12 @@ our %exceed = (
     'whois.domain-registry.nl' => 'too many requests',
     'whois.nic.uk' => 'and will be replenished',
     'whois.networksolutions.com' => 'contained within a list of IP addresses that may have failed',
+    'whois.worldsite.ws' => 'You exceeded the maximum',
+    'whois.tucows.com'  => 'Maximum Daily connection limit reached',
+    'whois.centralnic.com'  => 'Query rate of \\d+',
+    'whois.pir.org'  => 'WHOIS LIMIT EXCEEDED',
+    'whois.nic.ms'   => 'Look up quota exceeded',
+    'whois.nic.gs'   => 'look up quota exceeded',
 );
 
 our $default_ban_time = 60;

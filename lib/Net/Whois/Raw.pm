@@ -12,7 +12,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.00';
+our $VERSION = '2.01';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -31,6 +31,19 @@ sub whois_config {
 	    no strict 'refs';
             ${$parname} = $par->{$parname};
         }
+    }
+}
+
+sub whois_config_data {
+    my $net_whois_raw_data = shift;
+
+    no strict 'refs';
+
+    foreach my $k (keys %$net_whois_raw_data) {
+	%{'Net::Whois::Raw::Data::'.$k} = (
+	    %{'Net::Whois::Raw::Data::'.$k},
+	    %{ $net_whois_raw_data->{ $k } || {} },
+	);
     }
 }
 

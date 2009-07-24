@@ -1,6 +1,6 @@
 ---
 name: Net-Whois-Raw
-version: 2.00
+version: 2.01
 author:
   - |-
     Original author Ariel Brosh B<schop@cpan.org>, 
@@ -23,12 +23,12 @@ requires:
 provides:
   Net::Whois::Raw:
     file: lib/Net/Whois/Raw.pm
-    version: 2.00
+    version: 2.01
   Net::Whois::Raw::Common:
     file: lib/Net/Whois/Raw/Common.pm
   Net::Whois::Raw::Data:
     file: lib/Net/Whois/Raw/Data.pm
-generated_by: Module::Build version 0.280801
+generated_by: Module::Build version 0.32
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2

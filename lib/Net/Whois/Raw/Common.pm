@@ -24,10 +24,10 @@ sub get_from_cache {
     my $result;
     if ( -e "$cache_dir/$query.00" ) {
         my $level = 0;
-        while ( open( CACHE, "<$cache_dir/$query.".sprintf( "%02d", $level ) ) ) {
-            $result->[$level]->{srv} = <CACHE>;
+        while ( open( my $cache_fh, '<', "$cache_dir/$query.".sprintf( "%02d", $level ) ) ) {
+            $result->[$level]->{srv} = <$cache_fh>;
             chomp $result->[$level]->{srv};
-            $result->[$level]->{text} = join "", <CACHE>;
+            $result->[$level]->{text} = join "", <$cache_fh>;
             if ( !$result->[$level]->{text} and $Net::Whois::Raw::CHECK_FAIL ) {
                 $result->[$level]->{text} = undef ;
             }
@@ -35,6 +35,7 @@ sub get_from_cache {
         	$result->[$level]->{text} = decode_utf8( $result->[$level]->{text} );
             }
             $level++;
+	    close $cache_fh;
         }
     }
     
@@ -50,18 +51,19 @@ sub write_to_cache {
     
     my $level = 0;
     foreach my $res ( @{$result} ) {
+	local $res->{text} = $res->{whois} if not exists $res->{text};
+
 	next if defined $res->{text} && !$res->{text} || !defined $res->{text};
 	utf8::encode( $res->{text} );
         my $postfix = sprintf("%02d", $level);
-        if ( open( CACHE, ">$cache_dir/$query.$postfix" ) ) {
-            print CACHE $res->{srv} ? $res->{srv} :
+        if ( open( my $cache_fh, '>', "$cache_dir/$query.$postfix" ) ) {
+            print $cache_fh $res->{srv} ? $res->{srv} :
                 ( $res->{server} ? $res->{server} : '')
                 , "\n";
                 
-            print CACHE $res->{text} ? $res->{text} :
-                ( $res->{whois} ? $res->{whois} : '' );
+            print $cache_fh $res->{text} ? $res->{text} : '';
             
-            close(CACHE);            
+            close $cache_fh;
             chmod 0666, "$cache_dir/$query.$postfix";
         }
         $level++;
@@ -82,7 +84,7 @@ sub process_whois {
 
     if ( $CHECK_EXCEED ) {
         my $exceed = $Net::Whois::Raw::Data::exceed{$server};
-        
+
         if ( $exceed && $whois =~ /$exceed/s) {
             return $whois, "Connection rate exceeded";
         }
@@ -321,6 +323,18 @@ sub get_http_query_url {
 	    from => '',
 	};
 	push @http_query_data, $data;
+
+	$data = {
+	    url  => "http://ns1.nic.tj/cgi/whois?domain=$name",
+	    from => '',
+	};
+	push @http_query_data, $data;
+
+	$data = {
+	    url  => "http://82.198.5.18/cgi/whois?domain=$name",
+	    from => '',
+	};
+	push @http_query_data, $data;
     }
         
     # return $url, %form;
@@ -544,7 +558,7 @@ sub parse_www_content {
 	}
 
     }
-    elsif ( $tld eq 'tj' && $url =~ m|^http\://www\.nic\.tj| ) {
+    elsif ( $tld eq 'tj' && $url =~ m|\.nic\.tj| || $url =~ m|82\.198\.5\.18| ) {
 
         $resp = decode_utf8( $resp );
         

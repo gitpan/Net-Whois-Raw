@@ -319,3 +319,6 @@ Revision history for Perl extension Net::Whois::Raw.
         - now flags OMIT_MSG and CHECK_FAIL supports only true and false values.
           Support for OMIT_MSG == 2 and CHECK_FAIL == 2 was dropped.
 	- fixes for .CN and .VN domains
+
+2.01	May 14 2009	Walery Studennikov
+	- support exceed pattern for .ws

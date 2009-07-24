@@ -22,7 +22,7 @@ my $return_all;
 Getopt::Long::Configure( 'bundling', 'no_ignore_case' );
 
 GetOptions(
-    'h|help'		=> \$help,
+    'help|h'		=> \$help,
     'strip|s'		=> \$do_strip,
     'checkfail|c'	=> \$do_checkfail,
     'debug|d+'		=> \$debug,
