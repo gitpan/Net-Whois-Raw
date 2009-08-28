@@ -322,3 +322,7 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.01	May 14 2009	Walery Studennikov
 	- support exceed pattern for .ws
+
+2.02	Aug 28 2009
+	- fix for twocows (by DAVINCHI)
+	- fix for "perl spits out an error if $res_srv is undefined" (by Ian Stuart)

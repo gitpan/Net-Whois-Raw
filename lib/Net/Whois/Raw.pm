@@ -12,7 +12,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.01';
+our $VERSION = '2.02';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -72,7 +72,7 @@ sub whois {
         ($res_text, $res_srv) = get_whois($dom, $server, $which_whois);
     }
     
-    $res_srv = '' if $res_srv eq 'www_whois';
+    $res_srv = '' if $res_srv && $res_srv eq 'www_whois';
     
     utf8::decode( $res_text ); # Perl whyly loss utf8 flag
     
