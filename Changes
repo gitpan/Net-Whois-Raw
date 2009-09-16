@@ -326,3 +326,9 @@ Revision history for Perl extension Net::Whois::Raw.
 2.02	Aug 28 2009
 	- fix for twocows (by DAVINCHI)
 	- fix for "perl spits out an error if $res_srv is undefined" (by Ian Stuart)
+
+2.03    Sep 10 2009	Andrey Kuzmin
+	- add five zones: COM.UA ORG.UA KIEV.UA BIZ.UA NOV.RU
+
+2.04	Sep 16 2009	Walery Studennikov
+	- Support for list of whois servers which has no idn support

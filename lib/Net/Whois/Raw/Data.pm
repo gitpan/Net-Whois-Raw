@@ -24,9 +24,11 @@ our %servers = qw(
     SPB.RU	whois.relcom.ru
     MSK.RU	whois.relcom.ru
     RU.NET	whois.relcom.ru
-    MSK.SU      whois.relcom.ru
+    MSK.SU	whois.relcom.ru
+    NOV.RU	whois.relcom.ru
     INT.RU      whois.int.ru    
     NNOV.RU     whois.nnov.ru
+    
 
     NS     whois.nsiregistry.net
     RIPE   whois.ripe.net
@@ -149,6 +151,10 @@ our %servers = qw(
     DN.UA       whois.dn.ua
     LG.UA       whois.lg.ua
     OD.UA       whois.od.ua
+    COM.UA      whois.com.ua
+    ORG.UA      whois.com.ua
+    KIEV.UA     whois.com.ua
+    BIZ.UA      whois.biz.ua
     AC.UK	whois.ja.net
     GOV.UK	whois.ja.net
 
@@ -226,6 +232,9 @@ our %notfound = (
     'whois.nnov.ru'         => 'No entries found',
     'whois.int.ru'          => 'No entries found',
     'whois.reg.ru'          => '^Domain \S+ not found',
+
+    'whois.com.ua'		=> '^% No entries found for domain \S+',
+    'whois.biz.ua'		=> 'No entries found',
     
     'whois.aero'                 => '^NOT FOUND',
     'whois.nic.asia'             => '^NOT FOUND',
@@ -1688,6 +1697,11 @@ our %exceed = (
 our $default_ban_time = 60;
 our %ban_time = (
     'whois.ripn.net'  => 60,
+);
+
+# Whois servers which has no idn support
+our %whois_servers_with_no_idn_support = (
+    'whois.melbourneit.com'  => 1,
 );
 
 1;
