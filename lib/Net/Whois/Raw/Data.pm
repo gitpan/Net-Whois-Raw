@@ -106,7 +106,7 @@ our %servers = qw(
     LU  whois.dns.lu
     LV  whois.nic.lv
     MG  whois.nic.mg
-    MN  whois.nic.mn
+    MN  whois2.afilias-grs.net
     MS  whois.nic.ms
     MU  whois.nic.mu
     MX  whois.nic.mx
@@ -148,13 +148,15 @@ our %servers = qw(
     YT  whois.nic.yt
 
     NET.UA      delta.hostmaster.net.ua
+    COM.UA      whois.com.ua
+    ORG.UA      whois.com.ua
+    BIZ.UA      whois.biz.ua
+    PP.UA	whois.pp.ua
+    KIEV.UA     whois.com.ua
     DN.UA       whois.dn.ua
     LG.UA       whois.lg.ua
     OD.UA       whois.od.ua
-    COM.UA      whois.com.ua
-    ORG.UA      whois.com.ua
-    KIEV.UA     whois.com.ua
-    BIZ.UA      whois.biz.ua
+
     AC.UK	whois.ja.net
     GOV.UK	whois.ja.net
 
@@ -215,6 +217,8 @@ our %codepages = (
     'whois.nic.hu'       => 'iso-8859-1',
     'whois.dns.pt'       => 'iso-8859-1',
     'whois.net.ua'       => 'koi8-u',
+    'whois.com.ua'       => 'koi8-u',
+    'whois.biz.ua'       => 'koi8-u',
     'whois.dn.ua'        => 'koi8-u',
     'whois.lg.ua'        => 'koi8-u',
     'whois.od.ua'        => 'koi8-u',
@@ -324,6 +328,9 @@ our %notfound = (
     'whois.twnic.net.tw'      => '^No Found',    
     'whois.net.ua'            => 'No entries found for domain',
     'delta.hostmaster.net.ua' => 'No entries found for domain',
+    'whois.com.ua'            => 'No entries found for domain',
+    'whois.biz.ua'            => 'No entries found',
+    'whois.pp.ua'             => 'No entries found',
     'whois.dn.ua'             => 'No match record found',
     'whois.lg.ua'             => 'No match record found',
     'whois.od.ua'             => 'No match record found',
@@ -1442,6 +1449,13 @@ our %strip = (
     'whois.od.ua' => [
         '^%',
     ],
+    'whois.com.ua' => [
+	'^% This is the Ukrainian',
+	'^% Rights restricted',
+        '^%$',
+        '^% % .UA whois',
+        '^% =====',
+    ],
     'whois.nic.uk' => [
 	'^This WHOIS information is',
 	'^for \.uk domain names',
@@ -1702,6 +1716,11 @@ our %ban_time = (
 # Whois servers which has no idn support
 our %whois_servers_with_no_idn_support = (
     'whois.melbourneit.com'  => 1,
+);
+
+# Internal postprocessing subroutines
+our %postprocess = (
+    'whois.pp.ua'   => sub { $_[0] =~ s/[\x00\x0A]+$//; $_[0]; },
 );
 
 1;

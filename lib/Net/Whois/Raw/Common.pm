@@ -123,10 +123,15 @@ MAIN:
 	}
     }
     
+    if ( defined $Net::Whois::Raw::Data::postprocess{$server} ) {
+        $whois = $Net::Whois::Raw::Data::postprocess{$server}->($whois);
+    }
+
     if ( defined $Net::Whois::Raw::POSTPROCESS{$server} ) {
         $whois = $Net::Whois::Raw::POSTPROCESS{$server}->($whois);
     }
-    elsif ( defined $Net::Whois::Raw::Data::codepages{$server} ) {
+
+    if ( defined $Net::Whois::Raw::Data::codepages{$server} ) {
         $whois = decode( $Net::Whois::Raw::Data::codepages{$server}, $whois );
     }
     else {
