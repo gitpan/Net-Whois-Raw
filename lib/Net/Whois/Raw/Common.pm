@@ -147,7 +147,6 @@ sub get_server {
     my ($dom, $USE_CNAME) = @_;
     
     my $tld = uc get_dom_tld( $dom );
-    $tld =~ s/^XN--(\w)/XN---$1/;
 
     if ( grep { $_ eq $tld } @Net::Whois::Raw::Data::www_whois ) {
         return 'www_whois';
@@ -318,28 +317,36 @@ sub get_http_query_url {
     }
     elsif ($tld eq 'tj') {
 	my $data = {
-	    url  => "http://www.nic.tj/cgi/whois?domain=$name",
-	    from => '',
-	};
-	push @http_query_data, $data;
-	
-	$data = {
 	    url  => "http://get.tj/whois/?lang=en&domain=$domain",
 	    from => '',
 	};
 	push @http_query_data, $data;
 
+	# first level on nic.tj
 	$data = {
-	    url  => "http://ns1.nic.tj/cgi/whois?domain=$name",
+	    url  => "http://www.nic.tj/cgi/lookup2?domain=$name",
 	    from => '',
 	};
 	push @http_query_data, $data;
 
+	# second level on nic.tj
 	$data = {
-	    url  => "http://82.198.5.18/cgi/whois?domain=$name",
+	    url  => "http://www.nic.tj/cgi/whois?domain=$name",
 	    from => '',
 	};
 	push @http_query_data, $data;
+	
+	#$data = {
+	#    url  => "http://ns1.nic.tj/cgi/whois?domain=$name",
+	#    from => '',
+	#};
+	#push @http_query_data, $data;
+
+	#$data = {
+	#    url  => "http://62.122.137.16/cgi/whois?domain=$name",
+	#    from => '',
+	#};
+	#push @http_query_data, $data;
     }
         
     # return $url, %form;
@@ -563,28 +570,6 @@ sub parse_www_content {
 	}
 
     }
-    elsif ( $tld eq 'tj' && $url =~ m|\.nic\.tj| || $url =~ m|82\.198\.5\.18| ) {
-
-        $resp = decode_utf8( $resp );
-        
-        if ($resp =~ m|<table[0-9a-z=\" ]*>\n(.+?)\n</table>|s) {
-            $resp = $1;
-            $resp =~ s|</?tr>||ig;
-            $resp =~ s|<td>| |ig;
-            $resp =~ s|</?td[0-9a-z=\" ]*>||ig;
-            $resp =~ s|</?col[0-9a-z=\" ]*>||ig;
-            $resp =~ s|&laquo;|"|ig;
-            $resp =~ s|&raquo;|"|ig;
-            $resp =~ s|&nbsp;| |ig;
-            $resp =~ s|\n\s+|\n|sg;
-            $resp =~ s|\s+\n|\n|sg;
-            $resp =~ s|\n\n|\n|sg;
-        }
-	else {
-            return 0;
-        }
-        
-    }
     elsif ( $tld eq 'tj' && $url =~ m|^http\://get\.tj| ) {
     
         $resp = decode_utf8( $resp );
@@ -608,6 +593,47 @@ sub parse_www_content {
             return 0;
         }
 
+    }
+    elsif ( $tld eq 'tj' && $url =~ m|\.nic\.tj/cgi/lookup| ) {
+
+        $resp = decode_utf8( $resp );
+        
+        if ($resp =~ m|<div[0-9a-z=\" ]*>\n?(.+?)\n?</div>|s) {
+            $resp = $1;
+
+	    return 0 if $resp =~ m|may be available|s;
+
+            $resp =~ s|\n\s+|\n|sg;
+            $resp =~ s|\s+\n|\n|sg;
+            $resp =~ s|\n\n|\n|sg;
+            $resp =~ s|<br.+||si;
+        }
+	else {
+            return 0;
+        }
+        
+    }
+    elsif ( $tld eq 'tj' && $url =~ m|\.nic\.tj/cgi/whois| || $url =~ m|62\.122\.137\.16| ) {
+
+        $resp = decode_utf8( $resp );
+        
+        if ($resp =~ m|<table[0-9a-z=\" ]*>\n(.+?)\n</table>|s) {
+            $resp = $1;
+            $resp =~ s|</?tr>||ig;
+            $resp =~ s|<td>| |ig;
+            $resp =~ s|</?td[0-9a-z=\" ]*>||ig;
+            $resp =~ s|</?col[0-9a-z=\" ]*>||ig;
+            $resp =~ s|&laquo;|"|ig;
+            $resp =~ s|&raquo;|"|ig;
+            $resp =~ s|&nbsp;| |ig;
+            $resp =~ s|\n\s+|\n|sg;
+            $resp =~ s|\s+\n|\n|sg;
+            $resp =~ s|\n\n|\n|sg;
+        }
+	else {
+            return 0;
+        }
+        
     }
     else {
         return 0;

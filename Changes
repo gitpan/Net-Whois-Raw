@@ -339,5 +339,8 @@ Revision history for Perl extension Net::Whois::Raw.
 	- add zone PP.UA
 
 2.06    Oct 22 2009     Ilya Chesnokov
-    - added internal answer postprocessing
+	- added internal answer postprocessing
 
+2.07    Nov 24 2009     Walery Studennikov
+	- support for cyrillic .RF domain
+	- fixes for multilingual TLDs

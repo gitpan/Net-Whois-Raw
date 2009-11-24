@@ -16,6 +16,7 @@ our @www_whois = qw(
 our %servers = qw(
     RU          whois.ripn.net
     SU          whois.ripn.net
+    XN--P1AI	whois.ripn.net
     
     COM.RU	whois.ripn.net
     NET.RU	whois.ripn.net
@@ -28,7 +29,6 @@ our %servers = qw(
     NOV.RU	whois.relcom.ru
     INT.RU      whois.int.ru    
     NNOV.RU     whois.nnov.ru
-    
 
     NS     whois.nsiregistry.net
     RIPE   whois.ripe.net
@@ -55,11 +55,10 @@ our %servers = qw(
     ORG    whois.pir.org
     PRO    whois.registrypro.pro
     TEL    whois-tel.neustar.biz
-    TV     tvwhois.verisign-grs.com
-    WS     whois.worldsite.ws
 
-    NF     whois.nic.cx
-
+    TV  tvwhois.verisign-grs.com
+    WS  whois.worldsite.ws
+    NF  whois.nic.cx
     AC  whois.nic.ac
     AG  whois.nic.ag
     AM  whois.amnic.net
@@ -160,11 +159,11 @@ our %servers = qw(
     AC.UK	whois.ja.net
     GOV.UK	whois.ja.net
 
-    XN---P1AG	ru.whois.i-dns.net
-    XN---P1AG	ru.whois.i-dns.net
-    XN---J1AEF	whois.i-dns.net
-    XN---E1APQ	whois.i-dns.net
-    XN---C1AVG	whois.i-dns.net
+    XN--P1AG	ru.whois.i-dns.net
+    XN--P1AG	ru.whois.i-dns.net
+    XN--J1AEF	whois.i-dns.net
+    XN--E1APQ	whois.i-dns.net
+    XN--C1AVG	whois.i-dns.net
 
     EU.COM      whois.centralnic.com
     GB.COM      whois.centralnic.com

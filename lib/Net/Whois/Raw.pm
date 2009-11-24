@@ -12,7 +12,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.06';
+our $VERSION = '2.07';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -185,7 +185,7 @@ sub recursive_whois {
 	}
     }
 
-    if ($dom =~ /^xn--/i && $Net::Whois::Raw::Data::whois_servers_with_no_idn_support{$newsrv}) {
+    if ($dom =~ /^xn--/i && $newsrv && $Net::Whois::Raw::Data::whois_servers_with_no_idn_support{$newsrv}) {
 	# Bypass recursing to WHOIS servers with no IDN support
 	$newsrv = undef;
     }

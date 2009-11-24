@@ -2,7 +2,8 @@
 
 use strict;
 
-use Test::More tests => 12;
+use Data::Dumper;
+use Test::More tests => 13;
 
 BEGIN {
     use_ok('Net::Whois::Raw',qw( whois ));
@@ -73,7 +74,7 @@ SKIP: {
     like( whois( $test_domain, undef, 'QRY_FIRST' ), qr/net-whois-raw-common-test/s, 'get_from_cache' );
     
     like( whois( 'get.tj' ), qr/domain name\:? get\.tj/i, 'www whois' );
-    
+
     unlink <$tmp_dir/*>;
     rmdir $tmp_dir;
 };
