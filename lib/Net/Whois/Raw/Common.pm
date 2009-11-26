@@ -200,8 +200,7 @@ sub get_dom_tld {
         my @alltlds = keys %Net::Whois::Raw::Data::servers;
         @alltlds = sort { dlen($b) <=> dlen($a) } @alltlds;
         foreach my $awailtld (@alltlds) {
-            $awailtld = lc $awailtld;
-            if ($dom =~ /(.+?)\.($awailtld)$/) {
+            if ($dom =~ /(.+?)\.($awailtld)$/i) {
                 $tld = $2;
                 last;
             }

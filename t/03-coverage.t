@@ -14,6 +14,7 @@ use Net::Whois::Raw;
 
 our $DEBUG = 0;
 our $fake_domain = "fake123domain";
+our %psevdo_zone = map {$_ => 1} qw/ARPA NS RIPE IP/;
 my $tests_number = keys(%Net::Whois::Raw::Data::servers) * 2;
 
 if ($ARGV[0] && $ARGV[0] eq "-f") {
@@ -27,6 +28,8 @@ print "Coverage tests skiped by default. Run with -f to force.\n";
 
 foreach my $tld (sort keys %Net::Whois::Raw::Data::servers) {
     SKIP: {    
+        skip( "Psevdozona $tld", 2 ) if $psevdo_zone{$tld};
+
         my $server = $Net::Whois::Raw::Data::servers{$tld};
         my $domain = get_domain($tld);        
         skip( "Cant find domain in .$tld", 2 ) unless $domain;

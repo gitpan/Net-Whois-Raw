@@ -344,3 +344,10 @@ Revision history for Perl extension Net::Whois::Raw.
 2.07    Nov 24 2009     Walery Studennikov
 	- support for cyrillic .RF domain
 	- fixes for multilingual TLDs
+
+2.08	Nov 24 2009	David T Dzhanaev
+	- multiple ccTLD zones added
+	- fixed case-sensitive search for an appropriate whois
+
+2.09	Nov 26 2009	David T Dzhanaev
+	- support geographic domains for .RU and .SU zones

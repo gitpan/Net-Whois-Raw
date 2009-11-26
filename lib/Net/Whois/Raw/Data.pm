@@ -22,13 +22,97 @@ our %servers = qw(
     NET.RU	whois.ripn.net
     ORG.RU	whois.ripn.net
     PP.RU	whois.ripn.net
-    SPB.RU	whois.relcom.ru
-    MSK.RU	whois.relcom.ru
+    INT.RU  whois.int.ru    
     RU.NET	whois.relcom.ru
-    MSK.SU	whois.relcom.ru
-    NOV.RU	whois.relcom.ru
-    INT.RU      whois.int.ru    
-    NNOV.RU     whois.nnov.ru
+
+    ABKHAZIA.SU         whois.relcom.ru
+    ADYGEYA.RU          whois.relcom.ru
+    ADYGEYA.SU          whois.relcom.ru
+    AKTYUBINSK.SU       whois.relcom.ru
+    AMURSK.RU           whois.relcom.ru
+    ARKHANGELSK.SU      whois.relcom.ru
+    ARMENIA.SU          whois.relcom.ru
+    ASHGABAD.SU         whois.relcom.ru
+    AZERBAIJAN.SU       whois.relcom.ru
+    BALASHOV.SU         whois.relcom.ru
+    BASHKIRIA.RU        whois.relcom.ru
+    BASHKIRIA.SU        whois.relcom.ru
+    BELGOROD.RU         whois.relcom.ru
+    BELGOROD.SU         whois.relcom.ru
+    BIR.RU              whois.relcom.ru
+    BRYANSK.SU          whois.relcom.ru
+    BUKHARA.SU          whois.relcom.ru
+    CBG.RU              whois.relcom.ru
+    CHELYABINSK.RU      whois.relcom.ru
+    CHIMKENT.SU         whois.relcom.ru
+    CMW.RU              whois.relcom.ru
+    DAGESTAN.RU         whois.relcom.ru
+    DAGESTAN.SU         whois.relcom.ru
+    DUDINKA.RU          whois.relcom.ru
+    EAST-KAZAKHSTAN.SU  whois.relcom.ru
+    EXNET.SU            whois.relcom.ru
+    FAREAST.RU          whois.relcom.ru
+    GEORGIA.SU          whois.relcom.ru
+    GROZNY.RU           whois.relcom.ru
+    GROZNY.SU           whois.relcom.ru
+    IVANOVO.SU          whois.relcom.ru
+    JAMBYL.SU           whois.relcom.ru
+    JAR.RU              whois.relcom.ru
+    JOSHKAR-OLA.RU      whois.relcom.ru
+    KALMYKIA.RU         whois.relcom.ru
+    KALMYKIA.SU         whois.relcom.ru
+    KALUGA.SU           whois.relcom.ru
+    KARACOL.SU          whois.relcom.ru
+    KARAGANDA.SU        whois.relcom.ru
+    KARELIA.SU          whois.relcom.ru
+    KCHR.RU             whois.relcom.ru
+    KHAKASSIA.SU        whois.relcom.ru
+    KOMI.SU             whois.relcom.ru
+    KRASNODAR.SU        whois.relcom.ru
+    KURGAN.SU           whois.relcom.ru
+    KUSTANAI.RU         whois.relcom.ru
+    KUSTANAI.SU         whois.relcom.ru
+    MANGYSHLAK.SU       whois.relcom.ru
+    MARINE.RU           whois.relcom.ru
+    MORDOVIA.RU         whois.relcom.ru
+    MORDOVIA.SU         whois.relcom.ru
+    MSK.RU              whois.relcom.ru
+    MSK.SU              whois.relcom.ru
+    MURMANSK.SU         whois.relcom.ru
+    MYTIS.RU            whois.relcom.ru
+    NALCHIK.RU          whois.relcom.ru
+    NALCHIK.SU          whois.relcom.ru
+    NAVOI.SU            whois.relcom.ru
+    NNOV.RU             whois.nnov.ru
+    NORILSK.RU          whois.relcom.ru
+    NORTH-KAZAKHSTAN.SU whois.relcom.ru
+    NOV.RU              whois.relcom.ru
+    NOV.SU              whois.relcom.ru
+    OBNINSK.SU          whois.relcom.ru
+    PALANA.RU           whois.relcom.ru
+    PENZA.SU            whois.relcom.ru
+    POKROVSK.SU         whois.relcom.ru
+    PYATIGORSK.RU       whois.relcom.ru
+    RU.NET              whois.relcom.ru
+    SIMBIRSK.RU         whois.relcom.ru
+    SOCHI.SU            whois.relcom.ru
+    SPB.RU              whois.relcom.ru
+    SPB.SU              whois.relcom.ru
+    TASHKENT.SU         whois.relcom.ru
+    TERMEZ.SU           whois.relcom.ru
+    TOGLIATTI.SU        whois.relcom.ru
+    TROITSK.SU          whois.relcom.ru
+    TSARITSYN.RU        whois.relcom.ru
+    TSELINOGRAD.SU      whois.relcom.ru
+    TULA.SU             whois.relcom.ru
+    TUVA.SU             whois.relcom.ru
+    VLADIKAVKAZ.RU      whois.relcom.ru
+    VLADIKAVKAZ.SU      whois.relcom.ru
+    VLADIMIR.RU         whois.relcom.ru
+    VLADIMIR.SU         whois.relcom.ru
+    VOLOGDA.SU          whois.relcom.ru
+    YAKUTIA.SU          whois.relcom.ru
+    YEKATERINBURG.RU    whois.relcom.ru
 
     NS     whois.nsiregistry.net
     RIPE   whois.ripe.net
@@ -62,6 +146,7 @@ our %servers = qw(
     AC  whois.nic.ac
     AG  whois.nic.ag
     AM  whois.amnic.net
+    AS  whois.nic.as
     AT  whois.nic.at
     AU  whois.aunic.net
     BE  whois.dns.be
@@ -81,12 +166,14 @@ our %servers = qw(
     EE  whois.eenet.ee
     EU  whois.eu
     FI  whois.ficora.fi
+    FO  whois.ripe.net
     FR  whois.nic.fr
     GG  whois.channelisles.net
     GI  whois2.afilias-grs.net
     GS  whois.nic.gs
     HU  whois.nic.hu
     HK  whois.hkirc.hk
+    HM  whois.registry.hm
     HN  whois2.afilias-grs.net
     IE  whois.domainregistry.ie
     IL  whois.isoc.org.il
@@ -104,6 +191,7 @@ our %servers = qw(
     LT  whois.domreg.lt
     LU  whois.dns.lu
     LV  whois.nic.lv
+    MC  whois.ripe.net
     MG  whois.nic.mg
     MN  whois2.afilias-grs.net
     MS  whois.nic.ms
@@ -127,9 +215,12 @@ our %servers = qw(
     SG  whois.nic.net.sg
     SH  whois.nic.sh
     SI  whois.arnes.si
+    SK  whois.ripe.net
+    SM  whois.ripe.net
     ST  whois.nic.st
     TC  whois.adamsnames.tc
     TF  whois.nic.tf
+    TH  whois.nic.uk
     TK  whois.dot.tk
     TL  whois.nic.tl
     TM  whois.nic.tm
@@ -146,6 +237,138 @@ our %servers = qw(
     WF  whois.nic.wf
     YT  whois.nic.yt
 
+    ASN.AU        whois.aunic.net
+    COM.AU        whois.aunic.net
+    CONF.AU       whois.aunic.net
+    CSIRO.AU      whois.aunic.net
+    EDU.AU        whois.aunic.net
+    GOV.AU        whois.aunic.net
+    ID.AU         whois.aunic.net
+    INFO.AU       whois.aunic.net
+    NET.AU        whois.aunic.net
+    ORG.AU        whois.aunic.net
+    EMU.ID.AU     whois.aunic.net
+    WATTLE.ID.AU  whois.aunic.net
+    
+    ADM.BR  whois.nic.br
+    ADV.BR  whois.nic.br
+    AGR.BR  whois.nic.br
+    AM.BR   whois.nic.br
+    ARQ.BR  whois.nic.br
+    ART.BR  whois.nic.br
+    ATO.BR  whois.nic.br
+    BIO.BR  whois.nic.br
+    BMD.BR  whois.nic.br
+    CIM.BR  whois.nic.br
+    CNG.BR  whois.nic.br
+    CNT.BR  whois.nic.br
+    COM.BR  whois.nic.br
+    ECN.BR  whois.nic.br
+    EDU.BR  whois.nic.br
+    ENG.BR  whois.nic.br
+    ESP.BR  whois.nic.br
+    ETC.BR  whois.nic.br
+    ETI.BR  whois.nic.br
+    FAR.BR  whois.nic.br
+    FM.BR   whois.nic.br
+    FND.BR  whois.nic.br
+    FOT.BR  whois.nic.br
+    FST.BR  whois.nic.br
+    G12.BR  whois.nic.br
+    GGF.BR  whois.nic.br
+    GOV.BR  whois.nic.br
+    IMB.BR  whois.nic.br
+    IND.BR  whois.nic.br
+    INF.BR  whois.nic.br
+    JOR.BR  whois.nic.br
+    LEL.BR  whois.nic.br
+    MAT.BR  whois.nic.br
+    MED.BR  whois.nic.br
+    MIL.BR  whois.nic.br
+    MUS.BR  whois.nic.br
+    NET.BR  whois.nic.br
+    NOM.BR  whois.nic.br
+    NOT.BR  whois.nic.br
+    NTR.BR  whois.nic.br
+    ODO.BR  whois.nic.br
+    OOP.BR  whois.nic.br
+    ORG.BR  whois.nic.br
+    PPG.BR  whois.nic.br
+    PRO.BR  whois.nic.br
+    PSC.BR  whois.nic.br
+    PSI.BR  whois.nic.br
+    QSL.BR  whois.nic.br
+    REC.BR  whois.nic.br
+    SLG.BR  whois.nic.br
+    SRV.BR  whois.nic.br
+    TMP.BR  whois.nic.br
+    TRD.BR  whois.nic.br
+    TUR.BR  whois.nic.br
+    TV.BR   whois.nic.br
+    VET.BR  whois.nic.br
+    ZLG.BR  whois.nic.br
+    
+    AC.CN  whois.cnnic.net.cn
+    AH.CN  whois.cnnic.net.cn
+    BJ.CN  whois.cnnic.net.cn
+    COM.CN whois.cnnic.net.cn
+    CQ.CN  whois.cnnic.net.cn
+    FJ.CN  whois.cnnic.net.cn
+    GD.CN  whois.cnnic.net.cn
+    GOV.CN whois.cnnic.net.cn
+    GS.CN  whois.cnnic.net.cn
+    GX.CN  whois.cnnic.net.cn
+    GZ.CN  whois.cnnic.net.cn
+    HA.CN  whois.cnnic.net.cn
+    HB.CN  whois.cnnic.net.cn
+    HE.CN  whois.cnnic.net.cn
+    HI.CN  whois.cnnic.net.cn
+    HK.CN  whois.cnnic.net.cn
+    HL.CN  whois.cnnic.net.cn
+    HN.CN  whois.cnnic.net.cn
+    JL.CN  whois.cnnic.net.cn
+    JS.CN  whois.cnnic.net.cn
+    JX.CN  whois.cnnic.net.cn
+    LN.CN  whois.cnnic.net.cn
+    MO.CN  whois.cnnic.net.cn
+    NET.CN whois.cnnic.net.cn
+    NM.CN  whois.cnnic.net.cn
+    NX.CN  whois.cnnic.net.cn
+    ORG.CN whois.cnnic.net.cn
+    QH.CN  whois.cnnic.net.cn
+    SC.CN  whois.cnnic.net.cn
+    SD.CN  whois.cnnic.net.cn
+    SH.CN  whois.cnnic.net.cn
+    SN.CN  whois.cnnic.net.cn
+    SX.CN  whois.cnnic.net.cn
+    TJ.CN  whois.cnnic.net.cn
+    TW.CN  whois.cnnic.net.cn
+    XJ.CN  whois.cnnic.net.cn
+    XZ.CN  whois.cnnic.net.cn
+    YN.CN  whois.cnnic.net.cn
+    ZJ.CN  whois.cnnic.net.cn
+
+    COM.HK  whois.hknic.net.hk
+    GOV.HK  whois.hknic.net.hk
+    NET.HK  whois.hknic.net.hk
+    ORG.HK  whois.hknic.net.hk
+    
+    AC.JP  whois.jprs.jp
+    AD.JP  whois.jprs.jp
+    CO.JP  whois.jprs.jp
+    GR.JP  whois.jprs.jp
+    NE.JP  whois.jprs.jp
+    OR.JP  whois.jprs.jp
+
+    COM.MX  whois.nic.mx
+    GOB.MX  whois.nic.mx
+    NET.MX  whois.nic.mx
+
+    COM.TW  whois.twnic.net
+    IDV.TW  whois.twnic.net
+    NET.TW  whois.twnic.net
+    ORG.TW  whois.twnic.net
+
     NET.UA      delta.hostmaster.net.ua
     COM.UA      whois.com.ua
     ORG.UA      whois.com.ua
@@ -157,7 +380,12 @@ our %servers = qw(
     OD.UA       whois.od.ua
 
     AC.UK	whois.ja.net
+    CO.UK   whois.nic.uk
     GOV.UK	whois.ja.net
+    LTD.UK  whois.nic.uk
+    NET.UK  whois.nic.uk
+    ORG.UK  whois.nic.uk
+    PLC.UK  whois.nic.uk    
 
     XN--P1AG	ru.whois.i-dns.net
     XN--P1AG	ru.whois.i-dns.net
@@ -262,12 +490,15 @@ our %notfound = (
     'whois.worldsite.ws'         => 'No match for',
 
     'whois.nic.ag'            => 'NOT FOUND',
+    'whois.nic.as'            => 'Domain Not Found',
     'whois.nic.at'            => 'nothing found',
+    'whois.nic.br'            => '^% No match for domain',
     'whois.amnic.net'         => 'No match',
     'whois.aunic.net'         => 'No Data Found',
     'whois.dns.be'            => '^Status:\s+FREE',
     'whois.register.bg'       => '^Domain name \S+ does not exist',
     'whois.registro.br'       => 'No match for',
+    'whois.registry.hm'       => 'Domain not found',
     'whois.cira.ca'           => '^Domain status\:\s+AVAIL',
     'whois.nic.ch'            => '^We do not have an entry in our database matching your',
     'whois.nic.ci'            => '^Domain \S+ not found',
@@ -284,6 +515,7 @@ our %notfound = (
     'whois.channelisles.net'  => 'No information found',
     'whois.nic.gs'            => 'Status: Not Registered',
     'whois.hkirc.hk'          => '^Domain Not Found',
+    'whois.hknic.net.hk'      => 'Domain Not Found',
     'whois.nic.hu'            => 'No match',
     'whois.domainregistry.ie' => 'There was no match',    
     'whois.isoc.org.il'       => 'No data was found',
@@ -324,6 +556,7 @@ our %notfound = (
     'whois.dot.tk'            => 'domain name not known',
     'whois.nic.tm'            => '^Domain \S+ - Available',
     'whois.tonic.to'          => 'No match for',
+    'whois.twnic.net'         => 'No Found',
     'whois.twnic.net.tw'      => '^No Found',    
     'whois.net.ua'            => 'No entries found for domain',
     'delta.hostmaster.net.ua' => 'No entries found for domain',
