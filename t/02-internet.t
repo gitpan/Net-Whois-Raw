@@ -3,7 +3,7 @@
 use strict;
 
 use Data::Dumper;
-use Test::More tests => 13;
+use Test::More tests => 12;
 
 BEGIN {
     use_ok('Net::Whois::Raw',qw( whois ));
@@ -23,7 +23,8 @@ my @domains = qw(
 
 SKIP: {
     print "The following tests requires internet connection. Checking...\n";
-    skip "Looks like no internet connection", 10 unless get_connected();
+    skip "Looks like no internet connection", 
+        Test::More->builder->expected_tests() - 1 unless get_connected();
     
     # registrars    
     like( whois( 'REGRU-REG-RIPN', 'whois.ripn.net' ), qr/www.reg.ru/ );

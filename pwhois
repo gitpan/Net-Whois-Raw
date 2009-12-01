@@ -22,16 +22,16 @@ my $return_all;
 Getopt::Long::Configure( 'bundling', 'no_ignore_case' );
 
 GetOptions(
-    'help|h'		=> \$help,
-    'strip|s'		=> \$do_strip,
-    'checkfail|c'	=> \$do_checkfail,
-    'debug|d+'		=> \$debug,
-    'timeout|T=i'	=> \$timeout,
-    'enable_caching|t'	=> \$enable_caching,
-    'src_addr|a=s@'	=> \@source_addresses,
-    'return_first|F'	=> \$return_first,
-    'return_last|L'	=> \$return_last,
-    'return_all|A'	=> \$return_all,
+    'help|h'           => \$help,
+    'strip|s'          => \$do_strip,
+    'checkfail|c'      => \$do_checkfail,
+    'debug|d+'         => \$debug,
+    'timeout|T=i'      => \$timeout,
+    'enable_caching|t' => \$enable_caching,
+    'src_addr|a=s@'    => \@source_addresses,
+    'return_first|F'   => \$return_first,
+    'return_last|L'    => \$return_last,
+    'return_all|A'     => \$return_all,
 ) or die;
 
 if ($help || !@ARGV) {
@@ -47,16 +47,16 @@ Switches:
 -d	enables debugging messages.
 -F	returns results of the first query of recursive whois requests
 -L	returns results of the last query of recursive whois requests (the default)
--A	returns results of the last query of recursive whois requests
+-A	returns results of the all queries of recursive whois requests
 EOM
     exit; 
 }
 
-$Net::Whois::Raw::DEBUG = $debug;
-$Net::Whois::Raw::OMIT_MSG = $do_strip ? 1 : 0;
+$Net::Whois::Raw::DEBUG      = $debug;
+$Net::Whois::Raw::OMIT_MSG   = $do_strip     ? 1 : 0;
 $Net::Whois::Raw::CHECK_FAIL = $do_checkfail ? 1 : 0;
-$Net::Whois::Raw::TIMEOUT = $timeout;
-@Net::Whois::Raw::SRC_IPS = @source_addresses if @source_addresses;
+$Net::Whois::Raw::TIMEOUT    = $timeout;
+@Net::Whois::Raw::SRC_IPS    = @source_addresses if @source_addresses;
 
 if ($enable_caching) {
     $Net::Whois::Raw::CACHE_DIR = $ENV{TEMP} || ($^O =~ /Win/ ? "C:\\temp" : '/tmp' );
@@ -70,30 +70,21 @@ my $server = $ARGV[1];
 
 eval {
     my ($result, $server);
-    my $which_whois =
-	$return_first ? 'QRY_FIRST' :
-	$return_all   ? 'QRY_ALL' :
-			'QRY_LAST';
-    ($result, $server) = Net::Whois::Raw::get_whois( $dom, $server, $which_whois );
-    
-    if ($result) {
-        my $cp;
-        ($cp = $ENV{LANG}) =~ s/^[a-z]{2}_[A-Z]{2}\.//;
-        $cp = lc $cp;
+    my $which_whois = 
+        $return_first ? 'QRY_FIRST' :
+        $return_all   ? 'QRY_ALL'   : 'QRY_LAST';
+                        
+    ($result, $server) = 
+        Net::Whois::Raw::get_whois( $dom, $server, $which_whois );
 
-        if ( $cp =~ /utf\-?8/ ) {
-	    $result = encode_utf8( $result );
-	}
-	else {
-	    $result = encode( $cp, $result );
-	}
-
-	print "[$server]\n";
-	print $result, "\n";
-	    
+    if ($result and ref $result eq 'ARRAY') {
+        make_output($_->{text}, $_->{srv}) for @{$result};
+    }
+    elsif ($result) {
+        make_output($result, $server);
     }
     else {
-	print STDERR "Failed.\n";
+        print STDERR "Failed.\n";
     }
 };
 
@@ -104,6 +95,24 @@ if ($@) {
     print "\nWhois information could not be fetched:\n$err\n";
     exit -1;
 }	
+
+# Prepare and print output
+sub make_output {
+    my ($result, $server) = @_;
+
+    (my $cp = $ENV{LANG}) =~ s/^[a-z]{2}_[A-Z]{2}\.//;
+    $cp = lc $cp;
+
+    if ( $cp =~ /utf\-?8/ ) {
+        $result = encode_utf8( $result );
+    }
+    else {
+        $result = encode( $cp, $result );
+    }
+    
+    print "[$server]\n";
+    print $result, "\n";
+}
 
 __END__
 
@@ -135,7 +144,7 @@ Switches:
     B<-d> enables debugging messages.
     B<-F> returns results of the first query of recursive whois requests
     B<-L> returns results of the last query of recursive whois requests (the default)
-    B<-A> returns results of the last query of recursive whois requests
+    B<-A> returns results of the all queries of recursive whois requests
  
 =head1 AUTHORS
 

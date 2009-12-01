@@ -351,3 +351,13 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.09	Nov 26 2009	David T Dzhanaev
 	- support geographic domains for .RU and .SU zones
+
+2.10	Nov 30 2009	David T Dzhanaev
+	- fixed -A param in pwhois 
+	  (Ticket https://rt.cpan.org/Public/Bug/Display.html?id=52144)
+
+2.11	Dec 1 2009	David T Dzhanaev
+	- fixed 02-internet.t tests broken when no connection
+	  (Ticket https://rt.cpan.org/Public/Bug/Display.html?id=41712)
+	- fixed Cache broken in taint mode
+	  (Ticket https://rt.cpan.org/Public/Bug/Display.html?id=47216)

@@ -6,6 +6,9 @@ require Net::Whois::Raw::Data;
 
 use utf8;
 
+# func prototype
+sub untaint(\$);
+
 # get whois from cache 
 sub get_from_cache {
     my ($query, $cache_dir, $cache_time) = @_;
@@ -15,10 +18,11 @@ sub get_from_cache {
     
     my $now = time;
     # clear the cache
-    foreach ( glob("$cache_dir/*") ) {
-        my $mtime = ( stat($_) )[9] or next;
+    foreach my $fn ( glob("$cache_dir/*") ) {
+        my $mtime = ( stat($fn) )[9] or next;
         my $elapsed = $now - $mtime;
-        unlink $_ if ( $elapsed / 60 >= $cache_time );
+        untaint $fn; untaint $elapsed;
+        unlink $fn if ( $elapsed / 60 >= $cache_time );
     }
 
     my $result;
@@ -49,6 +53,8 @@ sub write_to_cache {
     return unless $cache_dir && $result;
     mkdir $cache_dir unless -d $cache_dir;
     
+    untaint $query; untaint $cache_dir;
+
     my $level = 0;
     foreach my $res ( @{$result} ) {
 	local $res->{text} = $res->{whois} if not exists $res->{text};
@@ -684,6 +690,14 @@ sub dlen {
     my ($str) = @_;
 
     return length($str) * domain_level($str);
+}
+
+# clear the data's taintedness
+sub untaint (\$) {
+    my ($str) = @_;
+
+    $$str =~ m/^(.*)$/;
+    $$str = $1;
 }
 
 1;
