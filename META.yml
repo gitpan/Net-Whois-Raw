@@ -1,6 +1,6 @@
 ---
 name: Net-Whois-Raw
-version: 2.11
+version: 2.12
 author:
   - |-
     Original author Ariel Brosh B<schop@cpan.org>, 
@@ -14,23 +14,23 @@ license: perl
 resources:
   license: http://dev.perl.org/licenses/
 requires:
+  Encode: 0
   Getopt::Long: 2
   HTTP::Headers: 0
   HTTP::Request: 0
   LWP::UserAgent: 0
   Test::More: 0
   URI::URL: 0
-configure_requires:
-  Module::Build: 0.35
+  perl: 5.008001
 provides:
   Net::Whois::Raw:
     file: lib/Net/Whois/Raw.pm
-    version: 2.11
+    version: 2.12
   Net::Whois::Raw::Common:
     file: lib/Net/Whois/Raw/Common.pm
   Net::Whois::Raw::Data:
     file: lib/Net/Whois/Raw/Data.pm
-generated_by: Module::Build version 0.35
+generated_by: Module::Build version 0.32
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

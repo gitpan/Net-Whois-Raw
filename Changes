@@ -361,3 +361,6 @@ Revision history for Perl extension Net::Whois::Raw.
 	  (Ticket https://rt.cpan.org/Public/Bug/Display.html?id=41712)
 	- fixed Cache broken in taint mode
 	  (Ticket https://rt.cpan.org/Public/Bug/Display.html?id=47216)
+
+2.12	Dec 8 2009	Walery Studennikov
+	- now we require perl 5.8.1 and Encode
