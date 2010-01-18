@@ -1,6 +1,6 @@
 package Net::Whois::Raw;
 
-require 5.8.1;
+require 5.008_001;
 require Net::Whois::Raw::Common;
 require Net::Whois::Raw::Data;
 
@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.12';
+our $VERSION = '2.13';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;

@@ -364,3 +364,8 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.12	Dec 8 2009	Walery Studennikov
 	- now we require perl 5.8.1 and Encode
+	
+2.13	Jan 17 2010	Andrey Suslov
+	- fixed 'v-string' portability warning
+	  (Ticket https://rt.cpan.org/Public/Bug/Display.html?id=53084)
+
