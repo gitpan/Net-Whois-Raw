@@ -150,7 +150,7 @@ MAIN:
 
 # get whois-server for domain
 sub get_server {
-    my ($dom, $USE_CNAME) = @_;
+    my ($dom, $is_ns, $USE_CNAME) = @_;
     
     my $tld = uc get_dom_tld( $dom );
 
@@ -159,8 +159,15 @@ sub get_server {
     }
 
     my $cname = "$tld.whois-servers.net";
-    my $srv = $Net::Whois::Raw::Data::servers{$tld} || $cname;
-    $srv = $cname if $USE_CNAME && gethostbyname($cname);
+    my $srv = '';
+    if ( $is_ns ) {
+        $srv = $Net::Whois::Raw::Data::servers{ $tld . '.NS' } || 
+               $Net::Whois::Raw::Data::servers{ 'NS' };
+    }
+    else {
+        $srv = $Net::Whois::Raw::Data::servers{ $tld } || $cname;
+        $srv = $cname if $USE_CNAME && gethostbyname($cname);
+    }
 
     return $srv;
 }
@@ -168,24 +175,14 @@ sub get_server {
 sub get_real_whois_query{
     my ($whoisquery, $srv, $is_ns) = @_;
     
-    $is_ns = 1 if $whoisquery =~ s/.NS$//i;
-
+	$srv = $is_ns ? $srv . '.ns' : $srv;
+	
     if ($srv eq 'whois.crsnic.net' && domain_level($whoisquery) == 2) {
         $whoisquery = "domain $whoisquery";
     }
-    elsif ($srv eq 'whois.denic.de') {
-        $whoisquery = "-T dn,ace -C ISO-8859-1 $whoisquery";
-    }
-    elsif ($srv eq 'whois.nic.name') {
-        if ( $is_ns ) {
-            $whoisquery = "nameserver=$whoisquery";
-	}
-	else {
-	    $whoisquery = "domain=$whoisquery";
-	}
-    }
-    elsif ( $is_ns && $srv eq 'whois.nsiregistry.net' ) {
-        $whoisquery = "nameserver = $whoisquery";
+    elsif ( $Net::Whois::Raw::Data::query_prefix{ $srv } ) {
+        $whoisquery = $Net::Whois::Raw::Data::query_prefix{ $srv }
+                      . $whoisquery;
     }
     
     return $whoisquery;

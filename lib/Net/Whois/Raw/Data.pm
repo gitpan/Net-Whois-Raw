@@ -416,6 +416,10 @@ our %servers = qw(
     SE.NET	whois.centralnic.com
 
     AE.ORG	whois.centralnic.com
+	
+    ORG.NS	whois.pir.org
+    BIZ.NS	whois.biz
+    NAME.NS	whois.nic.name	
 );
 
 
@@ -717,6 +721,9 @@ our %strip = (
 	'^whatsoever, you agree to abide by',
 	'^NOTE\: FAILURE TO LOCATE A RECORD',
 	'^OF THE AVAILABILITY OF A DOMAIN NAME',
+	'^NeuStar, Inc\., the Registry',
+	'^NeuStar registry database',
+	'^allowed without NeuStar',
     ],
     'whois-tel.neustar.biz' => [ # .tel
         '^>>>> Whois database was last updated',
@@ -1953,6 +1960,18 @@ our %whois_servers_with_no_idn_support = (
 # Internal postprocessing subroutines
 our %postprocess = (
     'whois.pp.ua'   => sub { $_[0] =~ s/[\x00\x0A]+$//; $_[0]; },
+);
+
+# Special query prefix strings for some servers
+our %query_prefix = (
+    'whois.crsnic.net'         => 'domain ',
+    'whois.denic.de'           => '-T dn,ace -C ISO-8859-1 ',
+    'whois.nic.name'           => 'domain=',
+    
+    'whois.nic.name.ns'        => 'nameserver=',
+    'whois.pir.org.ns'         => 'HO ',
+    'whois.biz.ns'             => 'nameserver ',
+    'whois.nsiregistry.net.ns' => 'nameserver = ',
 );
 
 1;

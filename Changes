@@ -369,3 +369,6 @@ Revision history for Perl extension Net::Whois::Raw.
 	- fixed 'v-string' portability warning
 	  (Ticket https://rt.cpan.org/Public/Bug/Display.html?id=53084)
 
+2.14	Feb 1 2010	Andrey Suslov
+	- search DNS-servers in .org, .biz, .name zones through 
+	  a whois-server of appropriate zone

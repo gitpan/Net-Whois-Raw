@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.13';
+our $VERSION = '2.14';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -108,15 +108,15 @@ sub get_whois {
 sub get_all_whois {
     my ($dom, $srv, $norecurse) = @_;
 
-    $srv ||= Net::Whois::Raw::Common::get_server( $dom, $USE_CNAMES );
+    my $is_ns = 0;
+    $is_ns = 1 if $dom =~ s/.NS$//i;
+	
+    $srv ||= Net::Whois::Raw::Common::get_server( $dom, $is_ns, $USE_CNAMES );
 
     if ($srv eq 'www_whois') {
 	my ($responce, $ishtml) = www_whois_query( $dom );
 	return $responce ? [ { text => $responce, srv => $srv } ] : $responce;
     }
-
-    my $is_ns = 0;
-    $is_ns = 1 if $dom =~ s/.NS$//i;
 
     my @whois = recursive_whois( $dom, $srv, [], $norecurse, $is_ns );
 
@@ -181,8 +181,8 @@ sub recursive_whois {
 	elsif (/^\s+Maintainer:\s+RIPE\b/ && Net::Whois::Raw::Common::is_ipaddr($dom)) {
             $newsrv = $Net::Whois::Raw::Data::servers{RIPE};
 	}
-	elsif ( $is_ns && $srv eq $Net::Whois::Raw::Data::servers{NS} && /No match for nameserver/ && $dom =~ /.name$/i ) {
-	    $newsrv = $Net::Whois::Raw::Data::servers{NAME};
+	elsif ( $is_ns && $srv ne $Net::Whois::Raw::Data::servers{NS} ) {
+	    $newsrv = $Net::Whois::Raw::Data::servers{NS};
 	}
     }
 
@@ -255,7 +255,7 @@ sub whois_query {
         
         if ($class->can ('whois_socket_fixup')) {
             my $new_sock = $class->whois_socket_fixup ($sock);
-	    $sock = $new_sock if $new_sock;
+            $sock = $new_sock if $new_sock;
         }
 
 	if ($DEBUG > 2) {
