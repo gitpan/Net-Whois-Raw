@@ -1928,6 +1928,7 @@ our %strip = (
 	'^reserves the right to modify',
 	'^The Registry database contains',
 	'^Registrars\.$',
+	'^Whois Server Version',
     ],
 );
 

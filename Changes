@@ -372,3 +372,6 @@ Revision history for Perl extension Net::Whois::Raw.
 2.14	Feb 1 2010	Andrey Suslov
 	- search DNS-servers in .org, .biz, .name zones through 
 	  a whois-server of appropriate zone
+
+2.15	Feb 1 2010	Andrey Suslov
+	- added more tests to MANIFEST
