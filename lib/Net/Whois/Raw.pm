@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.15';
+our $VERSION = '2.17';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -226,9 +226,14 @@ sub whois_query {
 
     # Prepare for query
 
-    my @sockparams;
+    my (@sockparams, $sock);
+
     if ($class->can ('whois_query_sockparams')) {
         @sockparams = $class->whois_query_sockparams ($dom, $srv);
+    }
+    # hook for outside defined socket
+    elsif ($class->can ('whois_query_socket')) {
+        $sock = $class->whois_query_socket ($dom, $srv);
     }
     elsif (scalar(@SRC_IPS)) {
         my $src_ip = $SRC_IPS[0];
@@ -251,7 +256,10 @@ sub whois_query {
     eval {
         local $SIG{'ALRM'} = sub { die "Connection timeout to $srv" };
         $prev_alarm = alarm $TIMEOUT if $TIMEOUT;
-        my $sock = IO::Socket::INET->new(@sockparams) || Carp::confess "$srv: $!: ".join(', ', @sockparams);
+
+        unless($sock){
+            $sock = IO::Socket::INET->new(@sockparams) || Carp::confess "$srv: $!: ".join(', ', @sockparams);
+        }
         
         if ($class->can ('whois_socket_fixup')) {
             my $new_sock = $class->whois_socket_fixup ($sock);
@@ -306,8 +314,17 @@ sub www_whois_query {
 	my $referer = delete $qurl->{form}{referer} if $qurl->{form} && defined $qurl->{form}{referer};
 	my $method = ( $qurl->{form} && scalar(keys %{$qurl->{form}}) ) ? 'POST' : 'GET';
 
-	my $ua = new LWP::UserAgent( parse_head => 0 );
+    my $ua;
+
+    # hook for outside defined lwp
+    if ($class->can ('whois_query_ua')) {
+        $ua = $class->whois_query_ua ($dom);
+    }
+
+    unless($ua){
+        $ua = new LWP::UserAgent( parse_head => 0 );
 	$ua->agent('Mozilla/5.0 (X11; U; Linux i686; ru; rv:1.9.0.5) Gecko/2008121622 Fedora/3.0.5-1.fc10 Firefox/3.0.5');
+    }
 	my $header = HTTP::Headers->new;
 	$header->header('Referer' => $referer) if $referer;
 	my $req = new HTTP::Request $method, $qurl->{url}, $header;
@@ -494,6 +511,53 @@ C<'QRY_ALL'> -
     Reference to array of references to hashes is returned.
     Hash keys: C<text> - result of whois query, C<srv> -
     whois server which was used to make query.
+
+=back
+
+=head1 USER DEFINED FUNCTIONS
+
+=over 3
+
+=item whois_query_sockparams( DOMAIN, SRV )
+
+You can set your own IO::Socket::INET params like this:
+
+    *Net::Whois::Raw::whois_query_sockparams = sub {
+        my $class  = shift;
+        my $domain = shift;
+        my $name   = shift;
+
+        return (
+            PeerAddr => $name,
+            PeerPort => 43,
+            # LocalHost => ,
+            # LocalPort =>
+        );
+    };
+
+=item whois_query_socket( DOMAIN, SRV )
+
+You can set your own IO::Socket::INET like this:
+
+    *Net::Whois::Raw::whois_query_socket = sub {
+        my $class  = shift;
+        my $domain = shift;
+        my $name   = shift;
+
+        $name .= ':43';
+        return IO::Socket::INET->new();
+    };
+
+=item whois_query_ua( DOMAIN, SRV )
+
+You can set your own LWP::UserAgent like this:
+
+    *Net::Whois::Raw::whois_query_ua = sub {
+        my $class  = shift;
+        my $domain = shift;
+
+        return LWP::UserAgent->new();
+    };
 
 =back
 

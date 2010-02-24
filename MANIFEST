@@ -13,4 +13,4 @@ t/01-local.t
 t/02-internet.t
 t/03-coverage.t
 t/04-coro-domains.t
-t/05-domains-load-balancing.t
+t/example-domains-load-balancing.pl

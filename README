@@ -3,8 +3,8 @@ NAME
 
 SYNOPSIS
       use Net::Whois::Raw;
-  
-      $dominfo = whois('perl.com');
+      
+  $dominfo = whois('perl.com');
       ($dominfo, $whois_server) = whois('funet.fi');
       $reginfo = whois('REGRU-REG-RIPN', 'whois.ripn.net');
 
@@ -103,6 +103,45 @@ FUNCTIONS
        chain. Reference to array of references to hashes is returned. Hash
        keys: "text" - result of whois query, "srv" - whois server which was
        used to make query.
+
+USER DEFINED FUNCTIONS
+    whois_query_sockparams( DOMAIN, SRV )
+       You can set your own IO::Socket::INET params like this:
+
+           *Net::Whois::Raw::whois_query_sockparams = sub {
+               my $class  = shift;
+               my $domain = shift;
+               my $name   = shift;
+
+               return (
+                   PeerAddr => $name,
+                   PeerPort => 43,
+                   # LocalHost => ,
+                   # LocalPort =>
+               );
+           };
+
+    whois_query_socket( DOMAIN, SRV )
+       You can set your own IO::Socket::INET like this:
+
+           *Net::Whois::Raw::whois_query_socket = sub {
+               my $class  = shift;
+               my $domain = shift;
+               my $name   = shift;
+
+               $name .= ':43';
+               return IO::Socket::INET->new();
+           };
+
+    whois_query_ua( DOMAIN, SRV )
+       You can set your own LWP::UserAgent like this:
+
+           *Net::Whois::Raw::whois_query_ua = sub {
+               my $class  = shift;
+               my $domain = shift;
+
+               return LWP::UserAgent->new();
+           };
 
 AUTHOR
     Original author Ariel Brosh schop@cpan.org, Inspired by jwhois.pl

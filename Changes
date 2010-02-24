@@ -375,3 +375,9 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.15	Feb 1 2010	Andrey Suslov
 	- added more tests to MANIFEST
+	
+2.16	Feb 24 2010	Alexander Ponomarev
+	- fixed 'www whois' test
+
+2.17	Feb 24 2010	Roman V. Nikolaev
+	- external hooks support: whois_query_sockparams, whois_query_socket, whois_query_ua
