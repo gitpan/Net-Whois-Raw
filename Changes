@@ -381,3 +381,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.17	Feb 24 2010	Roman V. Nikolaev
 	- external hooks support: whois_query_sockparams, whois_query_socket, whois_query_ua
+
+2.18	Mar 25 2010	Walery Studennikov
+	- Coro tests are turned off by default
