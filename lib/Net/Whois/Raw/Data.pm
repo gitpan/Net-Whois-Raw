@@ -1933,7 +1933,7 @@ our %strip = (
 );
 
 our %exceed = (
-    'whois.eu' => 'Excessive querying, grace period of',
+    'whois.eu' => '(?:Excessive querying, grace period of|Still in grace period, wait)',
     'whois.dns.lu' => 'Excessive querying, grace period of',
     'whois.mynic.net.my' => 'Query limitation is',
     'whois.ripn.net' => 'exceeded allowed connection rate',
@@ -1941,7 +1941,7 @@ our %exceed = (
     'whois.nic.uk' => 'and will be replenished',
     'whois.networksolutions.com' => 'contained within a list of IP addresses that may have failed',
     'whois.worldsite.ws' => 'You exceeded the maximum',
-    'whois.tucows.com'  => '(Maximum Daily connection limit reached|exceeded maximum connection limit)',
+    'whois.tucows.com'  => '(?:Maximum Daily connection limit reached|exceeded maximum connection limit)',
     'whois.centralnic.com'  => 'Query rate of \\d+',
     'whois.pir.org'  => 'WHOIS LIMIT EXCEEDED',
     'whois.nic.ms'   => 'Look up quota exceeded',

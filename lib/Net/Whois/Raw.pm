@@ -13,9 +13,9 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.18';
+our $VERSION = '2.20';
 
-our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $USE_CNAMES, $TIMEOUT, $DEBUG) = (0) x 7;
+our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
 our $SET_CODEPAGE = '';
 our (%notfound, %strip, @SRC_IPS, %POSTPROCESS);
@@ -26,7 +26,7 @@ my $last_cache_clear_time;
 
 sub whois_config {
     my ($par) = @_;
-    my @parnames = qw(OMIT_MSG CHECK_FAIL CACHE_DIR CACHE_TIME USE_CNAMES TIMEOUT @SRC_IPS);
+    my @parnames = qw(OMIT_MSG CHECK_FAIL CHECK_EXCEED CACHE_DIR CACHE_TIME TIMEOUT @SRC_IPS);
     foreach my $parname (@parnames) {
         if (exists($par->{$parname})) {
 	    no strict 'refs';
@@ -111,7 +111,7 @@ sub get_all_whois {
     my $is_ns = 0;
     $is_ns = 1 if $dom =~ s/.NS$//i;
 	
-    $srv ||= Net::Whois::Raw::Common::get_server( $dom, $is_ns, $USE_CNAMES );
+    $srv ||= Net::Whois::Raw::Common::get_server( $dom, $is_ns );
 
     if ($srv eq 'www_whois') {
 	my ($responce, $ishtml) = www_whois_query( $dom );
@@ -120,7 +120,24 @@ sub get_all_whois {
 
     my @whois = recursive_whois( $dom, $srv, [], $norecurse, $is_ns );
 
-    return process_whois_answers( \@whois, $dom );
+    my $whois_answers = process_whois_answers( \@whois, $dom );
+
+    # Crutch for rechecking RELCOM-domains through WWW
+    if (
+	(!ref $whois_answers
+         || !scalar @{$whois_answers}
+         || !$whois_answers->[-1]->{text}
+         || $whois_answers->[-1]->{text} =~ /No entries found for the selected source/s
+        )
+	&&
+	$srv eq 'whois.relcom.ru'
+    ) {
+	my ($responce, $ishtml) = www_whois_query( $dom );
+	return $responce ? [ { text => $responce, srv => $srv } ] : $responce;
+    }
+    # / End of crutch
+
+    return $whois_answers;
 }
 
 sub process_whois_answers {
@@ -246,7 +263,7 @@ sub whois_query {
 
     print "QUERY: $whoisquery; SRV: $srv, ".
 	    "OMIT_MSG: $OMIT_MSG, CHECK_FAIL: $CHECK_FAIL, CACHE_DIR: $CACHE_DIR, ".
-	    "CACHE_TIME: $CACHE_TIME, USE_CNAMES: $USE_CNAMES, TIMEOUT: $TIMEOUT\n" if $DEBUG >= 2;
+	    "CACHE_TIME: $CACHE_TIME, TIMEOUT: $TIMEOUT\n" if $DEBUG >= 2;
 
     my $prev_alarm = 0;
     my @lines;
@@ -294,7 +311,7 @@ sub www_whois_query {
 
     my ($resp, $url);
     my ($name, $tld) = Net::Whois::Raw::Common::split_domain( $dom );
-	# my ($url, %form) = Net::Whois::Raw::Common::get_http_query_url($dom, $reserve);
+
     my $http_query_urls = Net::Whois::Raw::Common::get_http_query_url($dom);
     
     foreach my $qurl ( @{$http_query_urls} ) {
@@ -433,11 +450,6 @@ Net::Whois::Raw - Get Whois information for domains
         # for a specific number of minutes. Documents will not be
         # cleared if they keep get requested for, independent
         # of disk space. Default is not to clear the cache.
-
-  $Net::Whois::Raw::USE_CNAMES = 1;
-	# Use whois-servers.net to get the whois server
-        # name when possible. Default is to use the 
-        # hardcoded defaults.
 
   $Net::Whois::Raw::TIMEOUT = 10;
 	# Cancel the request if connection is not made within

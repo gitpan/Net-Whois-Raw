@@ -148,25 +148,25 @@ MAIN:
 }
 
 
-# get whois-server for domain
+# get whois-server for domain / tld
 sub get_server {
-    my ($dom, $is_ns, $USE_CNAME) = @_;
+    my ($dom, $is_ns, $tld) = @_;
     
-    my $tld = uc get_dom_tld( $dom );
+    $tld ||= get_dom_tld( $dom );
+    $tld = uc $tld;
 
     if ( grep { $_ eq $tld } @Net::Whois::Raw::Data::www_whois ) {
         return 'www_whois';
     }
 
-    my $cname = "$tld.whois-servers.net";
     my $srv = '';
     if ( $is_ns ) {
         $srv = $Net::Whois::Raw::Data::servers{ $tld . '.NS' } || 
                $Net::Whois::Raw::Data::servers{ 'NS' };
     }
     else {
+    	my $cname = "$tld.whois-servers.net";
         $srv = $Net::Whois::Raw::Data::servers{ $tld } || $cname;
-        $srv = $cname if $USE_CNAME && gethostbyname($cname);
     }
 
     return $srv;
@@ -226,6 +226,8 @@ sub get_http_query_url {
     my @http_query_data;
     # my ($url, %form);
 
+    my $server = get_server( undef, undef, $tld );
+
     if ($tld eq 'tv') {
         my $data = {
             url  => "http://www.tv/cgi-bin/whois.cgi?domain=$name&tld=tv",
@@ -242,7 +244,7 @@ sub get_http_query_url {
         };
         push @http_query_data, $data;
     }
-    elsif ($tld eq 'spb.ru' || $tld eq 'msk.ru') {
+    elsif ($server eq 'whois.relcom.ru') {
         my $data = {
 	    url  => "http://www.relcom.ru/Services/Whois/?fullName=$name.$tld",
 	    form => '',
@@ -369,6 +371,8 @@ sub have_reserve_url {
 # %param: resp*, tld*
 sub parse_www_content {
     my ($resp, $tld, $url, $CHECK_EXCEED) = @_;
+
+    my $server = get_server( undef, undef, $tld );
      
     chomp $resp;
     $resp =~ s/\r//g;
@@ -387,7 +391,7 @@ sub parse_www_content {
         $ishtml = 1;
 
     }
-    elsif ( $tld eq 'spb.ru' || $tld eq 'msk.ru' ) {
+    elsif ( $server eq 'whois.relcom.ru' ) {
     
         $resp = decode( 'koi8-r', $resp  );
 
@@ -399,23 +403,16 @@ sub parse_www_content {
         if ($resp =~ m|<PRE>(.+?)</PRE>|s) {
             $resp = $1;
         }
-        elsif ($resp =~ m|DNS \(name-серверах\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE><H3>Дополнительную информацию можно получить по адресу:</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
+        elsif ($resp =~ m|DNS \(name-серверах\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
             my $nameservers = $1;
-            my $emails = $2;
-            my (@nameservers, @emails);
+            my @nameservers;
             while ($nameservers =~ m|<CODE CLASS="h2black">(.+?)</CODE>|g) {
                 push @nameservers, $1;
             }
-            while ($emails =~ m|<CODE CLASS="h2black"><A HREF=".+?">(.+?)</A></CODE>|g) {
-                push @emails, $1;
-            }
-            if (scalar @nameservers && scalar @emails) {
+            if (scalar @nameservers) {
                 $resp = '';
                 foreach my $ns (@nameservers) {
                     $resp .= "nserver:      $ns\n";
-                }
-                foreach my $email (@emails) {
-                    $resp .= "e-mail:       $email\n";
                 }
             }
         }

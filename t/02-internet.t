@@ -3,7 +3,7 @@
 use strict;
 
 use Data::Dumper;
-use Test::More tests => 12;
+use Test::More tests => 11;
 
 BEGIN {
     use_ok('Net::Whois::Raw',qw( whois ));
@@ -36,9 +36,6 @@ SKIP: {
         ok($txt && $txt =~ /$domain/i, "$domain resolved");
     }
     
-    # get_server
-    ok( Net::Whois::Raw::Common::get_server( 'test.test', 0, 1 ) eq 'TEST.whois-servers.net', 'get_server' );
-
     # Net::Whois::Raw::www_whois_query for AC domain
     # ok( Net::Whois::Raw::www_whois_query( 'nic.ac' ) =~ /Organization Name.*Network Information Center/i, "www_whois_query");
     

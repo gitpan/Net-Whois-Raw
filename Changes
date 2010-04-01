@@ -384,3 +384,11 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.18	Mar 25 2010	Walery Studennikov
 	- Coro tests are turned off by default
+
+2.19	Mar 26 2010	Walery Studennikov
+	- Exceed patterns updated for whois.eu
+	- Fixed whois_config (CHECK_EXCEED support)
+
+2.20	Apr 01 2010	Walery Studennikov
+	- $Net::Whois::Raw::USE_CNAMES option removed (who needs it??)
+	- Crutch for rechecking RELCOM-domains through WWW
