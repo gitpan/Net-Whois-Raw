@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.20';
+our $VERSION = '2.22';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -449,7 +449,7 @@ Net::Whois::Raw - Get Whois information for domains
 	# Cache files will be cleared after not accessed
         # for a specific number of minutes. Documents will not be
         # cleared if they keep get requested for, independent
-        # of disk space. Default is not to clear the cache.
+        # of disk space.
 
   $Net::Whois::Raw::TIMEOUT = 10;
 	# Cancel the request if connection is not made within

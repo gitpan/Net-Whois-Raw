@@ -392,3 +392,13 @@ Revision history for Perl extension Net::Whois::Raw.
 2.20	Apr 01 2010	Walery Studennikov
 	- $Net::Whois::Raw::USE_CNAMES option removed (who needs it??)
 	- Crutch for rechecking RELCOM-domains through WWW
+        - added 'not found' string for .kg domains
+
+2.21    Apr 20 2010     Ilya Chesnokov
+        - Added whois servers for zones: .MD, .GD, .HT, .IM, .KI, .LC, .TRAVEL, .FM, .CO
+        - Fixed whois servers for zones: .LA, .SB, .VN
+        - Fixed %strip hash for .CX, .MU, .NL, .TL
+        - Added .CM zone
+
+2.22	Apr 26 2010	Walery Studennikov
+	- Fixed $CACHE_TIME parameter documentation

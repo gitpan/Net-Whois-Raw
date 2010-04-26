@@ -295,7 +295,7 @@ sub get_http_query_url {
     }
     elsif ($tld eq 'vn') {
 	my $data = {
-	    url  => "http://www.vnnic.vn/jsp/jsp/tracuudomain1.jsp",
+	    url  => "http://www.tenmien.vn/jsp/jsp/tracuudomain1.jsp",
 	    form => {
 		cap2        => ".$tld",
 		referer     => 'http://www.vnnic.vn/english/',
@@ -351,6 +351,16 @@ sub get_http_query_url {
 	#    from => '',
 	#};
 	#push @http_query_data, $data;
+    }
+    elsif ($tld eq 'cm') {
+        my $data = {
+            url  => "http://www.register.cm/whois.php",
+            form => {
+                domain => $domain,
+                submit => 'Go',
+            },
+        };
+        push @http_query_data, $data;
     }
         
     # return $url, %form;
@@ -592,6 +602,22 @@ sub parse_www_content {
             return 0;
         }
 
+    }
+    elsif ( $tld eq 'cm'  ) {
+        $resp = decode_utf8($resp);
+        if ( $resp =~ m{
+                <div \s+ class="result-info"> \s* <p> (.*?) </p> \s* </div>
+            }xms ) {
+
+            $resp = $1;
+            $resp =~ s{ <br/> }{}gxms;
+            $resp =~ s{ \n{2,} }{ \n }gxms;
+            # strip disclaimer
+            $resp =~ s{ \A .*? Domain \s+ Information \n }{}xms; 
+        }
+        else {
+            return 0;
+        }
     }
     elsif ( $tld eq 'tj' && $url =~ m|\.nic\.tj/cgi/lookup| ) {
 

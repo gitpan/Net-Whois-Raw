@@ -10,8 +10,9 @@ our @www_whois = qw(
     AC
     BZ
     TJ
+    CM
 );
-# Candidates for www_whois: DO, IO, MG, MN, SH, TM, TP, ZA
+# Candidates for www_whois: DO, IO, MG, SH, TM, TP, ZA
 
 our %servers = qw(
     RU          whois.ripn.net
@@ -139,6 +140,7 @@ our %servers = qw(
     ORG    whois.pir.org
     PRO    whois.registrypro.pro
     TEL    whois-tel.neustar.biz
+    TRAVEL whois.nic.travel
 
     TV  tvwhois.verisign-grs.com
     WS  whois.worldsite.ws
@@ -158,6 +160,7 @@ our %servers = qw(
     CI  whois.nic.ci
     CL  Whois.nic.cl
     CN  whois.cnnic.net.cn
+    CO  whois.nic.co
     CX  whois.nic.cx
     CZ  whois.nic.cz
     DE  whois.denic.de
@@ -166,8 +169,10 @@ our %servers = qw(
     EE  whois.eenet.ee
     EU  whois.eu
     FI  whois.ficora.fi
+    FM  whois.nic.fm
     FO  whois.ripe.net
     FR  whois.nic.fr
+    GD  whois.adamsnames.com
     GG  whois.channelisles.net
     GI  whois2.afilias-grs.net
     GS  whois.nic.gs
@@ -175,8 +180,10 @@ our %servers = qw(
     HK  whois.hkirc.hk
     HM  whois.registry.hm
     HN  whois2.afilias-grs.net
+    HT  whois.nic.ht
     IE  whois.domainregistry.ie
     IL  whois.isoc.org.il
+    IM  whois.nic.im
     IN  whois.inregistry.net
     IO  whois.nic.io
     IS  whois.isnic.is
@@ -184,14 +191,17 @@ our %servers = qw(
     JE  whois.channelisles.net
     JP  whois.jprs.jp
     KE  whois.kenic.or.ke
+    KI  whois.nic.ki
     KR  whois.nic.or.kr
     KZ  whois.nic.kz
-    LA  whois2.afilias-grs.net
+    LA  whois.nic.la
+    LC  whois2.afilias-grs.net
     LI  whois.nic.li
     LT  whois.domreg.lt
     LU  whois.dns.lu
     LV  whois.nic.lv
     MC  whois.ripe.net
+    MD  whois.nic.md
     MG  whois.nic.mg
     MN  whois2.afilias-grs.net
     MS  whois.nic.ms
@@ -209,7 +219,7 @@ our %servers = qw(
     PT  whois.dns.pt
     RE  whois.nic.re
     RO  whois.rotld.ro
-    SB  whois.nic.net.sb
+    SB  whois.nic.sb
     SC  whois2.afilias-grs.net
     SE  whois.iis.se
     SG  whois.nic.net.sg
@@ -492,6 +502,7 @@ our %notfound = (
     'tvwhois.verisign-grs.com'   => '^No match for',
     'whois.registrypro.pro'      => '^Unknown domain',
     'whois.worldsite.ws'         => 'No match for',
+    'whois.nic.travel'           => 'Not found: \S+',
 
     'whois.nic.ag'            => 'NOT FOUND',
     'whois.nic.as'            => 'Domain Not Found',
@@ -503,6 +514,7 @@ our %notfound = (
     'whois.register.bg'       => '^Domain name \S+ does not exist',
     'whois.registro.br'       => 'No match for',
     'whois.registry.hm'       => 'Domain not found',
+    'whois.nic.ht'            => 'Status: Not Registered',
     'whois.cira.ca'           => '^Domain status\:\s+AVAIL',
     'whois.nic.ch'            => '^We do not have an entry in our database matching your',
     'whois.nic.ci'            => '^Domain \S+ not found',
@@ -515,6 +527,7 @@ our %notfound = (
     'whois.eenet.ee'          => '^NOT FOUND',
     'whois.eu'                => '^Status:\s+AVAILABLE',
     'whois.ficora.fi'         => 'Domain not found',
+    'whois.nic.fm'            => 'Status: Not Registered',
     'whois.nic.fr'            => 'No entries found',
     'whois.channelisles.net'  => 'No information found',
     'whois.nic.gs'            => 'Status: Not Registered',
@@ -523,18 +536,22 @@ our %notfound = (
     'whois.nic.hu'            => 'No match',
     'whois.domainregistry.ie' => 'There was no match',    
     'whois.isoc.org.il'       => 'No data was found',
+    'whois.nic.im'            => 'The domain \S+ was not found',
     'whois.inregistry.net'    => 'NOT FOUND',
     'whois.nic.io'            => 'Domain \S+ - Available',
     'whois.isnic.is'          => 'No entries found',
     'whois.nic.it'            => 'Status:\s+AVAILABLE',
     'whois.jprs.jp'           => 'No match',
     'whois.kenic.or.ke'       => 'No match found',
+    'whois.nic.ki'            => 'Status: Not Registered',
     'whois.nic.or.kr'         => 'Above domain name is not registered',
     'whois.nic.kz'            => 'Nothing found for this query',
+    'whois.nic.la'            => 'DOMAIN NOT FOUND',
     'whois.nic.li'            => 'We do not have an entry',
     'whois.domreg.lt'         => '^Status:\s+available',
     'whois.dns.lu'            => 'No such domain',
     'whois.nic.lv'            => 'Nothing found',
+    'whois.nic.md'            => 'No match for',
     'whois.nic.ms'            => 'Status\: Not Registered',
     'whois.nic.mx'            => 'Object_Not_Found',
     'whois.mynic.net.my'      => '^Domain Name \S+ does not',
@@ -549,12 +566,14 @@ our %notfound = (
     'whois.dns.pt'            => 'no match',
     'whois.nic.re'            => 'No entries found',
     'whois.rotld.ro'          => 'No entries found',
+    'whois.nic.sb'            => 'Status: Not Registered',
     'whois.iis.se'            => '^\S+ not found',
     'whois.nic.net.sg'        => '^Domain Not Found',
     'whois.nic.sh'            => '^Domain \S+ - Available',
     'whois.arnes.si'          => 'No entries found',
     'whois.nic.st'            => '^No entries found',
     'whois.adamsnames.tc'     => '^\S+ is not registered',
+    'whois.adamsnames.com'    => '^\S+ is not registered',
     'whois.nic.tl'            => 'Status\: Not Registered',
     'whois.nic.tf'            => 'No entries found',
     'whois.dot.tk'            => 'domain name not known',
@@ -630,9 +649,12 @@ our %notfound = (
     'whois.worldnames.net'      => 'NO MATCH for domain',
      # 'whois.yournamemonkey.com' -- need try again
     'whois.cnnic.net.cn'	=> 'no matching record',
+    'whois.nic.co'              => 'Not found: \S+',
     'me.whois-servers.net'	=> 'NOT FOUND',
+    'kg.whois-servers.net'      => 'Data not found. This domain is available for registration.',
     
-    'www_whois'                 => '(Available|no records found|is free)', # for VN | TJ | TJ zone
+    # for VN | TJ | CM zones
+    'www_whois'                 => '(Available|no records found|is free|Not Registered)', 
 );
 
 our %strip = (
@@ -1236,20 +1258,8 @@ our %strip = (
     ],
     'whois.nic.cx' => [
 	'^TERMS OF USE\: You are not',
-	'^database through the use of',
-	'^automated\.  Whois database',
-	'^community on behalf of CoCCA',
-	'^The data is for information',
-	'^guarantee its accuracy',
-	'^by the following terms of use',
-	'^for lawful purposes and that',
-	'^to\: \(1\) allow, enable, or',
-	'^unsolicited, commercial',
-	'^or facsimile; or \(2\) enable',
-	'^that apply to CoCCA it',
-	'^compilation, repackaging, dissemination',
-	'^expressly prohibited',
-	'^CoCCA Helpdesk',
+        '^CiiA makes every effort to maintain the completeness',
+        'CiiA, All rights reserved',
 	'^Domain Information$',
     ],
     'whois.nic.cz' => [
@@ -1319,7 +1329,7 @@ our %strip = (
 	'^The Registry contains ONLY',
 	'^.* and .*\\.HK domains.',
     ],
-    'whois2.afilias-grs.net' => [ # .GI .HN .LA .SC .VC
+    'whois2.afilias-grs.net' => [ # .GI .HN .LC .SC .VC
 	'^Access to CCTLD WHOIS',
 	'^determining the contents',
 	'^Afilias registry database',
@@ -1460,20 +1470,8 @@ our %strip = (
     ],
     'whois.nic.mu' => [
 	'^TERMS OF USE\: You are not',
-	'^database through the use',
-	'^automated\.  Whois',
-	'^community on behalf of',
-	'^The data is for information',
-	'^guarantee its accuracy',
-	'^by the following terms',
-	'^for lawful purposes and',
-	'^to\: \(1\) allow, enable',
-	'^unsolicited, commercial',
-	'^or facsimile; or \(2',
-	'^that apply to CoCCA it',
-	'^compilation, repackaging',
-	'^expressly prohibited',
-	'^CoCCA Helpdesk',
+        '^Internet Direct Ltd makes every effort to maintain the completeness',
+        'Internet Direct Ltd, All rights reserved',
 	'^Domain Information$',
     ],
     'whois.nic.mx' => [
@@ -1561,6 +1559,17 @@ our %strip = (
 	'of any such activities or',
 	'Copyright \(c\) The',
 	'Netherlands \(SIDN\)',
+
+        '^These restrictions apply equally',
+        '^reproductions and publications',
+        '^reasonable, necessary and solely',
+        '^activities referred to in the',
+        '^Registrars',
+        '^action. Anyone who is aware',
+        '^in the Netherlands',
+        '^\(SIDN\) Dutch Copyright Act',
+        '^subsection 1, clause 1\).',
+
     ],
     'whois.norid.no' => [
 	'^%',
@@ -1929,6 +1938,125 @@ our %strip = (
 	'^The Registry database contains',
 	'^Registrars\.$',
 	'^Whois Server Version',
+    ],
+    'whois.nic.travel' => [
+        '^>>>> Whois database was last updated',
+        '^Tralliance, Inc., the Registry Operator',
+        '^for the WHOIS database through',
+        '^is provided to you for',
+        '^persons in determining',
+        '^Tralliance registry database',
+        '^"as is" and does not',
+        '^agree that you will',
+        '^circumstances will',
+        '^support the transmission',
+        '^solicitations via direct mail',
+        '^contravention of any applicable',
+        '^enable high volume, automated',
+        '^\(or its systems\).  Compilation',
+        '^WHOIS database in its entirety',
+        '^allowed without Tralliance',
+        '^right to modify or change',
+        '^subsequent notification of any',
+        '^whatsoever, you agree to abide',
+        '^NOTE: FAILURE TO LOCATE A RECORD',
+        '^OF THE AVAILABILITY OF A DOMAIN NAME',
+    ],
+    'whois.nic.ht' => [
+        '^TERMS OF USE: You are not authorized',
+        '^database through the use of electronic',
+        '^automated.  Whois database is provided',
+        '^community on by of Consortium FDS/RDDH',
+        '^The data is for information purposes only.',
+        '^guarantee its accuracy. By submitting a',
+        '^by the following terms of use:',
+        '^for lawful purposes and that under',
+        '^to: \(1\) allow, enable, or',
+        '^unsolicited, commercial',
+        '^or facsimile; or \(2\) enable',
+        '^that apply to Consortium FDS/RDDH',
+        '^compilation, repackaging',
+        '^expressly prohibited.',
+        '^Domain Information$',
+    ],
+    'whois.nic.ki' => [
+        '^TERMS OF USE: You are not',
+        '^database through the',
+        '^automated.  Whois database',
+        '^community on behalf of CoCCA',
+        '^The data is for information purposes',
+        '^guarantee its accuracy. By',
+        '^by the following terms of use',
+        '^for lawful purposes and that',
+        '^to: \(1\) allow, enable, or',
+        '^unsolicited, commercial',
+        '^or facsimile; or \(2\) enable',
+        '^that apply to CoCCA it\'s members',
+        '^compilation, repackaging',
+        '^expressly prohibited.',
+    ],
+    'whois.nic.la' => [
+        '^This whois service is provided by',
+        '^pertaining to Internet domain names',
+        '^using this service you are agreeing',
+        '^here for any purpose other than',
+        '^to store or reproduce this data',
+    ],
+    'whois.nic.sb' => [
+        '^TERMS OF USE: You are not authorized',
+        '^The data is for information purposes only',
+        '^CoCCA Helpdesk \| http://helpdesk.cocca.cx',
+        '^Domain Information$',
+    ],
+    'whois.nic.tl' => [
+        '^TERMS OF USE: You are not authorized',
+        '^database through the use of',
+        '^automated.  Whois database is',
+        '^community on behalf of CoCCA',
+        '^The data is for information',
+        '^guarantee its accuracy. By',
+        '^by the following terms of use',
+        '^for lawful purposes and that',
+        '^to: \(1\) allow, enable, or',
+        '^unsolicited, commercial',
+        '^or facsimile; or',
+        '^that apply to CoCCA',
+        '^compilation, repackaging',
+        '^expressly prohibited',
+        '^CoCCA Helpdesk',
+        '^Domain Information$',
+    ],
+    'whois.nic.fm' => [
+        '^TERMS OF USE',
+        '^dotFM makes every effort',
+        'is a registered trademark of BRS Media Inc.',
+        '^Domain Information$',
+    ],
+    'whois.nic.co' => [
+        '^>>>> Whois database was last',
+        '^.CO Internet, S.A.S., the',
+        '^information for the WHOIS',
+        '^This information is provided',
+        '^designed to assist persons',
+        '^registration record in the',
+        '^information available to you',
+        '^By submitting a WHOIS query',
+        '^lawful purposes and that',
+        '^\(1\) to allow, enable',
+        '^unsolicited, commercial',
+        '^electronic mail, or by',
+        '^data and privacy protection',
+        '^electronic processes that',
+        '^repackaging, dissemination',
+        '^entirety, or of a substantial',
+        '^.CO Internet',
+        '^change these conditions at',
+        '^of any kind. By executing',
+        '^abide by these terms.',
+        '^NOTE: FAILURE TO LOCATE',
+        '^OF THE AVAILABILITY',
+        '^All domain names are subject',
+        '^rules.  For details, please',
     ],
 );
 

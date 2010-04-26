@@ -36,12 +36,7 @@ SYNOPSIS
             # Cache files will be cleared after not accessed
             # for a specific number of minutes. Documents will not be
             # cleared if they keep get requested for, independent
-            # of disk space. Default is not to clear the cache.
-
-      $Net::Whois::Raw::USE_CNAMES = 1;
-            # Use whois-servers.net to get the whois server
-            # name when possible. Default is to use the 
-            # hardcoded defaults.
+            # of disk space.
 
       $Net::Whois::Raw::TIMEOUT = 10;
             # Cancel the request if connection is not made within
