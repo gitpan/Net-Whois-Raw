@@ -402,3 +402,8 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.22	Apr 26 2010	Walery Studennikov
 	- Fixed $CACHE_TIME parameter documentation
+        - Fixed .CM zone processing
+        - Added real whois server for .KG zone
+
+2.23	Aug 25 2010	Walery Studennikov
+	- Fixed problem with tests for .TJ domains

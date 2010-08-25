@@ -320,21 +320,21 @@ sub get_http_query_url {
         push @http_query_data, $data;
     }
     elsif ($tld eq 'tj') {
-	my $data = {
-	    url  => "http://get.tj/whois/?lang=en&domain=$domain",
-	    from => '',
-	};
-	push @http_query_data, $data;
-
+	#my $data = {
+	#    url  => "http://get.tj/whois/?lang=en&domain=$domain",
+	#    from => '',
+	#};
+	#push @http_query_data, $data;
+	
 	# first level on nic.tj
-	$data = {
-	    url  => "http://www.nic.tj/cgi/lookup2?domain=$name",
-	    from => '',
-	};
-	push @http_query_data, $data;
+	#$data = {
+	#    url  => "http://www.nic.tj/cgi/lookup2?domain=$name",
+	#    from => '',
+	#};
+	#push @http_query_data, $data;
 
 	# second level on nic.tj
-	$data = {
+	my $data = {
 	    url  => "http://www.nic.tj/cgi/whois?domain=$name",
 	    from => '',
 	};
@@ -614,6 +614,9 @@ sub parse_www_content {
             $resp =~ s{ \n{2,} }{ \n }gxms;
             # strip disclaimer
             $resp =~ s{ \A .*? Domain \s+ Information \n }{}xms; 
+            if ( $resp =~ /Status: \s+ Not \s+ Registered/ixms ) {
+                return 0;
+            }
         }
         else {
             return 0;

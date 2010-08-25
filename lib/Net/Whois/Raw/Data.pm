@@ -191,6 +191,7 @@ our %servers = qw(
     JE  whois.channelisles.net
     JP  whois.jprs.jp
     KE  whois.kenic.or.ke
+    KG  whois.domain.kg
     KI  whois.nic.ki
     KR  whois.nic.or.kr
     KZ  whois.nic.kz
@@ -465,6 +466,7 @@ our %codepages = (
     'whois.od.ua'        => 'koi8-u',
     'whois.jprs.jp'      => 'iso-2022-jp',
     'whois.nic.or.kr'    => 'euc-kr',
+    'whois.domain.kg'    => 'cp-1251',
 );
 
 
@@ -651,7 +653,7 @@ our %notfound = (
     'whois.cnnic.net.cn'	=> 'no matching record',
     'whois.nic.co'              => 'Not found: \S+',
     'me.whois-servers.net'	=> 'NOT FOUND',
-    'kg.whois-servers.net'      => 'Data not found. This domain is available for registration.',
+    'whois.domain.kg'           => 'Data not found. This domain is available for registration.',
     
     # for VN | TJ | CM zones
     'www_whois'                 => '(Available|no records found|is free|Not Registered)', 
@@ -2057,6 +2059,9 @@ our %strip = (
         '^OF THE AVAILABILITY',
         '^All domain names are subject',
         '^rules.  For details, please',
+    ],
+    'whois.domain.kg' => [
+        '^%',
     ],
 );
 
