@@ -8,7 +8,6 @@ use strict;
 our @www_whois = qw(
     VN
     AC
-    BZ
     TJ
     CM
 );
@@ -431,6 +430,8 @@ our %servers = qw(
     ORG.NS	whois.pir.org
     BIZ.NS	whois.biz
     NAME.NS	whois.nic.name	
+
+    BZ          whois.belizenic.bz
 );
 
 
@@ -2062,6 +2063,24 @@ our %strip = (
     ],
     'whois.domain.kg' => [
         '^%',
+    ],
+    'whois.belizenic.bz' => [
+        '^The data in BelizeNIC registrar WHOIS database is provided to you by',
+        '^BelizeNIC registrar for information purposes only, that is, to assist you in',
+        '^obtaining information about or related to a domain name registration',
+        '^record. BelizeNIC registrar makes this information available "as is,"',
+        '^and',
+        '^does not guarantee its accuracy. By submitting a WHOIS query, you',
+        '^agree that you will use this data only for lawful purposes and that,',
+        '^under no circumstances',
+        '^or otherwise support the transmission of mass unsolicited, commercial',
+        '^advertising or solicitations via direct mail, electronic mail, or by',
+        '^telephone; ',
+        '^that apply to BelizeNIC',
+        '^repackaging, dissemination or other use of this data is expressly',
+        '^prohibited without the prior written consent of BelizeNIC registrar.',
+        '^BelizeNIC registrar reserves the right to modify these terms at any time.',
+        '^By submitting this query, you agree to abide by these terms.',
     ],
 );
 

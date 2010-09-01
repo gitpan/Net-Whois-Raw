@@ -407,3 +407,6 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.23	Aug 25 2010	Walery Studennikov
 	- Fixed problem with tests for .TJ domains
+
+2.24    Sep 01 2010     Ilya Chesnokov
+        - For .BZ domains whois server from www_whois to whois.belizenic.bz

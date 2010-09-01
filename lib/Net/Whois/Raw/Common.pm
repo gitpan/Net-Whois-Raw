@@ -311,14 +311,6 @@ sub get_http_query_url {
         };
         push @http_query_data, $data;
     }
-    elsif ($tld eq 'bz') {
-	my $domcode = unpack( 'H*', "$name.$tld" );
-	my $data = {
-	    url  => 'http://www.belizenic.bz/cgi-bin/Registrar_YTest?action=whois&action2=whois&domain='.$domcode,
-	    form => '',
-        };
-        push @http_query_data, $data;
-    }
     elsif ($tld eq 'tj') {
 	#my $data = {
 	#    url  => "http://get.tj/whois/?lang=en&domain=$domain",
@@ -568,15 +560,6 @@ sub parse_www_content {
 	else {
             return 0;
         }
-
-    }
-    elsif ($tld eq 'bz') {
-
-        $resp = decode_utf8( $resp );
-
-	if ($resp =~ m|<pre>(.+?)</pre>|xms) {
-	    $resp = $1;
-	}
 
     }
     elsif ( $tld eq 'tj' && $url =~ m|^http\://get\.tj| ) {
