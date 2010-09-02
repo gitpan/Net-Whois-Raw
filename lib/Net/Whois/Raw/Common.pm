@@ -311,6 +311,12 @@ sub get_http_query_url {
         };
         push @http_query_data, $data;
     }
+    elsif ($tld eq 'bz') {
+	my $data = {
+	    url  => "http://www.belizenic.bz/index.php/home/whois_result?domain=$name.$tld",
+        };
+        push @http_query_data, $data;
+    }
     elsif ($tld eq 'tj') {
 	#my $data = {
 	#    url  => "http://get.tj/whois/?lang=en&domain=$domain",
@@ -561,6 +567,19 @@ sub parse_www_content {
             return 0;
         }
 
+    }
+    elsif ($tld eq 'bz') {
+
+        $resp = decode_utf8( $resp );
+
+        if ( $resp =~ m{
+                <td \s+ class="box"> \s* <pre> # opening tags
+                \s* (.*?) \s*       # whois info
+                </?pre>             # strange closing tag - w/o slash
+            }xms )
+        {
+            $resp = $1;
+        }
     }
     elsif ( $tld eq 'tj' && $url =~ m|^http\://get\.tj| ) {
     

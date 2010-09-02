@@ -8,6 +8,7 @@ use strict;
 our @www_whois = qw(
     VN
     AC
+    BZ
     TJ
     CM
 );
@@ -430,8 +431,6 @@ our %servers = qw(
     ORG.NS	whois.pir.org
     BIZ.NS	whois.biz
     NAME.NS	whois.nic.name	
-
-    BZ          whois.belizenic.bz
 );
 
 
@@ -657,7 +656,7 @@ our %notfound = (
     'whois.domain.kg'           => 'Data not found. This domain is available for registration.',
     
     # for VN | TJ | CM zones
-    'www_whois'                 => '(Available|no records found|is free|Not Registered)', 
+    'www_whois'                 => '(Available|no records found|is free|Not Registered|NOT FOUND|No domain)',
 );
 
 our %strip = (

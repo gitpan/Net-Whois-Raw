@@ -1,6 +1,6 @@
 ---
 name: Net-Whois-Raw
-version: 2.24
+version: 2.25
 author:
   - |-
     Original author Ariel Brosh B<schop@cpan.org>, 
@@ -27,7 +27,7 @@ configure_requires:
 provides:
   Net::Whois::Raw:
     file: lib/Net/Whois/Raw.pm
-    version: 2.24
+    version: 2.25
   Net::Whois::Raw::Common:
     file: lib/Net/Whois/Raw/Common.pm
   Net::Whois::Raw::Data:
