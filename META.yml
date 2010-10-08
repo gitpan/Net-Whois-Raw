@@ -1,38 +1,35 @@
 ---
-name: Net-Whois-Raw
-version: 2.25
+abstract: 'Get Whois information for domains'
 author:
-  - |-
-    Original author Ariel Brosh B<schop@cpan.org>, 
-    Inspired by jwhois.pl available on the net.
-  - |-
-    Past maintainers Gabor Szabo B<gabor@perl.org.il>,
-    Corris Randall B<corris@cpan.org>
+  - "Original author Ariel Brosh B<schop@cpan.org>, \nInspired by jwhois.pl available on the net."
+  - "Past maintainers Gabor Szabo B<gabor@perl.org.il>,\nCorris Randall B<corris@cpan.org>"
   - 'Current Maintainer: Walery Studennikov B<despair@cpan.org>'
-abstract: Get Whois information for domains
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3603'
 license: perl
-resources:
-  license: http://dev.perl.org/licenses/
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Net-Whois-Raw
+provides:
+  Net::Whois::Raw:
+    file: lib/Net/Whois/Raw.pm
+    version: 2.26
+  Net::Whois::Raw::Common:
+    file: lib/Net/Whois/Raw/Common.pm
+  Net::Whois::Raw::Data:
+    file: lib/Net/Whois/Raw/Data.pm
 requires:
   Encode: 0
   Getopt::Long: 2
   HTTP::Headers: 0
   HTTP::Request: 0
   LWP::UserAgent: 0
+  Net::IDN::Punycode: 1
   Test::More: 0
   URI::URL: 0
   perl: 5.008001
-configure_requires:
-  Module::Build: 0.35
-provides:
-  Net::Whois::Raw:
-    file: lib/Net/Whois/Raw.pm
-    version: 2.25
-  Net::Whois::Raw::Common:
-    file: lib/Net/Whois/Raw/Common.pm
-  Net::Whois::Raw::Data:
-    file: lib/Net/Whois/Raw/Data.pm
-generated_by: Module::Build version 0.35
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+resources:
+  license: http://dev.perl.org/licenses/
+version: 2.26

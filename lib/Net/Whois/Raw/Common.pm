@@ -579,6 +579,13 @@ sub parse_www_content {
             }xms )
         {
             $resp = $1;
+            if ( $resp =~ /NOT\s+FOUND/ || $resp =~ /No\s+Domain/ ) {
+                # Whois info not found
+                return 0;
+            }
+        }
+        else {
+            return 0;
         }
     }
     elsif ( $tld eq 'tj' && $url =~ m|^http\://get\.tj| ) {

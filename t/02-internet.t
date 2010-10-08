@@ -3,7 +3,7 @@
 use strict;
 
 use Data::Dumper;
-use Test::More tests => 11;
+use Test::More tests => 10;
 
 BEGIN {
     use_ok('Net::Whois::Raw',qw( whois ));
@@ -70,8 +70,6 @@ SKIP: {
     close CACHE;
     
     like( whois( $test_domain, undef, 'QRY_FIRST' ), qr/net-whois-raw-common-test/s, 'get_from_cache' );
-    
-    ok( whois( 'get.tj' ), 'www whois' );
 
     unlink <$tmp_dir/*>;
     rmdir $tmp_dir;

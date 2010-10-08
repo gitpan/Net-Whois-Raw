@@ -5,6 +5,7 @@ use warnings;
 use Net::Whois::Raw;
 use Getopt::Long;
 use Encode;
+use Net::IDN::Punycode qw( :all );
 
 my $help;
 my $do_strip;
@@ -65,23 +66,26 @@ else {
     $Net::Whois::Raw::CACHE_DIR = undef;
 }
 
+my ( $input_cp, $output_cp ) = detect_encodings();
+
 my $dom = $ARGV[0];
 my $server = $ARGV[1];
+$dom = decode_domain($dom, $input_cp);
 
 eval {
-    my ($result, $server);
+    my ($result, $result_server);
     my $which_whois = 
         $return_first ? 'QRY_FIRST' :
         $return_all   ? 'QRY_ALL'   : 'QRY_LAST';
                         
-    ($result, $server) = 
+    ($result, $result_server) = 
         Net::Whois::Raw::get_whois( $dom, $server, $which_whois );
 
     if ($result and ref $result eq 'ARRAY') {
-        make_output($_->{text}, $_->{srv}) for @{$result};
+        make_output($_->{text}, $_->{srv}, $output_cp) for @{$result};
     }
     elsif ($result) {
-        make_output($result, $server);
+        make_output($result, $result_server, $output_cp);
     }
     else {
         print STDERR "Failed.\n";
@@ -98,10 +102,7 @@ if ($@) {
 
 # Prepare and print output
 sub make_output {
-    my ($result, $server) = @_;
-
-    (my $cp = $ENV{LANG}) =~ s/^[a-z]{2}_[A-Z]{2}\.//;
-    $cp = lc $cp;
+    my ($result, $server, $cp) = @_;
 
     if ( $cp =~ /utf\-?8/ ) {
         $result = encode_utf8( $result );
@@ -112,6 +113,54 @@ sub make_output {
     
     print "[$server]\n";
     print $result, "\n";
+}
+
+# Detect terminal input and output encodings 
+sub detect_encodings {
+    my ( $input_cp, $output_cp );
+
+    if ( $^O =~ /Win/ ) {
+        # Read encoding from registry
+        require Win32API::Registry;
+        Win32API::Registry->import( qw( :ALL ) );
+    
+        my ( $key, $type, $data );
+        RegOpenKeyEx( HKEY_LOCAL_MACHINE(), 'SYSTEM\\CurrentControlSet\\Control\\Nls\\CodePage', 0, KEY_READ(), $key )
+            or die "Can't read system encodings from registry: ".regLastError();
+        RegQueryValueEx( $key, 'ACP', [], $type, $data, [] )
+            or die "Can't read system encodings from registry: ".regLastError();
+        $input_cp = 'cp'.$data;
+        RegQueryValueEx( $key, 'OEMCP', [], $type, $data, [] )
+            or die "Can't read system encodings from registry: ".regLastError();
+        $output_cp = 'cp'.$data;
+    } else {
+        # Read encoding from environment
+        (my $cp = $ENV{LANG}) =~ s/^[a-z]{2}_[A-Z]{2}\.//;
+        $input_cp = $output_cp = lc $cp;
+    }
+
+    return ($input_cp, $output_cp);
+}
+
+# Decode domain if needed
+sub decode_domain {
+    my ($dom, $input_cp) = @_;
+
+    unless ($dom =~ /^[a-zA-Z0-9.\-]*$/) {
+        # Decode command-line input
+        $dom = decode($input_cp, $dom);
+
+        # Convert to Punycode
+        my @parts;
+        foreach my $part (split /\./, $dom) {
+            $part = 'xn--'.Net::IDN::Punycode::encode_punycode( $part )
+                unless $part =~ /^[a-zA-Z0-9.\-]*$/;
+            push @parts, $part;
+        }
+        $dom = join('.', @parts);
+    }
+
+    return $dom;
 }
 
 __END__

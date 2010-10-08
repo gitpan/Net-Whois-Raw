@@ -413,3 +413,8 @@ Revision history for Perl extension Net::Whois::Raw.
 
 2.25    Sep 02 2010     Ilya Chesnokov
         - And then again to www_whois (but to another URL)
+
+2.26    Oct 06 2010     Timur Nozadze
+        - Fixed problem with passing server parameter from command line in pwhois
+        - Fixed problem with encoding detection in pwhois on Windows
+        - Added convertation to punycode in pwhois

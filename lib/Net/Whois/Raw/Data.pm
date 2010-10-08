@@ -656,7 +656,7 @@ our %notfound = (
     'whois.domain.kg'           => 'Data not found. This domain is available for registration.',
     
     # for VN | TJ | CM zones
-    'www_whois'                 => '(Available|no records found|is free|Not Registered|NOT FOUND|No domain)',
+    'www_whois'                 => '(Available|no records found|is free|Not Registered)',
 );
 
 our %strip = (

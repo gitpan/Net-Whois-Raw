@@ -2,20 +2,25 @@
 use strict;
 use Module::Build;
 
+my $requires = {
+    'perl' => '5.008001',
+    'Getopt::Long' => 2.0,
+    'URI::URL' => 0,
+    'LWP::UserAgent' => 0,
+    'HTTP::Request' => 0,
+    'HTTP::Headers' => 0,
+    'Test::More' => 0,
+    'Encode' => 0,
+    'Net::IDN::Punycode' => 1,
+};
+
+if ($^O =~ /Win/) {
+    $requires->{'Win32API::Registry'} = 0;
+}
 my $build = Module::Build->new(
     module_name => 'Net::Whois::Raw',
     license  => 'perl',
-    requires => {
-	'perl' => '5.008001',
-	'Getopt::Long' => 2.0,
-	'URI::URL' => 0,
-	'LWP::UserAgent' => 0,
-	'HTTP::Request' => 0,
-	'HTTP::Headers' => 0,
-	'Test::More' => 0,
-	'Encode' => 0,
-    },
-    create_makefile_pl => 'traditional',
+    requires => $requires,
     script_files => 'pwhois',
 );
 
