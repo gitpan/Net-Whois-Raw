@@ -6,6 +6,7 @@ use Net::Whois::Raw;
 use Getopt::Long;
 use Encode;
 use Net::IDN::Punycode qw( :all );
+use utf8;
 
 my $help;
 my $do_strip;
@@ -70,7 +71,15 @@ my ( $input_cp, $output_cp ) = detect_encodings();
 
 my $dom = $ARGV[0];
 my $server = $ARGV[1];
-$dom = decode_domain($dom, $input_cp);
+
+$dom = prepare_domain($dom, $input_cp);
+
+unless (validate_domain($dom)) {
+    print encode_output("\nIncorrect domain name:\n$dom\n", $output_cp);
+    exit -1;
+}
+
+$dom = to_punycode($dom);
 
 eval {
     my ($result, $result_server);
@@ -104,15 +113,24 @@ if ($@) {
 sub make_output {
     my ($result, $server, $cp) = @_;
 
-    if ( $cp =~ /utf\-?8/ ) {
-        $result = encode_utf8( $result );
-    }
-    else {
-        $result = encode( $cp, $result );
-    }
+    $result = encode_output( $result, $cp );
     
     print "[$server]\n";
     print $result, "\n";
+}
+
+# Encode output
+sub encode_output {
+    my ( $output, $cp ) = @_;
+
+    if ( $cp =~ /utf\-?8/ ) {
+        $output = encode_utf8( $output );
+    }
+    else {
+        $output = encode( $cp, $output );
+    }
+
+    return $output;
 }
 
 # Detect terminal input and output encodings 
@@ -142,25 +160,54 @@ sub detect_encodings {
     return ($input_cp, $output_cp);
 }
 
-# Decode domain if needed
-sub decode_domain {
+# Prepare domain name
+sub prepare_domain {
     my ($dom, $input_cp) = @_;
 
-    unless ($dom =~ /^[a-zA-Z0-9.\-]*$/) {
-        # Decode command-line input
-        $dom = decode($input_cp, $dom);
+    # Decode command-line input
+    $dom = decode($input_cp, $dom);
 
+    # Lowercase latin and cyrillic characters
+    $dom =~ tr/A-ZА-ЯЁ\xAA\xA5\xB2\xAF/a-zа-яё\xBA\xB4\xB3\xBF/;
+
+    return $dom;
+}
+
+# Decode domain name to punycode if needed
+sub to_punycode {
+    my ($dom) = @_;
+
+    unless ($dom =~ /^[a-z0-9.\-]*$/) {
         # Convert to Punycode
         my @parts;
         foreach my $part (split /\./, $dom) {
             $part = 'xn--'.Net::IDN::Punycode::encode_punycode( $part )
-                unless $part =~ /^[a-zA-Z0-9.\-]*$/;
+                unless $part =~ /^[a-z0-9.-]*$/;
             push @parts, $part;
         }
         $dom = join('.', @parts);
     }
 
     return $dom;
+}
+
+# Validate domain name
+sub validate_domain {
+    my ($dom) = @_;
+
+    return 0 unless $dom;
+
+    $dom =~ /(.+?)\.([^.]+)$/;
+    my ($name, $tld) = ($1, $2);
+
+    return 0 if $name =~ /^-/;
+    return 0 if $name =~ /-$/;
+    return 0 if $name =~ /^..--/ && $dom !~ /^xn--/;
+
+    # Only latin and cyrillic characters allowed now
+    return 0 if $dom =~ m/[^-a-z0-9\.ёа-я\xAA\xBA\xB4\xB2\xB3\xAF\xBF\xA1\xA2]/;
+
+    return 1;
 }
 
 __END__

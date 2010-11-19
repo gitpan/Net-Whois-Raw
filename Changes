@@ -418,3 +418,7 @@ Revision history for Perl extension Net::Whois::Raw.
         - Fixed problem with passing server parameter from command line in pwhois
         - Fixed problem with encoding detection in pwhois on Windows
         - Added convertation to punycode in pwhois
+
+2.27    Nov 11 2010     Timur Nozadze
+        - Added domain name validation in pwhois
+        - Updated some 'not found' string

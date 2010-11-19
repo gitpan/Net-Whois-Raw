@@ -95,14 +95,14 @@ sub process_whois {
             return $whois, "Connection rate exceeded";
         }
     }
-    
+
     if ( $CHECK_FAIL || $OMIT_MSG ) {
-    
+
 	my %notfound = %Net::Whois::Raw::Data::notfound;
 	my %strip = %Net::Whois::Raw::Data::strip;
-    
+
 	my $notfound = $notfound{$server};
-    
+
 	my @strip = $strip{$server} ? @{$strip{$server}} : ();
 	my @lines;
 MAIN:
@@ -110,16 +110,17 @@ MAIN:
 	    if ( $CHECK_FAIL && $notfound && /$notfound/ ) {
         	return undef, "Not found";
 	    };
+
 	    if ($OMIT_MSG) {
-        	foreach my $re (@strip) {
+		foreach my $re (@strip) {
 		    next MAIN if (/$re/);
-        	}
+		}
 	    }
 	    s/^\s+//;
-        
+
 	    push(@lines, $_);
 	}
-    
+
 	$whois = join "\n", @lines, '';
 
 	if ( $OMIT_MSG ) {
