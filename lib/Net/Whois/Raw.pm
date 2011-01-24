@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.27';
+our $VERSION = '2.28';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -121,21 +121,6 @@ sub get_all_whois {
     my @whois = recursive_whois( $dom, $srv, [], $norecurse, $is_ns );
 
     my $whois_answers = process_whois_answers( \@whois, $dom );
-
-    # Crutch for rechecking RELCOM-domains through WWW
-    if (
-	(!ref $whois_answers
-         || !scalar @{$whois_answers}
-         || !$whois_answers->[-1]->{text}
-         || $whois_answers->[-1]->{text} =~ /No entries found for the selected source/s
-        )
-	&&
-	$srv eq 'whois.relcom.ru'
-    ) {
-	my ($responce, $ishtml) = www_whois_query( $dom );
-	return $responce ? [ { text => $responce, srv => $srv } ] : $responce;
-    }
-    # / End of crutch
 
     return $whois_answers;
 }

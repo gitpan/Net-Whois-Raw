@@ -245,13 +245,6 @@ sub get_http_query_url {
         };
         push @http_query_data, $data;
     }
-    elsif ($server eq 'whois.relcom.ru') {
-        my $data = {
-	    url  => "http://www.relcom.ru/Services/Whois/?fullName=$name.$tld",
-	    form => '',
-        };
-        push @http_query_data, $data;
-    }
     elsif ($tld eq 'ru' || $tld eq 'su') {
 	my $data = {
 	    url  => "http://www.nic.ru/whois/?domain=$name.$tld",
@@ -399,33 +392,6 @@ sub parse_www_content {
         return 0 if $resp =~ /Whois information is not available for domain/s;
         $ishtml = 1;
 
-    }
-    elsif ( $server eq 'whois.relcom.ru' ) {
-    
-        $resp = decode( 'koi8-r', $resp  );
-
-        return undef unless $resp =~ m|<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="2"><TR><TD BGCOLOR="#990000"><TABLE BORDER="0" CELLSPACING="0" CELLPADDING="20"><TR><TD BGCOLOR="white">(.+?)</TD></TR></TABLE></TD></TR></TABLE>|s;
-        $resp = $1;
-
-        return 0 if $resp =~ m/СВОБОДНО/;
-
-        if ($resp =~ m|<PRE>(.+?)</PRE>|s) {
-            $resp = $1;
-        }
-        elsif ($resp =~ m|DNS \(name-серверах\):</H3><BLOCKQUOTE>(.+?)</BLOCKQUOTE>|) {
-            my $nameservers = $1;
-            my @nameservers;
-            while ($nameservers =~ m|<CODE CLASS="h2black">(.+?)</CODE>|g) {
-                push @nameservers, $1;
-            }
-            if (scalar @nameservers) {
-                $resp = '';
-                foreach my $ns (@nameservers) {
-                    $resp .= "nserver:      $ns\n";
-                }
-            }
-        }
-        
     }
     elsif ($tld eq 'mu') {
 
