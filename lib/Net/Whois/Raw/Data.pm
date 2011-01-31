@@ -19,12 +19,12 @@ our %servers = qw(
     SU          whois.ripn.net
     XN--P1AI	whois.ripn.net
     
-    COM.RU	whois.ripn.net
-    NET.RU	whois.ripn.net
-    ORG.RU	whois.ripn.net
-    PP.RU	whois.ripn.net
-    INT.RU  whois.int.ru    
+    COM.RU	whois.nic.ru
+    NET.RU	whois.nic.ru
+    ORG.RU	whois.nic.ru
+    PP.RU	whois.nic.ru
     RU.NET	whois.nic.ru
+    INT.RU  whois.int.ru    
 
     ABKHAZIA.SU         whois.nic.ru
     ADYGEYA.RU          whois.nic.ru

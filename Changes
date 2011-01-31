@@ -426,3 +426,6 @@ Revision history for Perl extension Net::Whois::Raw.
 2.28    Jan 24 2011     Walery Studennikov
         - whois.relcom.ru is no more. Using whois.nic.ru instead.
         - Removed crutches for whois.relcom.ru / www_whois
+
+2.28    Jan 31 2011     Walery Studennikov
+        - Further migration from whois.relcom.ru to whois.nic.ru
