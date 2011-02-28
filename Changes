@@ -1,4 +1,4 @@
-Revision history for Perl extension Net::Whois::Raw.
+Revision history for Perl module Net::Whois::Raw.
 
 0.01  Jul 05 2000
 	- original version; created by h2xs 1.19
@@ -427,5 +427,11 @@ Revision history for Perl extension Net::Whois::Raw.
         - whois.relcom.ru is no more. Using whois.nic.ru instead.
         - Removed crutches for whois.relcom.ru / www_whois
 
-2.28    Jan 31 2011     Walery Studennikov
+2.29    Jan 31 2011     Walery Studennikov
         - Further migration from whois.relcom.ru to whois.nic.ru
+
+2.30    Feb 09 2011     Walery Studennikov
+        - confess -> die :: no need to die such verbosely
+
+2.31    Feb 28 2011     Ilya Chesnokov
+        - Added whois server for .SO zone

@@ -18,13 +18,13 @@ our %servers = qw(
     RU          whois.ripn.net
     SU          whois.ripn.net
     XN--P1AI	whois.ripn.net
-    
+
     COM.RU	whois.nic.ru
     NET.RU	whois.nic.ru
     ORG.RU	whois.nic.ru
     PP.RU	whois.nic.ru
     RU.NET	whois.nic.ru
-    INT.RU  whois.int.ru    
+    INT.RU  whois.int.ru
 
     ABKHAZIA.SU         whois.nic.ru
     ADYGEYA.RU          whois.nic.ru
@@ -260,7 +260,7 @@ our %servers = qw(
     ORG.AU        whois.aunic.net
     EMU.ID.AU     whois.aunic.net
     WATTLE.ID.AU  whois.aunic.net
-    
+
     ADM.BR  whois.nic.br
     ADV.BR  whois.nic.br
     AGR.BR  whois.nic.br
@@ -318,7 +318,7 @@ our %servers = qw(
     TV.BR   whois.nic.br
     VET.BR  whois.nic.br
     ZLG.BR  whois.nic.br
-    
+
     AC.CN  whois.cnnic.net.cn
     AH.CN  whois.cnnic.net.cn
     BJ.CN  whois.cnnic.net.cn
@@ -363,7 +363,7 @@ our %servers = qw(
     GOV.HK  whois.hknic.net.hk
     NET.HK  whois.hknic.net.hk
     ORG.HK  whois.hknic.net.hk
-    
+
     AC.JP  whois.jprs.jp
     AD.JP  whois.jprs.jp
     CO.JP  whois.jprs.jp
@@ -396,7 +396,7 @@ our %servers = qw(
     LTD.UK  whois.nic.uk
     NET.UK  whois.nic.uk
     ORG.UK  whois.nic.uk
-    PLC.UK  whois.nic.uk    
+    PLC.UK  whois.nic.uk
 
     XN--P1AG	ru.whois.i-dns.net
     XN--P1AG	ru.whois.i-dns.net
@@ -427,10 +427,11 @@ our %servers = qw(
     SE.NET	whois.centralnic.com
 
     AE.ORG	whois.centralnic.com
-	
+
     ORG.NS	whois.pir.org
     BIZ.NS	whois.biz
-    NAME.NS	whois.nic.name	
+    NAME.NS	whois.nic.name
+    SO          whois.nic.so
 );
 
 
@@ -542,7 +543,7 @@ our %notfound = (
     'whois.hkirc.hk'          => '^Domain Not Found',
     'whois.hknic.net.hk'      => 'Domain Not Found',
     'whois.nic.hu'            => 'No match',
-    'whois.domainregistry.ie' => 'There was no match',    
+    'whois.domainregistry.ie' => 'There was no match',
     'whois.isoc.org.il'       => 'No data was found',
     'whois.nic.im'            => 'The domain \S+ was not found',
     'whois.inregistry.net'    => 'NOT FOUND',
@@ -588,15 +589,15 @@ our %notfound = (
     'whois.nic.tm'            => '^Domain \S+ - Available',
     'whois.tonic.to'          => 'No match for',
     'whois.twnic.net'         => 'No Found',
-    'whois.twnic.net.tw'      => '^No Found',    
+    'whois.twnic.net.tw'      => '^No Found',
     'whois.nic.uk'            => 'No match for',
     'whois.ja.net'            => '^No such domain',
     'whois.nic.us'            => '^Not found',
     'whois.nic.ve'            => 'No match for',
     'whois.nic.wf'            => 'No entries found',
-    'whois.nic.yt'            => 'No entries found', 
+    'whois.nic.yt'            => 'No entries found',
 
-    
+
     'whois.nsiregistry.net'     => 'No match for',
 
     'whois.007names.com'        => '^The Domain Name \S+ does not exist',
@@ -652,7 +653,8 @@ our %notfound = (
     'whois.nic.co'              => 'Not found: \S+',
     'me.whois-servers.net'	=> 'NOT FOUND',
     'whois.domain.kg'           => 'Data not found. This domain is available for registration.',
-    
+    'whois.nic.so'              => 'Not\s+found:',
+
     # for VN | TJ | CM zones
     'www_whois'                 => '(Available|no records found|is free|Not Registered)',
 );
@@ -668,7 +670,7 @@ our %strip = (
 	'^%',
     ],
 
-    
+
     'whois.ripn.net' => [
 	'^%',
 	'Last updated on ',
@@ -1201,7 +1203,7 @@ our %strip = (
 	'^in the .* to be registered',
 	'^prohibited.',
     ],
-    
+
 
 
     'whois.nic.ag' => [
@@ -2117,7 +2119,7 @@ our %query_prefix = (
     'whois.crsnic.net'         => 'domain ',
     'whois.denic.de'           => '-T dn,ace -C ISO-8859-1 ',
     'whois.nic.name'           => 'domain=',
-    
+
     'whois.nic.name.ns'        => 'nameserver=',
     'whois.pir.org.ns'         => 'HO ',
     'whois.biz.ns'             => 'nameserver ',

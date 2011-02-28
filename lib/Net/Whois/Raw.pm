@@ -13,11 +13,12 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.29';
+our $VERSION = '2.31';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
 our $SET_CODEPAGE = '';
+our $SILENT_MODE = 0;
 our (%notfound, %strip, @SRC_IPS, %POSTPROCESS);
 
 our $class = __PACKAGE__;
@@ -57,7 +58,7 @@ sub whois {
     my $res = Net::Whois::Raw::Common::get_from_cache(
         $dom, $CACHE_DIR, $CACHE_TIME
     );
-    
+
     my ($res_text, $res_srv, $res_text2);
 
     if ($res) {
@@ -72,13 +73,13 @@ sub whois {
     else {
         ($res_text, $res_srv) = get_whois($dom, $server, $which_whois);
     }
-    
+
     $res_srv = '' if $res_srv && $res_srv eq 'www_whois';
-    
+
     utf8::decode( $res_text ); # Perl whyly loss utf8 flag
-    
+
     $res_text = encode( $SET_CODEPAGE, $res_text ) if $SET_CODEPAGE;
-    
+
     return wantarray ? ($res_text, $res_srv) : $res_text;
 }
 
@@ -91,7 +92,7 @@ sub get_whois {
         or return undef;
 
     Net::Whois::Raw::Common::write_to_cache($dom, $whois, $CACHE_DIR);
-    
+
     if ($which_whois eq 'QRY_LAST') {
 	my $thewhois = $whois->[-1];
         return wantarray ? ($thewhois->{text}, $thewhois->{srv}) : $thewhois->{text};
@@ -110,7 +111,7 @@ sub get_all_whois {
 
     my $is_ns = 0;
     $is_ns = 1 if $dom =~ s/.NS$//i;
-	
+
     $srv ||= Net::Whois::Raw::Common::get_server( $dom, $is_ns );
 
     if ($srv eq 'www_whois') {
@@ -146,7 +147,7 @@ sub process_whois_answers {
         }
         $level++;
     }
-    
+
     return \@processed_whois;
 }
 
@@ -174,7 +175,7 @@ sub recursive_whois {
 	    $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $1 };
     	}
 	elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && Net::Whois::Raw::Common::is_ipaddr($dom)) {
-	    my $val = $1;	
+	    my $val = $1;
 	    if($val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/) {
 		$newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $val };
 		last;
@@ -260,9 +261,9 @@ sub whois_query {
         $prev_alarm = alarm $TIMEOUT if $TIMEOUT;
 
         unless($sock){
-            $sock = IO::Socket::INET->new(@sockparams) || Carp::confess "$srv: $!: ".join(', ', @sockparams);
+            $sock = IO::Socket::INET->new(@sockparams) || die "$srv: $!: ".join(', ', @sockparams);
         }
-        
+
         if ($class->can ('whois_socket_fixup')) {
             my $new_sock = $class->whois_socket_fixup ($sock);
             $sock = $new_sock if $new_sock;
@@ -298,9 +299,9 @@ sub www_whois_query {
     my ($name, $tld) = Net::Whois::Raw::Common::split_domain( $dom );
 
     my $http_query_urls = Net::Whois::Raw::Common::get_http_query_url($dom);
-    
+
     foreach my $qurl ( @{$http_query_urls} ) {
-    
+
 	# load-on-demand
 	unless ($INC{'LWP/UserAgent.pm'}) {
 	    require LWP::UserAgent;
@@ -312,7 +313,7 @@ sub www_whois_query {
 	    import HTTP::Headers;
 	    import URI::URL;
 	}
-    
+
 	my $referer = delete $qurl->{form}{referer} if $qurl->{form} && defined $qurl->{form}{referer};
 	my $method = ( $qurl->{form} && scalar(keys %{$qurl->{form}}) ) ? 'POST' : 'GET';
 
@@ -356,7 +357,7 @@ sub www_whois_query {
 	    last;
 	}
     }
-    
+
     return undef unless $resp;
 
     chomp $resp;
@@ -401,7 +402,7 @@ Net::Whois::Raw - Get Whois information for domains
 =head1 SYNOPSIS
 
   use Net::Whois::Raw;
-  
+
   $dominfo = whois('perl.com');
   ($dominfo, $whois_server) = whois('funet.fi');
   $reginfo = whois('REGRU-REG-RIPN', 'whois.ripn.net');
@@ -560,7 +561,7 @@ You can set your own LWP::UserAgent like this:
 
 =head1 AUTHOR
 
-Original author Ariel Brosh B<schop@cpan.org>, 
+Original author Ariel Brosh B<schop@cpan.org>,
 Inspired by jwhois.pl available on the net.
 
 Since Ariel has passed away in September 2002:
@@ -604,8 +605,8 @@ Not available anymore.
 =head1 LEGAL
 
 Notice that registrars forbid querying their whois servers as a part of
-a search engine, or querying for a lot of domains by script. 
-Also, omitting the copyright information (that was requested by users of this 
+a search engine, or querying for a lot of domains by script.
+Also, omitting the copyright information (that was requested by users of this
 module) is forbidden by the registrars.
 
 =head1 SEE ALSO

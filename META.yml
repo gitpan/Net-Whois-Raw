@@ -1,12 +1,12 @@
 ---
 abstract: 'Get Whois information for domains'
 author:
-  - "Original author Ariel Brosh B<schop@cpan.org>, \nInspired by jwhois.pl available on the net."
+  - "Original author Ariel Brosh B<schop@cpan.org>,\nInspired by jwhois.pl available on the net."
   - "Past maintainers Gabor Szabo B<gabor@perl.org.il>,\nCorris Randall B<corris@cpan.org>"
   - 'Current Maintainer: Walery Studennikov B<despair@cpan.org>'
 configure_requires:
   Module::Build: 0.36
-generated_by: 'Module::Build version 0.3607'
+generated_by: 'Module::Build version 0.3624'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -15,7 +15,7 @@ name: Net-Whois-Raw
 provides:
   Net::Whois::Raw:
     file: lib/Net/Whois/Raw.pm
-    version: 2.29
+    version: 2.31
   Net::Whois::Raw::Common:
     file: lib/Net/Whois/Raw/Common.pm
   Net::Whois::Raw::Data:
@@ -32,4 +32,4 @@ requires:
   perl: 5.008001
 resources:
   license: http://dev.perl.org/licenses/
-version: 2.29
+version: 2.31

@@ -9,13 +9,13 @@ use utf8;
 # func prototype
 sub untaint(\$);
 
-# get whois from cache 
+# get whois from cache
 sub get_from_cache {
     my ($query, $cache_dir, $cache_time) = @_;
 
     return undef unless $cache_dir;
     mkdir $cache_dir unless -d $cache_dir;
-    
+
     my $now = time;
     # clear the cache
     foreach my $fn ( glob("$cache_dir/*") ) {
@@ -42,7 +42,7 @@ sub get_from_cache {
 	    close $cache_fh;
         }
     }
-    
+
     return $result;
 }
 
@@ -52,7 +52,7 @@ sub write_to_cache {
 
     return unless $cache_dir && $result;
     mkdir $cache_dir unless -d $cache_dir;
-    
+
     untaint $query; untaint $cache_dir;
 
     my $level = 0;
@@ -66,15 +66,15 @@ sub write_to_cache {
             print $cache_fh $res->{srv} ? $res->{srv} :
                 ( $res->{server} ? $res->{server} : '')
                 , "\n";
-                
+
             print $cache_fh $res->{text} ? $res->{text} : '';
-            
+
             close $cache_fh;
             chmod 0666, "$cache_dir/$query.$postfix";
         }
         $level++;
     }
-    
+
 }
 
 
@@ -129,7 +129,7 @@ MAIN:
 	    $whois =~ s|\n{3,}|\n\n|sg;
 	}
     }
-    
+
     if ( defined $Net::Whois::Raw::Data::postprocess{$server} ) {
         $whois = $Net::Whois::Raw::Data::postprocess{$server}->($whois);
     }
@@ -152,7 +152,7 @@ MAIN:
 # get whois-server for domain / tld
 sub get_server {
     my ($dom, $is_ns, $tld) = @_;
-    
+
     $tld ||= get_dom_tld( $dom );
     $tld = uc $tld;
 
@@ -162,7 +162,7 @@ sub get_server {
 
     my $srv = '';
     if ( $is_ns ) {
-        $srv = $Net::Whois::Raw::Data::servers{ $tld . '.NS' } || 
+        $srv = $Net::Whois::Raw::Data::servers{ $tld . '.NS' } ||
                $Net::Whois::Raw::Data::servers{ 'NS' };
     }
     else {
@@ -175,9 +175,9 @@ sub get_server {
 
 sub get_real_whois_query{
     my ($whoisquery, $srv, $is_ns) = @_;
-    
+
 	$srv = $is_ns ? $srv . '.ns' : $srv;
-	
+
     if ($srv eq 'whois.crsnic.net' && domain_level($whoisquery) == 2) {
         $whoisquery = "domain $whoisquery";
     }
@@ -185,7 +185,7 @@ sub get_real_whois_query{
         $whoisquery = $Net::Whois::Raw::Data::query_prefix{ $srv }
                       . $whoisquery;
     }
-    
+
     return $whoisquery;
 }
 
@@ -200,7 +200,7 @@ sub get_dom_tld {
     elsif ( domain_level($dom) == 1 ) {
         $tld = "NOTLD";
     }
-    else { 
+    else {
         my @alltlds = keys %Net::Whois::Raw::Data::servers;
         @alltlds = sort { dlen($b) <=> dlen($a) } @alltlds;
         foreach my $awailtld (@alltlds) {
@@ -211,7 +211,7 @@ sub get_dom_tld {
         }
         unless ($tld) {
             my @tokens = split(/\./, $dom);
-            $tld = $tokens[-1]; 
+            $tld = $tokens[-1];
         }
     }
 
@@ -222,7 +222,7 @@ sub get_dom_tld {
 # %param: domain*
 sub get_http_query_url {
     my ($domain) = @_;
-    
+
     my ($name, $tld) = split_domain($domain);
     my @http_query_data;
     # my ($url, %form);
@@ -317,7 +317,7 @@ sub get_http_query_url {
 	#    from => '',
 	#};
 	#push @http_query_data, $data;
-	
+
 	# first level on nic.tj
 	#$data = {
 	#    url  => "http://www.nic.tj/cgi/lookup2?domain=$name",
@@ -331,7 +331,7 @@ sub get_http_query_url {
 	    from => '',
 	};
 	push @http_query_data, $data;
-	
+
 	#$data = {
 	#    url  => "http://ns1.nic.tj/cgi/whois?domain=$name",
 	#    from => '',
@@ -354,18 +354,18 @@ sub get_http_query_url {
         };
         push @http_query_data, $data;
     }
-        
+
     # return $url, %form;
     return \@http_query_data;
 }
 
 sub have_reserve_url {
     my ( $tld ) = @_;
-    
+
     my %tld_list = (
         'tj' => 1,
     );
-    
+
     return defined $tld_list{$tld};
 }
 
@@ -375,7 +375,7 @@ sub parse_www_content {
     my ($resp, $tld, $url, $CHECK_EXCEED) = @_;
 
     my $server = get_server( undef, undef, $tld );
-     
+
     chomp $resp;
     $resp =~ s/\r//g;
 
@@ -384,7 +384,7 @@ sub parse_www_content {
     if ($tld eq 'tv') {
 
         $resp = decode_utf8( $resp );
-        
+
         return 0 unless
             $resp =~ /(<TABLE BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="95%">.+?<\/TABLE>)/is;
         $resp = $1;
@@ -416,16 +416,16 @@ sub parse_www_content {
 
         $resp = 'ERROR' if $resp =~ m/Error:/i || $resp !~ m/Информация о домене .+? \(по данным WHOIS.RIPN.NET\):/;
         #TODO: errors
-        
+
     }
     elsif ($tld eq 'ip') {
 
         $resp = decode_utf8( $resp );
-        
+
         return 0 unless $resp =~ m|<p ID="whois">(.+?)</p>|s;
 
         $resp = $1;
-        
+
         $resp =~ s|<a.+?>||g;
         $resp =~ s|</a>||g;
         $resp =~ s|<br>||g;
@@ -439,7 +439,7 @@ sub parse_www_content {
         if ( $resp =~ /Domain ID:\w{3,10}-\w{4}\n(.+?)\n\n/s ) {
             $resp = $1;
             $resp =~ s/<br>//g;
-        } 
+        }
 	else {
             return 0;
         }
@@ -482,7 +482,7 @@ sub parse_www_content {
 
     }
     elsif ($tld eq 'kz') {
-    
+
         $resp = decode_utf8( $resp );
 
 	if ($resp =~ /Domain Name\.{10}/s && $resp =~ /<pre>(.+?)<\/pre>/s) {
@@ -511,7 +511,7 @@ sub parse_www_content {
 	#    $resp =~ s|<br>|\n|ig;
 	#    $resp =~ s|<tr>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
 	#    $resp =~ s|^\s*||mg;
-	# 
+	#
     }
     elsif ($tld eq 'ac') {
 
@@ -556,9 +556,9 @@ sub parse_www_content {
         }
     }
     elsif ( $tld eq 'tj' && $url =~ m|^http\://get\.tj| ) {
-    
+
         $resp = decode_utf8( $resp );
-        
+
         if ($resp =~ m|<!-- Content //-->\n(.+?)<!-- End Content //-->|s ) {
             $resp = $1;
             $resp =~ s|<[^<>]+>||ig;
@@ -589,7 +589,7 @@ sub parse_www_content {
             $resp =~ s{ <br/> }{}gxms;
             $resp =~ s{ \n{2,} }{ \n }gxms;
             # strip disclaimer
-            $resp =~ s{ \A .*? Domain \s+ Information \n }{}xms; 
+            $resp =~ s{ \A .*? Domain \s+ Information \n }{}xms;
             if ( $resp =~ /Status: \s+ Not \s+ Registered/ixms ) {
                 return 0;
             }
@@ -601,7 +601,7 @@ sub parse_www_content {
     elsif ( $tld eq 'tj' && $url =~ m|\.nic\.tj/cgi/lookup| ) {
 
         $resp = decode_utf8( $resp );
-        
+
         if ($resp =~ m|<div[0-9a-z=\" ]*>\n?(.+?)\n?</div>|s) {
             $resp = $1;
 
@@ -615,12 +615,12 @@ sub parse_www_content {
 	else {
             return 0;
         }
-        
+
     }
     elsif ( $tld eq 'tj' && $url =~ m|\.nic\.tj/cgi/whois| || $url =~ m|62\.122\.137\.16| ) {
 
         $resp = decode_utf8( $resp );
-        
+
         if ($resp =~ m|<table[0-9a-z=\" ]*>\n(.+?)\n</table>|s) {
             $resp = $1;
             $resp =~ s|</?tr>||ig;
@@ -637,12 +637,12 @@ sub parse_www_content {
 	else {
             return 0;
         }
-        
+
     }
     else {
         return 0;
     }
-    
+
     return $resp;
 }
 
@@ -660,9 +660,9 @@ sub is_ip6addr {
 # get domain level
 sub domain_level {
     my ($str) = @_;
-    
+
     my $dotcount = $str =~ tr/././;
-    
+
     return $dotcount + 1;
 }
 
