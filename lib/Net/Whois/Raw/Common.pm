@@ -116,7 +116,6 @@ MAIN:
 		    next MAIN if (/$re/);
 		}
 	    }
-	    s/^\s+//;
 
 	    push(@lines, $_);
 	}

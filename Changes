@@ -435,3 +435,6 @@ Revision history for Perl module Net::Whois::Raw.
 
 2.31    Feb 28 2011     Ilya Chesnokov
         - Added whois server for .SO zone
+
+2.32    May 19 2011     Timur Nozadze
+        - Deleted whitespaces removing from the whois result
