@@ -6,7 +6,7 @@ author:
   - 'Current Maintainer: Walery Studennikov B<despair@cpan.org>'
 configure_requires:
   Module::Build: 0.36
-generated_by: 'Module::Build version 0.3603'
+generated_by: 'Module::Build version 0.3607'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -15,7 +15,7 @@ name: Net-Whois-Raw
 provides:
   Net::Whois::Raw:
     file: lib/Net/Whois/Raw.pm
-    version: 2.32
+    version: 2.33
   Net::Whois::Raw::Common:
     file: lib/Net/Whois/Raw/Common.pm
   Net::Whois::Raw::Data:
@@ -29,7 +29,8 @@ requires:
   Net::IDN::Punycode: 1
   Test::More: 0
   URI::URL: 0
+  Win32API::Registry: 0
   perl: 5.008001
 resources:
   license: http://dev.perl.org/licenses/
-version: 2.32
+version: 2.33

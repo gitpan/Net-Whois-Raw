@@ -15,3 +15,4 @@ t/02-internet.t
 t/03-coverage.t
 t/04-coro-domains.pl
 t/example-domains-load-balancing.pl
+META.json

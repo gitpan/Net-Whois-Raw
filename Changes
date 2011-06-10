@@ -438,3 +438,6 @@ Revision history for Perl module Net::Whois::Raw.
 
 2.32    May 19 2011     Timur Nozadze
         - Deleted whitespaces removing from the whois result
+
+2.33	Jun 10 2011	Walery Studennikov
+	- fixed tests
