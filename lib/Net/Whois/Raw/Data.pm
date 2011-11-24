@@ -8,7 +8,6 @@ use strict;
 our @www_whois = qw(
     VN
     AC
-    BZ
     TJ
     CM
 );
@@ -238,7 +237,8 @@ our %servers = qw(
     TO  whois.tonic.to
     TR  whois.nic.tr
     TW  whois.twnic.net.tw
-    UA  whois.net.ua
+    UA  whois.com.ua
+    NET.UA  whois.net.ua
     UK  whois.nic.uk
     US  whois.nic.us
     UZ  whois.cctld.uz
@@ -384,11 +384,13 @@ our %servers = qw(
     COM.UA      whois.com.ua
     ORG.UA      whois.com.ua
     BIZ.UA      whois.biz.ua
+    CO.UA       whois.co.ua
     PP.UA	whois.pp.ua
     KIEV.UA     whois.com.ua
     DN.UA       whois.dn.ua
     LG.UA       whois.lg.ua
     OD.UA       whois.od.ua
+    IN.UA       whois.in.ua
 
     AC.UK	whois.ja.net
     CO.UK   whois.nic.uk
@@ -432,6 +434,8 @@ our %servers = qw(
     BIZ.NS	whois.biz
     NAME.NS	whois.nic.name
     SO          whois.nic.so
+    BZ          whois.belizenic.bz
+    XXX         whois.nic.xxx
 );
 
 
@@ -462,9 +466,11 @@ our %codepages = (
     'whois.net.ua'       => 'koi8-u',
     'whois.com.ua'       => 'koi8-u',
     'whois.biz.ua'       => 'koi8-u',
+    'whois.co.ua'        => 'koi8-u',
     'whois.dn.ua'        => 'koi8-u',
     'whois.lg.ua'        => 'koi8-u',
     'whois.od.ua'        => 'koi8-u',
+    'whois.in.ua'        => 'koi8-u',
     'whois.jprs.jp'      => 'iso-2022-jp',
     'whois.nic.or.kr'    => 'euc-kr',
     'whois.domain.kg'    => 'cp-1251',
@@ -482,6 +488,7 @@ our %notfound = (
     'whois.reg.ru'          => '^Domain \S+ not found',
 
     'whois.com.ua'          => 'No entries found for',
+    'whois.co.ua'           => 'No entries found',
     'whois.biz.ua'          => 'No entries found',
     'whois.net.ua'            => 'No entries found for domain',
     'delta.hostmaster.net.ua' => 'No entries found for domain',
@@ -489,6 +496,7 @@ our %notfound = (
     'whois.dn.ua'             => 'No match record found',
     'whois.lg.ua'             => 'No match record found',
     'whois.od.ua'             => 'No match record found',
+    'whois.in.ua'             => 'No records found',
 
     'whois.aero'                 => '^NOT FOUND',
     'whois.nic.asia'             => '^NOT FOUND',
@@ -509,7 +517,7 @@ our %notfound = (
     'ccwhois.verisign-grs.com'   => '^No match for',
     'jobswhois.verisign-grs.com' => '^No match for',
     'tvwhois.verisign-grs.com'   => '^No match for',
-    'whois.registrypro.pro'      => '^Unknown domain',
+    'whois.registrypro.pro'      => '^No match',
     'whois.worldsite.ws'         => 'No match for',
     'whois.nic.travel'           => 'Not found: \S+',
 
@@ -657,6 +665,8 @@ our %notfound = (
 
     # for VN | TJ | CM zones
     'www_whois'                 => '(Available|no records found|is free|Not Registered)',
+
+    'whois.nic.xxx'             => 'NOT FOUND',
 );
 
 our %strip = (
@@ -2080,6 +2090,24 @@ our %strip = (
         '^prohibited without the prior written consent of BelizeNIC registrar.',
         '^BelizeNIC registrar reserves the right to modify these terms at any time.',
         '^By submitting this query, you agree to abide by these terms.',
+    ],
+    'whois.nic.xxx' => [
+        '^Access to the .XXX WHOIS information is provided to assist persons in',
+        '^determining the contents of a domain name registration record in the',
+        '^ICM Registry database. The data in this record is provided by',
+        '^ICM Registry for informational purposes only, and ICM does not',
+        '^guarantee its accuracy. This service is intended only for query-based',
+        '^access. You agree that you will use this data only for lawful purposes',
+        '^and that, under no circumstances will you use this data to',
+        '^enable, or otherwise support the transmission by e-mail, telephone, or',
+        '^facsimile of mass unsolicited, commercial advertising or solicitations',
+        '^to entities other than the data recipient',
+        '^\(b\) enable high volume, automated, electronic processes that send',
+        '^queries or data to the systems of Registry Operator, a Registrar, or',
+        '^ICM except as reasonably necessary to register domain names or',
+        '^modify existing registrations. All rights reserved. ICM reserves',
+        '^the right to modify these terms at any time. By submitting this query,',
+        '^you agree to abide by this policy.',
     ],
 );
 
