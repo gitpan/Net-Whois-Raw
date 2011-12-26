@@ -155,6 +155,7 @@ our %servers = qw(
     BJ  whois.nic.bj
     BR  whois.registro.br
     CA  whois.cira.ca
+    CD  whois.nic.cd
     CH  whois.nic.ch
     CI  whois.nic.ci
     CL  Whois.nic.cl
@@ -175,6 +176,7 @@ our %servers = qw(
     GG  whois.channelisles.net
     GI  whois2.afilias-grs.net
     GS  whois.nic.gs
+    GY  whois.registry.gy
     HU  whois.nic.hu
     HK  whois.hkirc.hk
     HM  whois.registry.hm
@@ -185,6 +187,7 @@ our %servers = qw(
     IM  whois.nic.im
     IN  whois.inregistry.net
     IO  whois.nic.io
+    IR  whois.nic.ir
     IS  whois.isnic.is
     IT  whois.nic.it
     JE  whois.channelisles.net
@@ -200,8 +203,11 @@ our %servers = qw(
     LT  whois.domreg.lt
     LU  whois.dns.lu
     LV  whois.nic.lv
+    LY  whois.nic.ly
+    MA  whois.iam.net.ma
     MC  whois.ripe.net
     MD  whois.nic.md
+    ME  whois.nic.me
     MG  whois.nic.mg
     MN  whois2.afilias-grs.net
     MS  whois.nic.ms
@@ -219,6 +225,8 @@ our %servers = qw(
     PT  whois.dns.pt
     RE  whois.nic.re
     RO  whois.rotld.ro
+    RS  whois.rnids.rs
+    SA  whois.saudinic.net.sa
     SB  whois.nic.sb
     SC  whois2.afilias-grs.net
     SE  whois.iis.se
@@ -359,6 +367,20 @@ our %servers = qw(
     YN.CN  whois.cnnic.net.cn
     ZJ.CN  whois.cnnic.net.cn
 
+    AC.FJ   whois.domains.fj
+    BIZ.FJ  whois.domains.fj
+    COM.FJ  whois.domains.fj
+    INFO.FJ whois.domains.fj
+    MIL.FJ  whois.domains.fj
+    NAME.FJ whois.domains.fj
+    NET.FJ  whois.domains.fj
+    ORG.FJ  whois.domains.fj
+    PRO.FJ  whois.domains.fj
+
+    CO.GY   whois.registry.gy
+    COM.GY  whois.registry.gy
+    NET.GY  whois.registry.gy
+
     COM.HK  whois.hknic.net.hk
     GOV.HK  whois.hknic.net.hk
     NET.HK  whois.hknic.net.hk
@@ -371,9 +393,26 @@ our %servers = qw(
     NE.JP  whois.jprs.jp
     OR.JP  whois.jprs.jp
 
+    AC.MA   whois.iam.net.ma
+    CO.MA   whois.iam.net.ma
+    GOV.MA  whois.iam.net.ma
+    NET.MA  whois.iam.net.ma
+    ORG.MA  whois.iam.net.ma
+    PRESS.MA  whois.iam.net.ma
+
     COM.MX  whois.nic.mx
     GOB.MX  whois.nic.mx
     NET.MX  whois.nic.mx
+
+    COM.MT  whois.nic.mt
+    ORG.MT  whois.nic.mt
+    NET.MT  whois.nic.mt
+    EDU.MT  whois.nic.mt
+
+    CO.RS  whois.rnids.rs
+    ORG.RS whois.rnids.rs
+    IN.RS  whois.rnids.rs
+    EDU.RS whois.rnids.rs
 
     COM.TW  whois.twnic.net
     IDV.TW  whois.twnic.net
@@ -532,32 +571,36 @@ our %notfound = (
     'whois.registro.br'       => 'No match for',
     'whois.registry.hm'       => 'Domain not found',
     'whois.nic.ht'            => 'Status: Not Registered',
-    'whois.cira.ca'           => '^Domain status\:\s+AVAIL',
+    'whois.cira.ca'           => '^Domain status\:\s+available',
+    'whois.nic.cd'            => 'Domain Not Found',
     'whois.nic.ch'            => '^We do not have an entry in our database matching your',
     'whois.nic.ci'            => '^Domain \S+ not found',
     'whois.nic.cl'            => '\: no existe',
     'whois.nic.cx'            => 'Status\: Not Registered',
-    'whois.nic.cz'            => 'No data found',
+    'whois.nic.cz'            => '^\% No entries found.',
     'whois.denic.de'          => 'Status\: free',
     'whois.nic.dm'            => 'Status\: Not Registered',
     'whois.dk-hostmaster.dk'  => '^No entries found for',
-    'whois.eenet.ee'          => '^NOT FOUND',
+    'whois.eenet.ee'          => '^\% No entries found',
     'whois.eu'                => '^Status:\s+AVAILABLE',
     'whois.ficora.fi'         => 'Domain not found',
+    'whois.domains.fj'        => 'The domain \S+ was not found',
     'whois.nic.fm'            => 'Status: Not Registered',
     'whois.nic.fr'            => 'No entries found',
     'whois.channelisles.net'  => 'No information found',
     'whois.nic.gs'            => 'Status: Not Registered',
-    'whois.hkirc.hk'          => '^Domain Not Found',
+    'whois.registry.gy'       => 'Status\:\s+Not Registered',
+    'whois.hkirc.hk'          => '^The domain has not been registered',
     'whois.hknic.net.hk'      => 'Domain Not Found',
     'whois.nic.hu'            => 'No match',
-    'whois.domainregistry.ie' => 'There was no match',
+    'whois.domainregistry.ie' => '^\% Not Registered',
     'whois.isoc.org.il'       => 'No data was found',
     'whois.nic.im'            => 'The domain \S+ was not found',
     'whois.inregistry.net'    => 'NOT FOUND',
     'whois.nic.io'            => 'Domain \S+ - Available',
     'whois.isnic.is'          => 'No entries found',
     'whois.nic.it'            => 'Status:\s+AVAILABLE',
+    'whois.nic.ir'            => 'No entries found',
     'whois.jprs.jp'           => 'No match',
     'whois.kenic.or.ke'       => 'No match found',
     'whois.nic.ki'            => 'Status: Not Registered',
@@ -567,22 +610,30 @@ our %notfound = (
     'whois.nic.li'            => 'We do not have an entry',
     'whois.domreg.lt'         => '^Status:\s+available',
     'whois.dns.lu'            => 'No such domain',
-    'whois.nic.lv'            => 'Nothing found',
+    'whois.nic.lv'            => 'Status\: free',
+    'whois.nic.ly'            => 'Not found',
+    'whois.iam.net.ma'        => 'No Objects Found',
     'whois.nic.md'            => 'No match for',
+    'whois.nic.me'            => 'NOT FOUND',
+	'whois.nic.mg'			  => 'Status\: Not Registered',
     'whois.nic.ms'            => 'Status\: Not Registered',
+    'whois.nic.mt'            => 'Domain is not registered',
+    'whois.nic.mu'            => 'Status\: Not Registered',
     'whois.nic.mx'            => 'Object_Not_Found',
     'whois.mynic.net.my'      => '^Domain Name \S+ does not',
     'whois.na-nic.com.na'     => '^Status\: Not Registered',
     'whois.domain-registry.nl' => '^\S+ is free',
-    'whois.norid.no'          => 'no matches',
+    'whois.norid.no'          => '^\% No match',
     'whois.nic.nu'            => '^NO MATCH for domain',
     'whois.srs.net.nz'        => '^query_status\: (500 Invalid|220 Avail)',
-    'whois.dns.pl'            => 'No information about domain',
+    'whois.dns.pl'            => 'No information available about domain name',
     'whois.nic.pm'            => 'No entries found',
-    'whois.nic.pr'            => 'No records matching',
+    'whois.nic.pr'            => 'is available for registration',
     'whois.dns.pt'            => 'no match',
     'whois.nic.re'            => 'No entries found',
     'whois.rotld.ro'          => 'No entries found',
+    'whois.rnids.rs'          => 'Domain is not registered',
+    'whois.saudinic.net.sa'   => 'No Match for',
     'whois.nic.sb'            => 'Status: Not Registered',
     'whois.iis.se'            => '^\S+ not found',
     'whois.nic.net.sg'        => '^Domain Not Found',
@@ -601,6 +652,7 @@ our %notfound = (
     'whois.nic.uk'            => 'No match for',
     'whois.ja.net'            => '^No such domain',
     'whois.nic.us'            => '^Not found',
+    'whois.cctld.uz'          => 'not found in database',
     'whois.nic.ve'            => 'No match for',
     'whois.nic.wf'            => 'No entries found',
     'whois.nic.yt'            => 'No entries found',
@@ -2125,6 +2177,10 @@ our %exceed = (
     'whois.pir.org'  => 'WHOIS LIMIT EXCEEDED',
     'whois.nic.ms'   => 'Look up quota exceeded',
     'whois.nic.gs'   => 'look up quota exceeded',
+    'whois.nic.tl'   => 'Lookup quota exceeded',
+    'whois.nic.mg'   => 'Lookup quota exceeded',
+    'whois.nic.li'   => 'You have exceeded this limit',
+    'whois.nic.ch'   => 'You have exceeded this limit',
 );
 
 our $default_ban_time = 60;

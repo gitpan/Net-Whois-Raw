@@ -18,7 +18,7 @@ my @domains = qw(
     freebsd.org
     reg.ru
     ns1.nameself.com.NS
-    belizenic.bz
+    XN--C1AD6A.XN--P1AI
 );
 
 SKIP: {

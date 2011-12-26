@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.37';
+our $VERSION = '2.39';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -283,7 +283,7 @@ sub whois_query {
     };
 
     alarm $prev_alarm;
-    die $@ if $@;
+    Carp::confess $@ if $@;
 
     foreach (@lines) { s/\r//g; }
 
