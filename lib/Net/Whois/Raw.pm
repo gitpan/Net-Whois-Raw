@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.39';
+our $VERSION = '2.40';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -270,13 +270,14 @@ sub whois_query {
         }
 
 	if ($DEBUG > 2) {
-	    _require_once('Data::Dumper');
-	    print "Socket: ".Dumper($sock);
+	    require Data::Dumper;      
+	    print "Socket: ". Data::Dumper::Dumper($sock);
 	}
 
         $sock->print( $whoisquery, "\r\n" );
         # TODO: $soc->read, parameters for read chunk size, max content length
-        while (my $str = <$sock>) {
+        # Now you can redefine SOCK_CLASS::getline method as you want
+        while (my $str = $sock->getline) {
             push @lines, $str;
         }
         $sock->close;
@@ -370,17 +371,6 @@ sub www_whois_query {
     return wantarray ? ($resp, $ishtml) : $resp;
 }
 
-sub _require_once ($) {
-    my ($module) = @_;
-
-    my $module_file = $module.'.pm';
-    $module_file =~ s/::/\//g;
-
-    unless ($INC{$module_file}) {
-	eval "require $module";
-	import $module;
-    }
-}
 
 sub import {
     my $mypkg = shift;
@@ -397,7 +387,7 @@ __END__
 
 =head1 NAME
 
-Net::Whois::Raw - Get Whois information for domains
+Net::Whois::Raw -- Get Whois information for domains
 
 =head1 SYNOPSIS
 

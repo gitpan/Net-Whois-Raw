@@ -22,6 +22,7 @@ my $build = Module::Build->new(
     license  => 'perl',
     requires => $requires,
     script_files => 'pwhois',
+    dist_abstract => 'Get Whois information for domains',
 );
 
 $build->create_build_script;
