@@ -465,3 +465,6 @@ Revision history for Perl module Net::Whois::Raw.
 2.40	Jan 31 2012	Alex Bykov
 	- Now you can redefine SOCK_CLASS::getline method as you want
 	- require_once for Data::Dumper
+
+2.41	Mar 14 2012	Timur Nozadze
+	- Case-insensitive match for "not found" messages

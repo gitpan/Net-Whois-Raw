@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.40';
+our $VERSION = '2.41';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -205,7 +205,7 @@ sub recursive_whois {
 	my $new_whois = scalar(@new_whois_recs) ? $new_whois_recs[0]->{text} : '';
 	my $notfound = $Net::Whois::Raw::Data::notfound{$newsrv};
 
-        if ( $new_whois && !$@ && not ( $notfound && $new_whois =~ /$notfound/m ) ) {
+        if ( $new_whois && !$@ && not ( $notfound && $new_whois =~ /$notfound/im ) ) {
             if ( $is_ns ) {
                 unshift @whois_recs, @new_whois_recs;
             }
