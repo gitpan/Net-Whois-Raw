@@ -13,7 +13,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.41';
+our $VERSION = '2.42';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -76,9 +76,11 @@ sub whois {
 
     $res_srv = '' if $res_srv && $res_srv eq 'www_whois';
 
-    utf8::decode( $res_text ); # Perl whyly loss utf8 flag
+    if ( $which_whois ne 'QRY_ALL' ) {
+	utf8::decode( $res_text ); # Perl whyly loss utf8 flag
 
-    $res_text = encode( $SET_CODEPAGE, $res_text ) if $SET_CODEPAGE;
+	$res_text = encode( $SET_CODEPAGE, $res_text ) if $SET_CODEPAGE;
+    }
 
     return wantarray ? ($res_text, $res_srv) : $res_text;
 }
