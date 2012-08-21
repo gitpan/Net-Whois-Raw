@@ -119,7 +119,7 @@ our %servers = qw(
     IP     whois.arin.net
 
     AERO   whois.aero
-    ARPA   whois.arin.net
+    ARPA   whois.iana.org
     ASIA   whois.nic.asia
     BIZ    whois.biz
     CAT    whois.cat
@@ -172,7 +172,7 @@ our %servers = qw(
     FM  whois.nic.fm
     FO  whois.ripe.net
     FR  whois.nic.fr
-    GD  whois.adamsnames.com
+    GD  whois.adamsnames.tc
     GG  whois.channelisles.net
     GI  whois2.afilias-grs.net
     GS  whois.nic.gs
@@ -233,7 +233,7 @@ our %servers = qw(
     SG  whois.nic.net.sg
     SH  whois.nic.sh
     SI  whois.arnes.si
-    SK  whois.ripe.net
+    SK  whois.sk-nic.sk
     SM  whois.ripe.net
     ST  whois.nic.st
     TC  whois.adamsnames.tc
@@ -419,7 +419,6 @@ our %servers = qw(
     NET.TW  whois.twnic.net
     ORG.TW  whois.twnic.net
 
-    NET.UA      delta.hostmaster.net.ua
     COM.UA      whois.com.ua
     ORG.UA      whois.com.ua
     BIZ.UA      whois.biz.ua
@@ -473,7 +472,7 @@ our %servers = qw(
     BIZ.NS	whois.biz
     NAME.NS	whois.nic.name
     SO          whois.nic.so
-    BZ          whois.belizenic.bz
+    BZ          whois.enom.com
     XXX         whois.nic.xxx
 );
 
