@@ -474,3 +474,12 @@ Revision history for Perl module Net::Whois::Raw.
 
 2.43	Aug 21 2012	gleecology
 	- IPv6 whois support
+
+2.44    Jan 11 2013 Alexander Nalobin
+    - IPv6 whois support with Regexp::IPv6
+
+2.45    Jan 31 2013 Alexander Nalobin
+    - Using whois.netcom.cm for CM instead of web whois
+    - TV whois server updated
+    - BZ web whois updated
+    - MU, IN, CN web whois removed

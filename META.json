@@ -6,7 +6,7 @@
       "Current Maintainer: Walery Studennikov B<despair@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.113640",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112621",
    "license" : [
       "perl_5"
    ],
@@ -29,9 +29,9 @@
             "HTTP::Request" : 0,
             "LWP::UserAgent" : 0,
             "Net::IDN::Punycode" : "1",
+            "Regexp::IPv6" : 0,
             "Test::More" : 0,
             "URI::URL" : 0,
-            "Win32API::Registry" : 0,
             "perl" : "5.008001"
          }
       }
@@ -39,7 +39,7 @@
    "provides" : {
       "Net::Whois::Raw" : {
          "file" : "lib/Net/Whois/Raw.pm",
-         "version" : "2.43"
+         "version" : "2.45"
       },
       "Net::Whois::Raw::Common" : {
          "file" : "lib/Net/Whois/Raw/Common.pm",
@@ -56,5 +56,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "2.43"
+   "version" : "2.45"
 }

@@ -2,6 +2,7 @@ package Net::Whois::Raw::Common;
 
 use Encode;
 use strict;
+use Regexp::IPv6 qw($IPv6_re);
 require Net::Whois::Raw::Data;
 
 use utf8;
@@ -36,10 +37,10 @@ sub get_from_cache {
                 $result->[$level]->{text} = undef ;
             }
             else {
-        	$result->[$level]->{text} = decode_utf8( $result->[$level]->{text} );
+                $result->[$level]->{text} = decode_utf8( $result->[$level]->{text} );
             }
             $level++;
-	    close $cache_fh;
+            close $cache_fh;
         }
     }
 
@@ -57,10 +58,10 @@ sub write_to_cache {
 
     my $level = 0;
     foreach my $res ( @{$result} ) {
-	local $res->{text} = $res->{whois} if not exists $res->{text};
+        local $res->{text} = $res->{whois} if not exists $res->{text};
 
-	next if defined $res->{text} && !$res->{text} || !defined $res->{text};
-	utf8::encode( $res->{text} );
+        next if defined $res->{text} && !$res->{text} || !defined $res->{text};
+        utf8::encode( $res->{text} );
         my $postfix = sprintf("%02d", $level);
         if ( open( my $cache_fh, '>', "$cache_dir/$query.$postfix" ) ) {
             print $cache_fh $res->{srv} ? $res->{srv} :
@@ -98,35 +99,35 @@ sub process_whois {
 
     if ( $CHECK_FAIL || $OMIT_MSG ) {
 
-	my %notfound = %Net::Whois::Raw::Data::notfound;
-	my %strip = %Net::Whois::Raw::Data::strip;
+        my %notfound = %Net::Whois::Raw::Data::notfound;
+        my %strip = %Net::Whois::Raw::Data::strip;
 
-	my $notfound = $notfound{$server};
+        my $notfound = $notfound{$server};
 
-	my @strip = $strip{$server} ? @{$strip{$server}} : ();
-	my @lines;
+        my @strip = $strip{$server} ? @{$strip{$server}} : ();
+        my @lines;
 MAIN:
-	foreach (split(/\n/, $whois)) {
-	    if ( $CHECK_FAIL && $notfound && /$notfound/ ) {
-        	return undef, "Not found";
-	    };
+        foreach (split(/\n/, $whois)) {
+            if ( $CHECK_FAIL && $notfound && /$notfound/ ) {
+                return undef, "Not found";
+            };
 
-	    if ($OMIT_MSG) {
-		foreach my $re (@strip) {
-		    next MAIN if (/$re/);
-		}
-	    }
+            if ($OMIT_MSG) {
+                foreach my $re (@strip) {
+                    next MAIN if (/$re/);
+                }
+            }
 
-	    push(@lines, $_);
-	}
+            push(@lines, $_);
+        }
 
-	$whois = join "\n", @lines, '';
+        $whois = join "\n", @lines, '';
 
-	if ( $OMIT_MSG ) {
-	    $whois =~ s/(?:\s*\n)+$/\n/s;
-	    $whois =~ s/^\n+//s;
-	    $whois =~ s|\n{3,}|\n\n|sg;
-	}
+        if ( $OMIT_MSG ) {
+            $whois =~ s/(?:\s*\n)+$/\n/s;
+            $whois =~ s/^\n+//s;
+            $whois =~ s|\n{3,}|\n\n|sg;
+        }
     }
 
     if ( defined $Net::Whois::Raw::Data::postprocess{$server} ) {
@@ -165,7 +166,7 @@ sub get_server {
                $Net::Whois::Raw::Data::servers{ 'NS' };
     }
     else {
-    	my $cname = "$tld.whois-servers.net";
+            my $cname = "$tld.whois-servers.net";
         $srv = $Net::Whois::Raw::Data::servers{ $tld } || $cname;
     }
 
@@ -175,7 +176,7 @@ sub get_server {
 sub get_real_whois_query{
     my ($whoisquery, $srv, $is_ns) = @_;
 
-	$srv = $is_ns ? $srv . '.ns' : $srv;
+        $srv = $is_ns ? $srv . '.ns' : $srv;
 
     if ($srv eq 'whois.crsnic.net' && domain_level($whoisquery) == 2) {
         $whoisquery = "domain $whoisquery";
@@ -228,130 +229,91 @@ sub get_http_query_url {
 
     my $server = get_server( undef, undef, $tld );
 
-    if ($tld eq 'tv') {
+    if ($tld eq 'ru' || $tld eq 'su') {
         my $data = {
-            url  => "http://www.tv/cgi-bin/whois.cgi?domain=$name&tld=tv",
+            url  => "http://www.nic.ru/whois/?domain=$name.$tld",
             form => '',
         };
         push @http_query_data, $data;
     }
-    elsif ($tld eq 'mu') {
-        my $data = {
-            url  => 'http://www.mu/cgi-bin/mu_whois.cgi',
-            form => {
-                whois => $name,
-            },
-        };
-        push @http_query_data, $data;
-    }
-    elsif ($tld eq 'ru' || $tld eq 'su') {
-	my $data = {
-	    url  => "http://www.nic.ru/whois/?domain=$name.$tld",
-	    form => '',
-	};
-	push @http_query_data, $data;
-    }
     elsif ($tld eq 'ip') {
-	my $data = {
-	    url  => "http://www.nic.ru/whois/?ip=$name",
-	    form => '',
-	};
-	push @http_query_data, $data;
-    }
-    elsif ($tld eq 'in') {
-	my $data = {
-	    url  => "http://www.registry.in/cgi-bin/whois.cgi?whois_query_field=$name",
-	    form => '',
-        };
-        push @http_query_data, $data;
-    }
-    elsif ($tld eq 'cn') {
         my $data = {
-	    url  => "http://ewhois.cnnic.net.cn/whois?value=$name.$tld&entity=domain",
-	    form => '',
+            url  => "http://www.nic.ru/whois/?ip=$name",
+            form => '',
         };
         push @http_query_data, $data;
     }
     elsif ($tld eq 'ws') {
-	my $data = {
-	    url  => "http://worldsite.ws/utilities/lookup.dhtml?domain=$name&tld=$tld",
-	    form => '',
+        my $data = {
+            url  => "http://worldsite.ws/utilities/lookup.dhtml?domain=$name&tld=$tld",
+            form => '',
         };
         push @http_query_data, $data;
     }
     elsif ($tld eq 'kz') {
-	my $data = {
-	    url  => "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0",
-	    form => '',
+        my $data = {
+            url  => "http://www.nic.kz/cgi-bin/whois?query=$name.$tld&x=0&y=0",
+            form => '',
         };
         push @http_query_data, $data;
     }
     elsif ($tld eq 'vn') {
-	my $data = {
-	    url  => "http://www.tenmien.vn/jsp/jsp/tracuudomain1.jsp",
-	    form => {
-		cap2        => ".$tld",
-		referer     => 'http://www.vnnic.vn/english/',
-		domainname1 => $name,
-	    },
-    	};
-    	push @http_query_data, $data;
+        # VN doesn't have web whois at the moment...
+        my $data = {
+            url  => "http://www.tenmien.vn/jsp/jsp/tracuudomain1.jsp",
+            form => {
+                cap2        => ".$tld",
+                referer     => 'http://www.vnnic.vn/english/',
+                domainname1 => $name,
+            },
+        };
+        push @http_query_data, $data;
     }
     elsif ($tld eq 'ac') {
-	my $data = {
-	    url  => "http://nic.ac/cgi-bin/whois?query=$name.$tld",
-	    form => '',
+        my $data = {
+            url  => "http://nic.ac/cgi-bin/whois?query=$name.$tld",
+            form => '',
         };
         push @http_query_data, $data;
     }
     elsif ($tld eq 'bz') {
-	my $data = {
-	    url  => "http://www.belizenic.bz/index.php/home/whois_result?domain=$name.$tld",
+        my $data = {
+            url  => "http://www.test.bz/Whois/index.php?query=$name&output=nice&dotname=.$tld&whois=Search",
         };
         push @http_query_data, $data;
     }
     elsif ($tld eq 'tj') {
-	#my $data = {
-	#    url  => "http://get.tj/whois/?lang=en&domain=$domain",
-	#    from => '',
-	#};
-	#push @http_query_data, $data;
+        #my $data = {
+        #    url  => "http://get.tj/whois/?lang=en&domain=$domain",
+        #    from => '',
+        #};
+        #push @http_query_data, $data;
 
-	# first level on nic.tj
-	#$data = {
-	#    url  => "http://www.nic.tj/cgi/lookup2?domain=$name",
-	#    from => '',
-	#};
-	#push @http_query_data, $data;
+        # first level on nic.tj
+        #$data = {
+        #    url  => "http://www.nic.tj/cgi/lookup2?domain=$name",
+        #    from => '',
+        #};
+        #push @http_query_data, $data;
 
-	# second level on nic.tj
-	my $data = {
-	    url  => "http://www.nic.tj/cgi/whois?domain=$name",
-	    from => '',
-	};
-	push @http_query_data, $data;
-
-	#$data = {
-	#    url  => "http://ns1.nic.tj/cgi/whois?domain=$name",
-	#    from => '',
-	#};
-	#push @http_query_data, $data;
-
-	#$data = {
-	#    url  => "http://62.122.137.16/cgi/whois?domain=$name",
-	#    from => '',
-	#};
-	#push @http_query_data, $data;
-    }
-    elsif ($tld eq 'cm') {
+        # second level on nic.tj
         my $data = {
-            url  => "http://www.register.cm/whois.php",
-            form => {
-                domain => $domain,
-                submit => 'Go',
-            },
+            url  => "http://www.nic.tj/cgi/whois?domain=$name",
+            from => '',
         };
         push @http_query_data, $data;
+
+        #$data = {
+        #    url  => "http://ns1.nic.tj/cgi/whois?domain=$name",
+        #    from => '',
+        #};
+        #push @http_query_data, $data;
+
+        #$data = {
+        #    url  => "http://62.122.137.16/cgi/whois?domain=$name",
+        #    from => '',
+        #};
+        #push @http_query_data, $data;
     }
 
     # return $url, %form;
@@ -380,29 +342,7 @@ sub parse_www_content {
 
     my $ishtml;
 
-    if ($tld eq 'tv') {
-
-        $resp = decode_utf8( $resp );
-
-        return 0 unless
-            $resp =~ /(<TABLE BORDER="0" CELLPADDING="4" CELLSPACING="0" WIDTH="95%">.+?<\/TABLE>)/is;
-        $resp = $1;
-        $resp =~ s/<BR><BR>.+?The data in The.+?any time.+?<BR><BR>//is;
-        return 0 if $resp =~ /Whois information is not available for domain/s;
-        $ishtml = 1;
-
-    }
-    elsif ($tld eq 'mu') {
-
-        $resp = decode_utf8( $resp );
-
-        return 0 unless
-            $resp =~ /(<p><b>Domain Name:<\/b><br>.+?)<hr width="75%">/s;
-        $resp = $1;
-        $ishtml = 1;
-
-    }
-    elsif ( $tld eq 'ru' || $tld eq 'su' ) {
+    if ( $tld eq 'ru' || $tld eq 'su' ) {
 
         $resp = decode( 'koi8-r', $resp );
 
@@ -431,65 +371,32 @@ sub parse_www_content {
         $resp =~ s|&nbsp;| |g;
 
     }
-    elsif ($tld eq 'in') {
-
-        $resp = decode_utf8( $resp );
-
-        if ( $resp =~ /Domain ID:\w{3,10}-\w{4}\n(.+?)\n\n/s ) {
-            $resp = $1;
-            $resp =~ s/<br>//g;
-        }
-	else {
-            return 0;
-        }
-
-    }
-    elsif ($tld eq 'cn') {
-
-        $resp = decode_utf8( $resp );
-
-        if ($resp =~ m|<table border=1 cellspacing=0 cellpadding=2>\n\n(.+?)\n</table>|s) {
-            $resp = $1;
-            $resp =~ s|<a.+?>||isg;
-            $resp =~ s|</a>||isg;
-            $resp =~ s|<font.+?>||isg;
-            $resp =~ s|</font>||isg;
-            $resp =~ s|<tr><td class="t_blue">.+?</td><td class="t_blue">||isg;
-            $resp =~ s|</td></tr>||isg;
-            $resp =~ s|\n\s+|\n|sg;
-            $resp =~ s|\n\n|\n|sg;
-        }
-	else {
-            return 0;
-        }
-
-    }
     elsif ($tld eq 'ws') {
 
         $resp = decode_utf8( $resp );
 
-	if ($resp =~ /Whois information for .+?:(.+?)<table>/s) {
-	    $resp = $1;
+        if ($resp =~ /Whois information for .+?:(.+?)<table>/s) {
+            $resp = $1;
             $resp =~ s|<font.+?>||isg;
             $resp =~ s|</font>||isg;
 
             $ishtml = 1;
-	}
-	else {
-	    return 0;
-	}
+        }
+        else {
+            return 0;
+        }
 
     }
     elsif ($tld eq 'kz') {
 
         $resp = decode_utf8( $resp );
 
-	if ($resp =~ /Domain Name\.{10}/s && $resp =~ /<pre>(.+?)<\/pre>/s) {
-	    $resp = $1;
-	}
-	else {
-	    return 0;
-	}
+        if ($resp =~ /Domain Name\.{10}/s && $resp =~ /<pre>(.+?)<\/pre>/s) {
+            $resp = $1;
+        }
+        else {
+            return 0;
+        }
     }
     elsif ($tld eq 'vn') {
 
@@ -498,19 +405,19 @@ sub parse_www_content {
         if ($resp =~ /\(\s*?(Domain .+?:\s*registered)\s*?\)/i )  {
             $resp = $1;
         }
-	else {
+        else {
             return 0;
         }
 
         #
-	# if ($resp =~/#ENGLISH.*?<\/tr>(.+?)<\/table>/si) {
-	#    $resp = $1;
-	#    $resp =~ s|</?font.*?>||ig;
-	#    $resp =~ s|&nbsp;||ig;
-	#    $resp =~ s|<br>|\n|ig;
-	#    $resp =~ s|<tr>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
-	#    $resp =~ s|^\s*||mg;
-	#
+        # if ($resp =~/#ENGLISH.*?<\/tr>(.+?)<\/table>/si) {
+        #    $resp = $1;
+        #    $resp =~ s|</?font.*?>||ig;
+        #    $resp =~ s|&nbsp;||ig;
+        #    $resp =~ s|<br>|\n|ig;
+        #    $resp =~ s|<tr>\s*<td.*?>\s*(.*?)\s*</td>\s*<td.*?>\s*(.*?)\s*</td>\s*</tr>|$1 $2\n|isg;
+        #    $resp =~ s|^\s*||mg;
+        #
     }
     elsif ($tld eq 'ac') {
 
@@ -519,7 +426,7 @@ sub parse_www_content {
         if ($CHECK_EXCEED && $resp =~ /too many requests/is) {
             die "Connection rate exceeded";
         }
-	elsif ($resp =~ /<!--- Start \/ Domain Info --->(.+?)<!--- End \/ Domain Info --->/is) {
+        elsif ($resp =~ /<!--- Start \/ Domain Info --->(.+?)<!--- End \/ Domain Info --->/is) {
             $resp = $1;
             $resp =~ s|</?table.*?>||ig;
             $resp =~ s|</?b>||ig;
@@ -529,7 +436,7 @@ sub parse_www_content {
             $resp =~ s|</?td>||ig;
             $resp =~ s|^\s*||mg;
         }
-	else {
+        else {
             return 0;
         }
 
@@ -539,9 +446,9 @@ sub parse_www_content {
         $resp = decode_utf8( $resp );
 
         if ( $resp =~ m{
-                <td \s+ class="box"> \s* <pre> # opening tags
-                \s* (.*?) \s*       # whois info
-                </?pre>             # strange closing tag - w/o slash
+                <blockquote>
+                (.+)
+                </blockquote>
             }xms )
         {
             $resp = $1;
@@ -549,6 +456,8 @@ sub parse_www_content {
                 # Whois info not found
                 return 0;
             }
+
+            $resp =~ s|<[^<>]+>||ig;
         }
         else {
             return 0;
@@ -578,25 +487,6 @@ sub parse_www_content {
         }
 
     }
-    elsif ( $tld eq 'cm'  ) {
-        $resp = decode_utf8($resp);
-        if ( $resp =~ m{
-                <div \s+ class="result-info"> \s* <p> (.*?) </p> \s* </div>
-            }xms ) {
-
-            $resp = $1;
-            $resp =~ s{ <br/> }{}gxms;
-            $resp =~ s{ \n{2,} }{ \n }gxms;
-            # strip disclaimer
-            $resp =~ s{ \A .*? Domain \s+ Information \n }{}xms;
-            if ( $resp =~ /Status: \s+ Not \s+ Registered/ixms ) {
-                return 0;
-            }
-        }
-        else {
-            return 0;
-        }
-    }
     elsif ( $tld eq 'tj' && $url =~ m|\.nic\.tj/cgi/lookup| ) {
 
         $resp = decode_utf8( $resp );
@@ -604,14 +494,14 @@ sub parse_www_content {
         if ($resp =~ m|<div[0-9a-z=\" ]*>\n?(.+?)\n?</div>|s) {
             $resp = $1;
 
-	    return 0 if $resp =~ m|may be available|s;
+            return 0 if $resp =~ m|may be available|s;
 
             $resp =~ s|\n\s+|\n|sg;
             $resp =~ s|\s+\n|\n|sg;
             $resp =~ s|\n\n|\n|sg;
             $resp =~ s|<br.+||si;
         }
-	else {
+        else {
             return 0;
         }
 
@@ -633,7 +523,7 @@ sub parse_www_content {
             $resp =~ s|\s+\n|\n|sg;
             $resp =~ s|\n\n|\n|sg;
         }
-	else {
+        else {
             return 0;
         }
 
@@ -652,7 +542,11 @@ sub is_ipaddr {
 
 # check, if it's IPv6-address?
 sub is_ip6addr {
-    $_[0] =~ /^[0-9a-f]{1,4}:[0-9a-f]{1,4}:[0-9a-f:]+$/i;
+    my ( $ip ) = @_;
+
+    return 0 unless defined $ip;
+
+    return $ip =~ /^$IPv6_re$/;
 }
 
 # get domain level
@@ -672,11 +566,11 @@ sub split_domain {
 
     my $name;
     if (uc $tld eq 'IP' || $tld eq 'NOTLD') {
-	$name = $dom;
+        $name = $dom;
     }
     else {
-	$dom =~ /(.+?)\.$tld$/; # or die "Can't match $tld in $dom";
-	$name = $1;
+        $dom =~ /(.+?)\.$tld$/; # or die "Can't match $tld in $dom";
+        $name = $1;
     }
 
     return ($name, $tld);
