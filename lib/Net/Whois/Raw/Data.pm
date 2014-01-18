@@ -3,11 +3,11 @@ package Net::Whois::Raw::Data;
 # Use string as is
 no utf8;
 
+use warnings;
 use strict;
 
 our @www_whois = qw(
     VN
-    AC
     TJ
 );
 # Candidates for www_whois: DO, IO, MG, SH, TM, TP, ZA
@@ -23,6 +23,8 @@ our %servers = qw(
     PP.RU	whois.nic.ru
     RU.NET	whois.nic.ru
     INT.RU  whois.int.ru
+
+    BY          whois.ripe.net
 
     ABKHAZIA.SU         whois.nic.ru
     ADYGEYA.RU          whois.nic.ru
@@ -255,6 +257,7 @@ our %servers = qw(
     VG  whois.adamsnames.tc
     WF  whois.nic.wf
     YT  whois.nic.yt
+    HR  whois.dns.hr
 
     ASN.AU        whois.aunic.net
     COM.AU        whois.aunic.net
@@ -467,6 +470,7 @@ our %servers = qw(
     SE.NET	whois.centralnic.com
 
     AE.ORG	whois.centralnic.com
+    IN.NET      whois.centralnic.com
 
     ORG.NS	whois.pir.org
     BIZ.NS	whois.biz
@@ -595,7 +599,7 @@ our %notfound = (
     'whois.isoc.org.il'       => 'No data was found',
     'whois.nic.im'            => 'The domain \S+ was not found',
     'whois.inregistry.net'    => 'NOT FOUND',
-    'whois.nic.io'            => 'Domain \S+ - Available',
+    'whois.nic.io'            => '\bis\s+available\b',
     'whois.isnic.is'          => 'No entries found',
     'whois.nic.it'            => 'Status:\s+AVAILABLE',
     'whois.nic.ir'            => 'No entries found',
@@ -613,7 +617,7 @@ our %notfound = (
     'whois.iam.net.ma'        => 'No Objects Found',
     'whois.nic.md'            => 'No match for',
     'whois.nic.me'            => 'NOT FOUND',
-        'whois.nic.mg'			  => 'Status\: Not Registered',
+    'whois.nic.mg'			  => 'Status\: Not Registered',
     'whois.nic.ms'            => 'Status\: Not Registered',
     'whois.nic.mt'            => 'Domain is not registered',
     'whois.nic.mu'            => 'Status\: Not Registered',
@@ -2179,6 +2183,7 @@ our %exceed = (
     'whois.nic.mg'   => 'Lookup quota exceeded',
     'whois.nic.li'   => 'You have exceeded this limit',
     'whois.nic.ch'   => 'You have exceeded this limit',
+    'whois.nic.cz'   => 'Your connection limit exceeded',
 );
 
 our $default_ban_time = 60;
