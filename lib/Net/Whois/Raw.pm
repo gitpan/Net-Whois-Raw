@@ -14,7 +14,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.51';
+our $VERSION = '2.55';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -135,16 +135,19 @@ sub process_whois_answers {
     my @processed_whois;
 
     my $level = 0;
-    foreach my $whois_rec (@{$raw_whois}) {
+    for my $whois_rec ( @$raw_whois ) {
         $whois_rec->{level} = $level;
-        my ($text, $error) = Net::Whois::Raw::Common::process_whois(
+        my ( $text, $error ) = Net::Whois::Raw::Common::process_whois(
             $dom,
             $whois_rec->{srv},
             $whois_rec->{text},
             $CHECK_FAIL, $OMIT_MSG, $CHECK_EXCEED,
         );
-        die $error if $level == 0 && $error && $error eq 'Connection rate exceeded';
-        if ($text || $level == 0) {
+
+        die $error  if $error && $error eq 'Connection rate exceeded'
+            && ( $level == 0 || $CHECK_EXCEED == 2 );
+
+        if ( $text || $level == 0 ) {
             $whois_rec->{text} = $text;
             push @processed_whois, $whois_rec;
         }
@@ -181,13 +184,20 @@ sub recursive_whois {
         elsif (/Contact information can be found in the (\S+)\s+database/) {
             $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $1 };
             }
-        elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && Net::Whois::Raw::Common::is_ipaddr($dom)) {
+        elsif (
+            ( /OrgID:\s+(\w+)/ || /descr:\s+(\w+)/ )
+              && 
+              ( 
+                   Net::Whois::Raw::Common::is_ipaddr ( $dom )
+                || Net::Whois::Raw::Common::is_ip6addr( $dom )
+              )
+        ) {
             my $val = $1;
-            if($val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/) {
+            if ( $val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/ ) {
                 $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $val };
                 last;
             }
-            }
+        }
         elsif (/^\s+Maintainer:\s+RIPE\b/ && Net::Whois::Raw::Common::is_ipaddr($dom)) {
             $newsrv = $Net::Whois::Raw::Data::servers{RIPE};
         }
@@ -434,10 +444,11 @@ Net::Whois::Raw -- Get Whois information for domains
         # sorted by servers.
         # Default is to give the textual response.
 
-  $Net::Whois::Raw::CHECK_EXCEED = 1;
-	# When this option is set, "die" will be called
+  $Net::Whois::Raw::CHECK_EXCEED = 0 | 1 | 2;
+	# When this option is true, "die" will be called
         # if connection rate to specific whois server have been
-        # exceeded
+        # exceeded.
+        # If set to 2, will die in recursive queries too.
 
   $Net::Whois::Raw::CACHE_DIR = "/var/spool/pwhois/";
 	# Whois information will be

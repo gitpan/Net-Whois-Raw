@@ -142,6 +142,81 @@ our %servers = qw(
     TEL    whois-tel.neustar.biz
     TRAVEL whois.nic.travel
 
+    VENTURES        whois.donuts.co
+    SINGLES         whois.donuts.co
+    BIKE            whois.donuts.co
+    HOLDINGS        whois.donuts.co
+    PLUMBING        whois.donuts.co
+    GURU            whois.donuts.co
+    CLOTHING        whois.donuts.co
+    CAMERA          whois.donuts.co
+    EQUIPMENT       whois.donuts.co
+    ESTATE          whois.donuts.co
+    GALLERY         whois.donuts.co
+    GRAPHICS        whois.donuts.co
+    LIGHTING        whois.donuts.co
+    PHOTOGRAPHY     whois.donuts.co
+    CONTRACTORS     whois.donuts.co
+    LAND            whois.donuts.co
+    TECHNOLOGY      whois.donuts.co
+    CONSTRUCTION    whois.donuts.co
+    DIRECTORY       whois.donuts.co
+    KITCHEN         whois.donuts.co
+    TODAY           whois.donuts.co
+    DIAMONDS        whois.donuts.co
+    ENTERPRISES     whois.donuts.co
+    TIPS            whois.donuts.co
+    VOYAGE          whois.donuts.co
+    SHOES           whois.donuts.co
+    CAREERS         whois.donuts.co
+    PHOTOS          whois.donuts.co
+    RECIPES         whois.donuts.co
+    LIMO            whois.donuts.co
+    DOMAINS         whois.donuts.co
+    CAB             whois.donuts.co
+    COMPANY         whois.donuts.co
+    COMPUTER        whois.donuts.co
+    CENTER          whois.donuts.co
+    SYSTEMS         whois.donuts.co
+    ACADEMY         whois.donuts.co
+    MANAGEMENT      whois.donuts.co
+    TRAINING        whois.donuts.co
+    SOLUTIONS       whois.donuts.co
+    SUPPORT         whois.donuts.co
+    BUILDERS        whois.donuts.co
+    EMAIL           whois.donuts.co
+    EDUCATION       whois.donuts.co
+    INSTITUTE       whois.donuts.co
+    REPAIR          whois.donuts.co
+    CAMP            whois.donuts.co
+    GLASS           whois.donuts.co
+    SOLAR           whois.donuts.co
+    COFFEE          whois.donuts.co
+    INTERNATIONAL   whois.donuts.co
+    HOUSE           whois.donuts.co
+    FLORIST         whois.donuts.co
+    HOLIDAY         whois.donuts.co
+    MARKETING       whois.donuts.co
+    VIAJES          whois.donuts.co
+    FARM            whois.donuts.co
+    CODES           whois.donuts.co
+    CHEAP           whois.donuts.co
+    ZONE            whois.donuts.co
+    AGENCY          whois.donuts.co
+    BARGAINS        whois.donuts.co
+    BOUTIQUE        whois.donuts.co
+    COOL            whois.donuts.co
+    WATCH           whois.donuts.co
+    WORKS           whois.donuts.co
+    EXPERT          whois.donuts.co
+    FOUNDATION      whois.donuts.co
+    EXPOSED         whois.donuts.co
+    VILLAS          whois.donuts.co
+    FLIGHTS         whois.donuts.co
+    RENTALS         whois.donuts.co
+    CRUISES         whois.donuts.co
+    VACATIONS       whois.donuts.co
+
     TV  whois.nic.tv
     WS  whois.worldsite.ws
     NF  whois.nic.cx
@@ -561,6 +636,7 @@ our %notfound = (
     'whois.registrypro.pro'      => '^No match',
     'whois.worldsite.ws'         => 'No match for',
     'whois.nic.travel'           => 'Not found: \S+',
+    'whois.donuts.co'            => 'Domain not found',
 
     'whois.nic.ag'            => 'NOT FOUND',
     'whois.nic.as'            => 'Domain Not Found',
@@ -722,6 +798,19 @@ our %notfound = (
 
     'whois.nic.xxx'             => 'NOT FOUND',
 );
+
+# Common whois stripping REs
+our @strip_regexps = (
+    qr{
+        (.+)
+        ^ (?: 
+            \W* Last \s update \s of \s WHOIS \s database
+            | Database \s last \s updated
+            | \W* Whois \s database \s was \s last \s updated \s on
+        )
+        \b .+ \z
+    }xmsi,
+); 
 
 our %strip = (
     'whois.arin.net' => [
@@ -2028,6 +2117,10 @@ our %strip = (
         '^NOTE: FAILURE TO LOCATE A RECORD',
         '^OF THE AVAILABILITY OF A DOMAIN NAME',
     ],
+    'whois.donuts.co' => [
+        '^Terms of Use:',
+        '>>> Last update of WHOIS database',
+    ],
     'whois.nic.ht' => [
         '^TERMS OF USE: You are not authorized',
         '^database through the use of electronic',
@@ -2184,6 +2277,7 @@ our %exceed = (
     'whois.nic.li'   => 'You have exceeded this limit',
     'whois.nic.ch'   => 'You have exceeded this limit',
     'whois.nic.cz'   => 'Your connection limit exceeded',
+    'whois.name.com' => 'Too many connection attempts. Please try again in a few seconds.',
 );
 
 our $default_ban_time = 60;

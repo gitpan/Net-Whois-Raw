@@ -1,20 +1,33 @@
 {
-   "abstract" : "Get Whois information for domains",
-   "author" : [],
+   "abstract" : "unknown",
+   "author" : [
+      "unknown"
+   ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4202",
+   "generated_by" : "ExtUtils::MakeMaker version 6.78, CPAN::Meta::Converter version 2.120351",
    "license" : [
-      "perl_5"
+      "unknown"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
    "name" : "Net-Whois-Raw",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "inc"
+      ]
+   },
    "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.42"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
@@ -28,28 +41,10 @@
             "Net::IDN::Punycode" : "1",
             "Regexp::IPv6" : "0",
             "Test::More" : "0",
-            "URI::URL" : "0",
-            "perl" : "5.008001"
+            "URI::URL" : "0"
          }
       }
    },
-   "provides" : {
-      "Net::Whois::Raw" : {
-         "file" : "lib/Net/Whois/Raw.pm",
-         "version" : "2.51"
-      },
-      "Net::Whois::Raw::Common" : {
-         "file" : "lib/Net/Whois/Raw/Common.pm"
-      },
-      "Net::Whois::Raw::Data" : {
-         "file" : "lib/Net/Whois/Raw/Data.pm"
-      }
-   },
    "release_status" : "stable",
-   "resources" : {
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ]
-   },
-   "version" : "2.51"
+   "version" : "2.55"
 }
