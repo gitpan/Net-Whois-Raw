@@ -14,7 +14,7 @@ use utf8;
 
 our @EXPORT = qw( whois get_whois );
 
-our $VERSION = '2.55';
+our $VERSION = '2.57';
 
 our ($OMIT_MSG, $CHECK_FAIL, $CHECK_EXCEED, $CACHE_DIR, $TIMEOUT, $DEBUG) = (0) x 7;
 our $CACHE_TIME = 60;
@@ -184,20 +184,13 @@ sub recursive_whois {
         elsif (/Contact information can be found in the (\S+)\s+database/) {
             $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $1 };
             }
-        elsif (
-            ( /OrgID:\s+(\w+)/ || /descr:\s+(\w+)/ )
-              && 
-              ( 
-                   Net::Whois::Raw::Common::is_ipaddr ( $dom )
-                || Net::Whois::Raw::Common::is_ip6addr( $dom )
-              )
-        ) {
+        elsif ((/OrgID:\s+(\w+)/ || /descr:\s+(\w+)/) && Net::Whois::Raw::Common::is_ipaddr($dom)) {
             my $val = $1;
-            if ( $val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/ ) {
+            if($val =~ /^(?:RIPE|APNIC|KRNIC|LACNIC)$/) {
                 $newsrv = $Net::Whois::Raw::Data::ip_whois_servers{ $val };
                 last;
             }
-        }
+            }
         elsif (/^\s+Maintainer:\s+RIPE\b/ && Net::Whois::Raw::Common::is_ipaddr($dom)) {
             $newsrv = $Net::Whois::Raw::Data::servers{RIPE};
         }

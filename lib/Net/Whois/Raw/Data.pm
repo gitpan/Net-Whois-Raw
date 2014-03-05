@@ -16,6 +16,10 @@ our %servers = qw(
     RU          whois.ripn.net
     SU          whois.ripn.net
     XN--P1AI	whois.ripn.net
+    XN--D1ACJ3B	whois.ripn.net
+
+    XN--80ASWG   whois.online.rs.corenic.net
+    XN--80ASEHDB whois.online.rs.corenic.net
 
     COM.RU	whois.nic.ru
     NET.RU	whois.nic.ru
@@ -551,7 +555,7 @@ our %servers = qw(
     BIZ.NS	whois.biz
     NAME.NS	whois.nic.name
     SO          whois.nic.so
-    BZ          whois.enom.com
+    BZ          whois2.afilias-grs.net
     XXX         whois.nic.xxx
 );
 
@@ -797,20 +801,22 @@ our %notfound = (
     'www_whois'                 => '(Available|no records found|is free|Not Registered)',
 
     'whois.nic.xxx'             => 'NOT FOUND',
+
+    'whois.online.rs.corenic.net' => 'no matching objects found',
 );
 
 # Common whois stripping REs
 our @strip_regexps = (
     qr{
         (.+)
-        ^ (?: 
+        ^ (?:
             \W* Last \s update \s of \s WHOIS \s database
             | Database \s last \s updated
             | \W* Whois \s database \s was \s last \s updated \s on
         )
         \b .+ \z
     }xmsi,
-); 
+);
 
 our %strip = (
     'whois.arin.net' => [
@@ -2255,6 +2261,9 @@ our %strip = (
         '^modify existing registrations. All rights reserved. ICM reserves',
         '^the right to modify these terms at any time. By submitting this query,',
         '^you agree to abide by this policy.',
+    ],
+    'whois.online.rs.corenic.net' => [
+        '^%',
     ],
 );
 
