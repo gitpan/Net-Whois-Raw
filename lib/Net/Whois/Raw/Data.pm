@@ -223,9 +223,17 @@ our %servers = qw(
 
     SEXY            whois.uniregistry.net
     TATTOO          whois.uniregistry.net
+    LINK            whois.uniregistry.net
+    GUITARS         whois.uniregistry.net
+    GIFT            whois.uniregistry.net
+    PICS            whois.uniregistry.net
+    PHOTO           whois.uniregistry.net
+
     MENU            whois.nic.menu
     UNO             whois.nic.uno
     BERLIN          whois.nic.berlin
+    KIWI            whois.dot-kiwi.com
+    BUILD           whois.nic.build
 
     TV  whois.nic.tv
     WS  whois.worldsite.ws
@@ -651,6 +659,8 @@ our %notfound = (
     'whois.uniregistry.net'      => 'No match for',
     'whois.nic.uno'              => 'Not found:',
     'whois.nic.berlin'           => 'No match',
+    'whois.dot-kiwi.com'         => 'Status\: Not Registered',
+    'whois.nic.build'            => 'No Data Found',
 
     'whois.nic.ag'            => 'NOT FOUND',
     'whois.nic.as'            => 'Domain Not Found',
@@ -2165,6 +2175,19 @@ our %strip = (
         '^By submitting an inquiry',
         '^You further agree not to use',
         '^Wedding TLD2, LLC reserves',
+    ],
+
+    'whois.dot-kiwi.com' => [
+        '^>>> Last update',
+        '^TERMS OF USE:',
+        '^The data',
+        '^[^A-Z]',
+    ],
+
+    'whois.nic.build' => [
+        '^>>> Last update of WHOIS database',
+        '^The data',
+        '^[^A-Z]',
     ],
 
     'whois.nic.ht' => [
