@@ -146,80 +146,143 @@ our %servers = qw(
     TEL    whois-tel.neustar.biz
     TRAVEL whois.nic.travel
 
-    VENTURES        whois.donuts.co
-    SINGLES         whois.donuts.co
+    ACADEMY         whois.donuts.co
+    ACCOUNTANTS     whois.donuts.co
+    AGENCY          whois.donuts.co
+    ASSOCIATES      whois.donuts.co
+    BARGAINS        whois.donuts.co
     BIKE            whois.donuts.co
-    HOLDINGS        whois.donuts.co
-    PLUMBING        whois.donuts.co
-    GURU            whois.donuts.co
-    CLOTHING        whois.donuts.co
-    CAMERA          whois.donuts.co
-    EQUIPMENT       whois.donuts.co
-    ESTATE          whois.donuts.co
-    GALLERY         whois.donuts.co
-    GRAPHICS        whois.donuts.co
-    LIGHTING        whois.donuts.co
-    PHOTOGRAPHY     whois.donuts.co
-    CONTRACTORS     whois.donuts.co
-    LAND            whois.donuts.co
-    TECHNOLOGY      whois.donuts.co
-    CONSTRUCTION    whois.donuts.co
-    DIRECTORY       whois.donuts.co
-    KITCHEN         whois.donuts.co
-    TODAY           whois.donuts.co
-    DIAMONDS        whois.donuts.co
-    ENTERPRISES     whois.donuts.co
-    TIPS            whois.donuts.co
-    VOYAGE          whois.donuts.co
-    SHOES           whois.donuts.co
-    CAREERS         whois.donuts.co
-    PHOTOS          whois.donuts.co
-    RECIPES         whois.donuts.co
-    LIMO            whois.donuts.co
-    DOMAINS         whois.donuts.co
+    BOUTIQUE        whois.donuts.co
+    BUILDERS        whois.donuts.co
     CAB             whois.donuts.co
+    CAMERA          whois.donuts.co
+    CAMP            whois.donuts.co
+    CAPITAL         whois.donuts.co
+    CARDS           whois.donuts.co
+    CARE            whois.donuts.co
+    CAREERS         whois.donuts.co
+    CASH            whois.donuts.co
+    CATERING        whois.donuts.co
+    CENTER          whois.donuts.co
+    CHEAP           whois.donuts.co
+    CHURCH          whois.donuts.co
+    CLAIMS          whois.donuts.co
+    CLEANING        whois.donuts.co
+    CLINIC          whois.donuts.co
+    CLOTHING        whois.donuts.co
+    CODES           whois.donuts.co
+    COFFEE          whois.donuts.co
+    COMMUNITY       whois.donuts.co
     COMPANY         whois.donuts.co
     COMPUTER        whois.donuts.co
-    CENTER          whois.donuts.co
-    SYSTEMS         whois.donuts.co
-    ACADEMY         whois.donuts.co
-    MANAGEMENT      whois.donuts.co
-    TRAINING        whois.donuts.co
-    SOLUTIONS       whois.donuts.co
-    SUPPORT         whois.donuts.co
-    BUILDERS        whois.donuts.co
-    EMAIL           whois.donuts.co
-    EDUCATION       whois.donuts.co
-    INSTITUTE       whois.donuts.co
-    REPAIR          whois.donuts.co
-    CAMP            whois.donuts.co
-    GLASS           whois.donuts.co
-    SOLAR           whois.donuts.co
-    COFFEE          whois.donuts.co
-    INTERNATIONAL   whois.donuts.co
-    HOUSE           whois.donuts.co
-    FLORIST         whois.donuts.co
-    HOLIDAY         whois.donuts.co
-    MARKETING       whois.donuts.co
-    VIAJES          whois.donuts.co
-    FARM            whois.donuts.co
-    CODES           whois.donuts.co
-    CHEAP           whois.donuts.co
-    ZONE            whois.donuts.co
-    AGENCY          whois.donuts.co
-    BARGAINS        whois.donuts.co
-    BOUTIQUE        whois.donuts.co
+    CONDOS          whois.donuts.co
+    CONSTRUCTION    whois.donuts.co
+    CONTRACTORS     whois.donuts.co
     COOL            whois.donuts.co
+    CREDIT          whois.donuts.co
+    CREDITCARD      whois.donuts.co
+    CRUISES         whois.donuts.co
+    DATING          whois.donuts.co
+    DENTAL          whois.donuts.co
+    DIAMONDS        whois.donuts.co
+    DIGITAL         whois.donuts.co
+    DIRECTORY       whois.donuts.co
+    DISCOUNT        whois.donuts.co
+    DOMAINS         whois.donuts.co
+    EDUCATION       whois.donuts.co
+    EMAIL           whois.donuts.co
+    ENGINEERING     whois.donuts.co
+    ENTERPRISES     whois.donuts.co
+    EQUIPMENT       whois.donuts.co
+    ESTATE          whois.donuts.co
+    EVENTS          whois.donuts.co
+    EXCHANGE        whois.donuts.co
+    EXPERT          whois.donuts.co
+    EXPOSED         whois.donuts.co
+    FAIL            whois.donuts.co
+    FARM            whois.donuts.co
+    FINANCE         whois.donuts.co
+    FINANCIAL       whois.donuts.co
+    FISH            whois.donuts.co
+    FITNESS         whois.donuts.co
+    FLIGHTS         whois.donuts.co
+    FLORIST         whois.donuts.co
+    FOUNDATION      whois.donuts.co
+    FUND            whois.donuts.co
+    FURNITURE       whois.donuts.co
+    GALLERY         whois.donuts.co
+    GLASS           whois.donuts.co
+    GRAPHICS        whois.donuts.co
+    GRATIS          whois.donuts.co
+    GRIPE           whois.donuts.co
+    GUIDE           whois.donuts.co
+    GURU            whois.donuts.co
+    HOLDINGS        whois.donuts.co
+    HOLIDAY         whois.donuts.co
+    HOUSE           whois.donuts.co
+    INDUSTRIES      whois.donuts.co
+    INSTITUTE       whois.donuts.co
+    INSURE          whois.donuts.co
+    INTERNATIONAL   whois.donuts.co
+    INVESTMENTS     whois.donuts.co
+    KITCHEN         whois.donuts.co
+    LAND            whois.donuts.co
+    LEASE           whois.donuts.co
+    LIFE            whois.donuts.co
+    LIGHTING        whois.donuts.co
+    LIMITED         whois.donuts.co
+    LIMO            whois.donuts.co
+    LOANS           whois.donuts.co
+    MAISON          whois.donuts.co
+    MANAGEMENT      whois.donuts.co
+    MARKETING       whois.donuts.co
+    MEDIA           whois.donuts.co
+    PARTNERS        whois.donuts.co
+    PARTS           whois.donuts.co
+    PHOTOGRAPHY     whois.donuts.co
+    PHOTOS          whois.donuts.co
+    PICTURES        whois.donuts.co
+    PLUMBING        whois.donuts.co
+    PRODUCTIONS     whois.donuts.co
+    PROPERTIES      whois.donuts.co
+    RECIPES         whois.donuts.co
+    REISEN          whois.donuts.co
+    RENTALS         whois.donuts.co
+    REPAIR          whois.donuts.co
+    REPORT          whois.donuts.co
+    SCHULE          whois.donuts.co
+    SERVICES        whois.donuts.co
+    SHOES           whois.donuts.co
+    SINGLES         whois.donuts.co
+    SOLAR           whois.donuts.co
+    SOLUTIONS       whois.donuts.co
+    SUPPLIES        whois.donuts.co
+    SUPPLY          whois.donuts.co
+    SUPPORT         whois.donuts.co
+    SURGERY         whois.donuts.co
+    SYSTEMS         whois.donuts.co
+    TAX             whois.donuts.co
+    TECHNOLOGY      whois.donuts.co
+    TIENDA          whois.donuts.co
+    TIPS            whois.donuts.co
+    TODAY           whois.donuts.co
+    TOOLS           whois.donuts.co
+    TOWN            whois.donuts.co
+    TOYS            whois.donuts.co
+    TRAINING        whois.donuts.co
+    UNIVERSITY      whois.donuts.co
+    VACATIONS       whois.donuts.co
+    VENTURES        whois.donuts.co
+    VIAJES          whois.donuts.co
+    VILLAS          whois.donuts.co
+    VISION          whois.donuts.co
+    VOYAGE          whois.donuts.co
     WATCH           whois.donuts.co
     WORKS           whois.donuts.co
-    EXPERT          whois.donuts.co
-    FOUNDATION      whois.donuts.co
-    EXPOSED         whois.donuts.co
-    VILLAS          whois.donuts.co
-    FLIGHTS         whois.donuts.co
-    RENTALS         whois.donuts.co
-    CRUISES         whois.donuts.co
-    VACATIONS       whois.donuts.co
+    WTF             whois.donuts.co
+    ZONE            whois.donuts.co
+
+
 
     SEXY            whois.uniregistry.net
     TATTOO          whois.uniregistry.net
@@ -234,6 +297,45 @@ our %servers = qw(
     BERLIN          whois.nic.berlin
     KIWI            whois.dot-kiwi.com
     BUILD           whois.nic.build
+
+    PINK            whois.afilias.net
+    RED             whois.afilias.net
+    SHIKSHA         whois.afilias.net
+    KIM             whois.afilias.net
+    BLUE            whois.afilias.net
+
+    CLUB            whois.nic.club
+    LUXURY          whois.nic.luxury
+
+    ACTOR           whois.unitedtld.com
+    AIRFORCE        whois.unitedtld.com
+    ARMY            whois.unitedtld.com
+    ATTORNEY        whois.unitedtld.com
+    CONSULTING      whois.unitedtld.com
+    DEGREE          whois.unitedtld.com
+    DANCE           whois.unitedtld.com
+    DEMOCRAT        whois.unitedtld.com
+    DENTIST         whois.unitedtld.com
+    ENGINEER        whois.unitedtld.com
+    FUTBOL          whois.unitedtld.com
+    GIVES           whois.unitedtld.com
+    HAUS            whois.unitedtld.com
+    IMMOBILIEN      whois.unitedtld.com
+    KAUFEN          whois.unitedtld.com
+    LAWYER          whois.unitedtld.com
+    MARKET          whois.unitedtld.com
+    MODA            whois.unitedtld.com
+    MORTGAGE        whois.unitedtld.com
+    NAVY            whois.unitedtld.com
+    NINJA           whois.unitedtld.com
+    PUB             whois.unitedtld.com
+    REHAB           whois.unitedtld.com
+    REPUBLICAN      whois.unitedtld.com
+    REVIEWS         whois.unitedtld.com
+    ROCKS           whois.unitedtld.com
+    SOCIAL          whois.unitedtld.com
+    SOFTWARE        whois.unitedtld.com
+    VET             whois.unitedtld.com
 
     TV  whois.nic.tv
     WS  whois.worldsite.ws
@@ -519,55 +621,55 @@ our %servers = qw(
     ORG.UA      whois.com.ua
     BIZ.UA      whois.biz.ua
     CO.UA       whois.co.ua
-    PP.UA	whois.pp.ua
+    PP.UA       whois.pp.ua
     KIEV.UA     whois.com.ua
     DN.UA       whois.dn.ua
     LG.UA       whois.lg.ua
     OD.UA       whois.od.ua
     IN.UA       whois.in.ua
 
-    AC.UK	whois.ja.net
-    CO.UK   whois.nic.uk
-    GOV.UK	whois.ja.net
-    LTD.UK  whois.nic.uk
-    NET.UK  whois.nic.uk
-    ORG.UK  whois.nic.uk
-    PLC.UK  whois.nic.uk
+    AC.UK       whois.ja.net
+    CO.UK       whois.nic.uk
+    GOV.UK      whois.ja.net
+    LTD.UK      whois.nic.uk
+    NET.UK      whois.nic.uk
+    ORG.UK      whois.nic.uk
+    PLC.UK      whois.nic.uk
 
-    XN--P1AG	ru.whois.i-dns.net
-    XN--P1AG	ru.whois.i-dns.net
-    XN--J1AEF	whois.i-dns.net
-    XN--E1APQ	whois.i-dns.net
-    XN--C1AVG	whois.i-dns.net
+    XN--P1AG    ru.whois.i-dns.net
+    XN--P1AG    ru.whois.i-dns.net
+    XN--J1AEF   whois.i-dns.net
+    XN--E1APQ   whois.i-dns.net
+    XN--C1AVG   whois.publicinterestregistry.net
 
     EU.COM      whois.centralnic.com
     GB.COM      whois.centralnic.com
-    KR.COM	whois.centralnic.com
-    US.COM	whois.centralnic.com
-    QC.COM	whois.centralnic.com
-    DE.COM	whois.centralnic.com
-    NO.COM	whois.centralnic.com
-    HU.COM	whois.centralnic.com
-    JPN.COM	whois.centralnic.com
-    UY.COM	whois.centralnic.com
-    ZA.COM	whois.centralnic.com
-    BR.COM	whois.centralnic.com
-    CN.COM	whois.centralnic.com
-    SA.COM	whois.centralnic.com
-    SE.COM	whois.centralnic.com
+    KR.COM      whois.centralnic.com
+    US.COM      whois.centralnic.com
+    QC.COM      whois.centralnic.com
+    DE.COM      whois.centralnic.com
+    NO.COM      whois.centralnic.com
+    HU.COM      whois.centralnic.com
+    JPN.COM     whois.centralnic.com
+    UY.COM      whois.centralnic.com
+    ZA.COM      whois.centralnic.com
+    BR.COM      whois.centralnic.com
+    CN.COM      whois.centralnic.com
+    SA.COM      whois.centralnic.com
+    SE.COM      whois.centralnic.com
     UK.COM      whois.centralnic.com
-    RU.COM	whois.centralnic.com
+    RU.COM      whois.centralnic.com
 
     GB.NET      whois.centralnic.com
     UK.NET      whois.centralnic.com
-    SE.NET	whois.centralnic.com
+    SE.NET      whois.centralnic.com
 
-    AE.ORG	whois.centralnic.com
+    AE.ORG      whois.centralnic.com
     IN.NET      whois.centralnic.com
 
-    ORG.NS	whois.pir.org
-    BIZ.NS	whois.biz
-    NAME.NS	whois.nic.name
+    ORG.NS      whois.pir.org
+    BIZ.NS      whois.biz
+    NAME.NS     whois.nic.name
     SO          whois.nic.so
     BZ          whois2.afilias-grs.net
     XXX         whois.nic.xxx
@@ -616,27 +718,27 @@ our %notfound = (
     'whois.ripe.net'        => 'No entries found',
 
     'whois.ripn.net'        => 'No entries found',
-    'whois.nic.ru'       => 'No entries found',
+    'whois.nic.ru'          => 'No entries found',
     'whois.nnov.ru'         => 'No entries found',
     'whois.int.ru'          => 'No entries found',
     'whois.reg.ru'          => '^Domain \S+ not found',
 
-    'whois.com.ua'          => 'No entries found for',
-    'whois.co.ua'           => 'No entries found',
-    'whois.biz.ua'          => 'No entries found',
-    'whois.net.ua'            => 'No entries found for domain',
-    'delta.hostmaster.net.ua' => 'No entries found for domain',
-    'whois.pp.ua'             => 'No entries found',
-    'whois.dn.ua'             => 'No match record found',
-    'whois.lg.ua'             => 'No match record found',
-    'whois.od.ua'             => 'No match record found',
-    'whois.in.ua'             => 'No records found',
+    'whois.com.ua'              => 'No entries found for',
+    'whois.co.ua'               => 'No entries found',
+    'whois.biz.ua'              => 'No entries found',
+    'whois.net.ua'              => 'No entries found for domain',
+    'delta.hostmaster.net.ua'   => 'No entries found for domain',
+    'whois.pp.ua'               => 'No entries found',
+    'whois.dn.ua'               => 'No match record found',
+    'whois.lg.ua'               => 'No match record found',
+    'whois.od.ua'               => 'No match record found',
+    'whois.in.ua'               => 'No records found',
 
     'whois.aero'                 => '^NOT FOUND',
     'whois.nic.asia'             => '^NOT FOUND',
     'whois.biz'                  => '^Not found:',
     'whois-tel.neustar.biz'      => '^Not found',
-    'whois.cat'		         => '^% Object \S+ NOT FOUND',
+    'whois.cat'                  => '^% Object \S+ NOT FOUND',
     'whois.nic.coop'             => 'No domain records',
     'whois.educause.edu'         => '^No Match',
     'whois.nic.mil'              => '^No match for',
@@ -661,6 +763,11 @@ our %notfound = (
     'whois.nic.berlin'           => 'No match',
     'whois.dot-kiwi.com'         => 'Status\: Not Registered',
     'whois.nic.build'            => 'No Data Found',
+    'whois.nic.club'             => '^Not found:',
+    'whois.unitedtld.com'        => 'Domain not found',
+    'whois.nic.luxury'           => 'No Data Found',
+
+    'whois.publicinterestregistry.net' => 'NOT FOUND',
 
     'whois.nic.ag'            => 'NOT FOUND',
     'whois.nic.as'            => 'Domain Not Found',
@@ -717,7 +824,7 @@ our %notfound = (
     'whois.iam.net.ma'        => 'No Objects Found',
     'whois.nic.md'            => 'No match for',
     'whois.nic.me'            => 'NOT FOUND',
-    'whois.nic.mg'			  => 'Status\: Not Registered',
+    'whois.nic.mg'            => 'Status\: Not Registered',
     'whois.nic.ms'            => 'Status\: Not Registered',
     'whois.nic.mt'            => 'Domain is not registered',
     'whois.nic.mu'            => 'Status\: Not Registered',
@@ -859,6 +966,10 @@ our %strip = (
         'Last updated on ',
     ],
 
+    'whois.publicinterestregistry.net' => [
+        '^[^A-Z]',
+        '^Access to Public Interest Registry',
+    ],
 
     'whois.aero' => [
         '^Access to \.AERO WHOIS',
@@ -1163,24 +1274,17 @@ our %strip = (
         '^A full list of \.name',
         '^\s+--------',
     ],
-    'whois.afilias.net' => [ # .info
-        '^Access to INFO WHOIS information',
-        '^determining the contents of a',
-        '^Afilias registry database',
-        '^Afilias Limited for informational',
-        '^guarantee its accuracy',
-        '^access\. You agree that',
-        '^and that, under no circumstances',
-        '^enable, or otherwise support',
-        '^facsimile of mass unsolicited',
-        '^to entities other than the data',
-        '^\(b\) enable high volume, automated',
-        '^queries or data to the systems',
-        '^Afilias except as reasonably',
-        '^modify existing registrations',
-        '^the right to modify these',
-        '^you agree to abide by this policy',
+    'whois.afilias.net' => [
+        '^Access to AFILIAS WHOIS',
+        '^[^A-Z]',
         '^Name Server: $',
+    ],
+    'whois.nic.club' => [
+        '>>>> Whois database was last updated [\s\w]+',
+    ],
+    'whois.nic.luxury' => [
+        '>>> Last update of WHOIS',
+        '^This is the future of Luxury',
     ],
     'whois.crsnic.net' => [ # .com  main .net
         '^TERMS OF USE:',
@@ -2188,6 +2292,12 @@ our %strip = (
         '^>>> Last update of WHOIS database',
         '^The data',
         '^[^A-Z]',
+    ],
+
+    'whois.unitedtld.com' => [
+        '^>>> Last update of WHOIS database',
+        '^[^A-Z]',
+        '^Terms of Use'
     ],
 
     'whois.nic.ht' => [

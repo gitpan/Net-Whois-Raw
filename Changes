@@ -552,3 +552,25 @@ Revision history for Perl module Net::Whois::Raw.
 
 2.63    Apr 17 2014 Dmitriy Seluzhitskiy
     - Add whois.nic.build for .BUILD
+
+2.64    Apr 22 2014 Dmitriy Seluzhitskiy
+    - new tlds .PINK .RED .SHIKSHA .KIM .BLUE
+
+2.65    Apr 24 2014 Dmitriy Seluzhitskiy
+    - new tlds .CLUB
+
+2.66    May 08 2014 Dmitriy Seluzhitskiy
+    - new tlds of United TLD Holdco Ltd (http://rightside.co)
+
+2.67    May 08 2014 Dmitriy Seluzhitskiy
+    - new tlds .LUXURY
+
+2.68    May 21 2014 Dmitriy Seluzhitskiy
+    - new tlds of donuts.co
+
+2.69    May 27 2014 Dmitriy Seluzhitskiy
+    - change whois for .орг
+
+2.70    Jun 02 2014 Alexander Nalobin
+    - RT#96078 Fixed LANG handling in pwhois script
+
