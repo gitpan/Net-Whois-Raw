@@ -41,10 +41,11 @@
             "Net::IDN::Punycode" : "1",
             "Regexp::IPv6" : "0",
             "Test::More" : "0",
+            "Test::RequiresInternet" : "0",
             "URI::URL" : "0"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "2.70"
+   "version" : "2.74"
 }
