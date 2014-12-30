@@ -3,29 +3,31 @@ abstract: unknown
 author:
   - unknown
 build_requires:
-  ExtUtils::MakeMaker: 0
+  ExtUtils::MakeMaker: '0'
 configure_requires:
-  ExtUtils::MakeMaker: 0
+  ExtUtils::MakeMaker: '0'
 dynamic_config: 1
-generated_by: 'ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.133380'
+generated_by: 'ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.143240'
 license: unknown
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: Net-Whois-Raw
 no_index:
   directory:
     - t
     - inc
 requires:
-  Encode: 0
-  File::Temp: 0
-  Getopt::Long: 2
-  HTTP::Headers: 0
-  HTTP::Request: 0
-  LWP::UserAgent: 0
-  Net::IDN::Punycode: 1
-  Regexp::IPv6: 0
-  Test::More: 0
-  URI::URL: 0
-version: 2.80
+  Encode: '0'
+  File::Temp: '0'
+  Getopt::Long: '2'
+  HTTP::Headers: '0'
+  HTTP::Request: '0'
+  LWP::UserAgent: '0'
+  Net::IDN::Punycode: '1'
+  Regexp::IPv6: '0'
+  Test::More: '0'
+  URI::URL: '0'
+resources:
+  repository: https://github.com/regru/Net-Whois-Raw.git
+version: '2.80'
